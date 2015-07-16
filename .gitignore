@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+export
+*.html
+readme_cache
+readme_files
+readme_parts/readme1_files
+readme_parts/readme2_files
+readme_parts/readme3_files
+readme_parts/img

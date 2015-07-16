@@ -1,0 +1,11 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^README\.Rmd$
+^README\.html$
+^IMG$
+^export$
+^readme.md$
+^readme_parts$
+^readme_files$
+^readme_cache$
+

@@ -1,0 +1,48 @@
+---
+output: 
+  html_document: 
+    keep_md: yes
+    self_contained: no
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "../img/README-"
+)
+```
+
+
+```{r, echo = FALSE}
+library(nlexperiment)
+# Set the path to your NetLogo instalation
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
+```
+
+
+## Simple experiment with fire
+Create NetLogo experiment object
+```{r SimpleModel}
+# Fire model is included in NetLogo sample models:
+fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/Fire.nlogo")
+
+# Create simple NetLogo experiment object
+experiment <- nl_experiment(
+  model_file = fire_model, 
+  while_condition = "any? turtles",
+  repetitions = 3,
+  export_view = TRUE
+)
+```
+
+Run the experiment:
+```{r SimpleModelRun}
+result <- nl_run(experiment)
+```
+
+Find exported view image files paths in `result$export` or just display them by calling `nl_show_view` function:
+```{r model_view, fig.width=2.2, fig.height=2.2}
+nl_show_view(result)
+```
+

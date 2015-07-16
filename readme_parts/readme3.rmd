@@ -1,0 +1,65 @@
+---
+output: 
+  html_document: 
+    keep_md: yes
+    self_contained: no
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "img/README-"
+)
+```
+
+
+```{r, echo = FALSE}
+library(nlexperiment)
+# Set the path to your NetLogo instalation
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
+fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/Fire.nlogo")
+```
+
+
+## Observations per each simulation run
+Create NetLogo experiment object with defined *run* measure (percent burned)
+and parameter values - parameter density goes from 55 to 62.
+```{r ModelRunMeasures2}
+experiment <- nl_experiment(
+  model_file = fire_model, 
+  while_condition = "any? turtles",
+  repetitions = 20,
+  run_measures = measures(
+    percent_burned = "(burned-trees / initial-trees) * 100",
+    progress = "max [pxcor] of patches with [pcolor > 0 and pcolor < 55]"
+  ),
+  param_values = list(
+    density = seq(from = 55, to = 62, by = 1)
+  )
+)
+```
+
+Run the experiment:
+```{r RunModelWithRunMeasures}
+result <- nl_run(experiment)
+# Join observations with parameter space values:
+dat <- nl_get_run_result(result)
+```
+
+Plot the results - percent burned as a function of density:
+```{r plot_run_density}
+library(ggplot2)
+# plot percent burned by density
+ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) + 
+  geom_violin() +
+  geom_jitter(position = position_jitter(width = .2)) 
+```
+
+Fire progress from left (-125) to right (125) as a function of density:
+```{r plot_run_rightmost}
+ggplot(dat, mapping = aes(x = factor(density), y = progress) ) + 
+  geom_jitter(position = position_jitter(width = .2)) +
+  theme_minimal()
+```
+

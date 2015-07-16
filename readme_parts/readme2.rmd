@@ -1,0 +1,52 @@
+---
+output: 
+  html_document: 
+    keep_md: yes
+    self_contained: no
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "img/README-"
+)
+```
+
+
+```{r, echo = FALSE}
+library(nlexperiment)
+# Set the path to your NetLogo instalation
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
+fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/Fire.nlogo")
+```
+
+
+## Observations per each simulation step
+Create NetLogo experiment object with step measure defined:
+```{r StepModel}
+experiment <- nl_experiment(
+  model_file = fire_model, 
+  while_condition = "any? turtles",
+  repetitions = 3,
+  step_measures = measures(
+    percent_burned = "(burned-trees / initial-trees) * 100"
+  )
+)
+```
+
+Run the experiment:
+```{r StepModelRun}
+result <- nl_run(experiment)
+```
+
+Observe how fire advances in time for different model runs:
+```{r model_step_plot, fig.height=4}
+library(ggplot2)
+
+ggplot(result$step, mapping = aes(x = tick, y=percent_burned) ) + 
+  geom_point(size = 0.5) +
+  facet_grid(. ~ run_id)
+```
+
+Note that `run_id` and `tick` values are included in the `results$step` by default.

@@ -1,0 +1,35 @@
+---
+output: 
+  html_document: 
+    keep_md: yes
+    self_contained: no
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "img/README-"
+)
+```
+
+## Settings
+
+```{r}
+library(nlexperiment)
+# Set the path to your NetLogo installation
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
+```
+
+
+```{r ch1, child="readme_parts/readme1.rmd", cache=TRUE}
+```
+
+```{r ch2, child="readme_parts/readme2.rmd", cache=TRUE}
+```
+
+```{r ch3, child="readme_parts/readme3.rmd", cache=TRUE}
+```
+
+
+
