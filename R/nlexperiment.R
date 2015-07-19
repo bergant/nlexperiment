@@ -1,3 +1,79 @@
+#' nlexperiment: NetLogo experiments
+#'
+#' Define and run NetLogo (Wilensky 1999) model experiments.
+#'
+#' @details
+#'
+#' \link{RNetLogo} package (Thiele 2014) makes it possible to run
+#' NetLogo models and get values from reporters.
+#' But it requires some additional programming to define and run
+#' model experiments (more than using
+#' NetLogo Behavior Space for example).
+#'
+#' Functions in \bold{nlexperiment} assume the following steps:
+#' \itemize{
+#' \item Define NetLogo experiment object with parameter space definition,
+#'    selected measures and other related simulation options
+#'    (see \code{\link{nl_experiment}} function).
+#' \item Run experiment (see \code{\link{nl_run}}).
+#'   The result of running an experiment keeps original
+#'   experiment definition
+#'   along with the simulation results and makes the process of model analysis
+#'   more concise and reproducible.
+#' \item Analyse and present results of simulation(s).
+#' \item When additional questions pop out, changes to
+#'   experiment will be needed.
+#'   Refine the original definition of the experiment by
+#'   changing for example only parameter space (\code{\link{nl_set_param_space}}),
+#'   set different measures (\code{\link{nl_set_measures}}) or set other simulation
+#'   options (\code{\link{nl_set_run_options}}).
+#' }
+#'
+#' @docType package
+#' @name nlexperiment
+#' @aliases nlexperiment-package
+#' @references
+#'
+#'   Wilensky, U. (1999) NetLogo. \url{http://ccl.northwestern.edu/netlogo/}. Center for Connected Learning and Computer-Based Modeling, Northwestern University. Evanston, IL.
+#'
+#'   Thiele, J. (2014) R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software 58(2) 1-41. \url{http://www.jstatsoft.org/v58/i02/}
+#'
+#'   This package is analogous to the Behavior Space functionality of NetLogo
+#'   \url{http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html}
+#' @examples
+#' \dontrun{
+#' # Set the path to your NetLogo installation
+#' nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/")
+#'
+#' # Fire model is included in NetLogo sample models:
+#' fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/Fire.nlogo")
+#'
+#' # Create a NetLogo experiment object
+#' experiment <- nl_experiment(
+#'   model_file = fire_model,
+#'   while_condition = "any? turtles",
+#'   repetitions = 10,
+#'   run_measures = measures(
+#'     percent_burned = "(burned-trees / initial-trees) * 100",
+#'     progress = "max [pxcor] of patches with [pcolor > 0 and pcolor < 55]"
+#'   ),
+#'   param_values = list(
+#'     density = seq(from = 55, to = 62, by = 1)
+#'   )
+#' )
+#'
+#' # Run the experiment
+#' result <- nl_run(experiment)
+#'
+#' dat <- nl_get_run_result(result)
+#'
+#' library(ggplot2)
+#' # plot percent burned by density
+#' ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) +
+#'   geom_violin() +
+#'   geom_jitter(position = position_jitter(width = .2))
+#' }
+NULL
 
 # package options (used for NetLogo path and other session settings)
 nl_options_class <- function() {
@@ -23,6 +99,8 @@ nl_special_params <- c("world_size")
 #' @param nl_path An absolute path to your NetLogo installation
 #'   (the folder where the NetLogo.jar is) starting from the root.
 #'   On Windows, for example, something like "C:/Program Files/NetLogo 5.1.0".
+#' @details Option is defined per session. When R session is restarded
+#'   and nlexperiment loaded, NetLogo path is empty.
 #' @export
 nl_netlogo_path <- function(nl_path = NULL) {
   if(missing(nl_path)) {
@@ -35,6 +113,11 @@ nl_netlogo_path <- function(nl_path = NULL) {
 #' Get and set export path
 #'
 #' @param export_path target folder to export files
+#' @details Setting export path is optional. If not set, running experiments
+#'   with export options (view images and worlds) will create "export"
+#'   folder in working directory.
+#'   Option is defined per session. When R session is restarded
+#'   and nlexperiment loaded, the export path is empty.
 #' @export
 nl_export_path <- function(export_path = NULL) {
   if(missing(export_path)) {
@@ -46,6 +129,8 @@ nl_export_path <- function(export_path = NULL) {
 
 #' Create NetLogo experiment object
 #'
+#' Use this function to create NetLogo experiment object.
+#'
 #' @param model_file An absolute path to your NetLogo model file (.nlogo)
 #' @param max_ticks Number of iterations to run.
 #'    This parameter is used when while_condition is not defined.
@@ -53,11 +138,16 @@ nl_export_path <- function(export_path = NULL) {
 #'     (for example: "ticks < 100")
 #' @param repetitions How many times to run the model with the same parameters.
 #'   It is set to 1 by default. Result data sets will include run_id as
-#'   additional variable to identify the specific runs.
+#'   additional variable to identify the specific runs. To change repetitions
+#'   of existing experiment object use \code{\link{nl_set_run_options}}
 #' @param step_measures Measures per each simulation step in a named character
 #'   vector. Use measures() function to construct measures in right format.
+#'   To change step measures
+#'   of existing experiment object use \code{\link{nl_set_measures}}
 #' @param run_measures Measures per each simulation run in a named character
 #'   vector. Use measures() function to construct measures in right format.
+#'   To change run measures
+#'   of existing experiment object use \code{\link{nl_set_measures}}
 #' @param param_values A data.frame with parameter values or
 #'   a list of values to be expanded to all combinations of values
 #' @param mapping Mapping between R and NetLogo parameters
@@ -67,12 +157,31 @@ nl_export_path <- function(export_path = NULL) {
 #'   a png image files for each run (when running the experiment)
 #' @param export_world If set to TRUE, the world will be exported to
 #'   a csv file for each run
+#' @examples
+#' experiment <- nl_experiment(
+#'   model_file = "my_model.nlogo",
+#'   while_condition = "any? turtles",
+#'   repetitions = 20,
+#'   run_measures = measures(
+#'     percent_burned = "(burned-trees / initial-trees) * 100",
+#'     progress = "max [pxcor] of patches with [pcolor > 0 and pcolor < 55]"
+#'   ),
+#'   param_values = list(
+#'     density = seq(from = 55, to = 62, by = 1)
+#'   )
+#' )
 #' @return NetLogo experiment object
+#' @seealso To run experiment use \code{\link{nl_run}}.
+#'   To change existing
+#'   experiment object see \code{\link{nl_set_measures}},
+#'   \code{\link{nl_set_run_options}} and
+#'   \code{\link{nl_set_param_space}}.
 #' @export
 nl_experiment <- function(model_file,
                           max_ticks = NULL,
                           while_condition = NULL,
                           repetitions = 1,
+                          random_seed = NULL,
                           step_measures = NULL,
                           run_measures = NULL,
                           mapping = NULL,
@@ -94,7 +203,9 @@ nl_experiment <- function(model_file,
 
 
   # set default run options (1000 iterations)
-  experiment <- nl_set_run_options(experiment, repetitions = repetitions)
+  experiment <- nl_set_run_options(experiment,
+                                   repetitions = repetitions,
+                                   random_seed = random_seed)
   # set default measures (no measures)
   experiment <- nl_set_measures(experiment,
                                 step = step_measures,
@@ -114,7 +225,11 @@ measures <- function(...) {
   unlist(list(...))
 }
 
-#' Set run options to a NetLogo experiment
+#' Set run options of a NetLogo experiment object
+#'
+#' You can set basic run options when creating experiment object
+#' with \code{\link{nl_experiment}}. To change these or add
+#' additional options use \code{nl_set_run_options}
 #'
 #' @param experiment NetLogo experiment object from nl_experiment() function
 #' @param random_seed Random seed
@@ -124,6 +239,19 @@ measures <- function(...) {
 #' @param setup_commands NetLogo command strings to execute to setup the model
 #' @param go_command NetLogo command string to execute the step in the model
 #' @return NetLogo experiment object
+#' @examples
+#'
+#' experiment <- nl_experiment(
+#'   model_file = "my_model.nlogo",
+#'   while_condition = "any? turtles"
+#' )
+#'
+#' experiment <- nl_set_run_options(
+#'   experiment,
+#'   repetitions = 3,
+#'   setup_commands = c("setup", "change_something")
+#' )
+#'
 #' @export
 nl_set_run_options <- function(
   experiment,
@@ -149,14 +277,24 @@ nl_set_run_options <- function(
 }
 
 
-#' Add measures for NetLogo experiment
+#' Set or change measures of existing NetLogo experiment
 #'
-#' @param experiment NetLogo model object from nl_experiment() function
-#' @param step NetLogo reporters for each step (reported at every tick)
-#' @param run NetLogo reporters for each run (reported at end of run)
-#' @param as.data.frame Reporting in data frame format
+#' @param experiment NetLogo experiment object
+#' @param step NetLogo reporters for each step (reported at every tick).
+#'   A list of named character vectors. Use \code{measures} function to get
+#'   the correct structure.
+#' @param run NetLogo reporters for each run (reported at end of run).
+#'   A list of named character vectors. Use \code{measures} function to get
+#'   the correct structure.
+#' @param as.data.frame Reporting in data frame format (TRUE by default)
 #' @param step_transform A function to transform data frame result from
-#'   step reporters.
+#'   step reporters. When simulation has many steps and only summary
+#'   data is needed, step_transform can reduce memory requirements to
+#'   run experiment.
+#' @details Values of experiment measures are NetLogo reporters.
+#'   Names of measures will be used in the resulting data frames as
+#'   column names.
+#' @seealso To create an experiment object use \code{\link{nl_experiment}}
 #' @return NetLogo experiment object
 #' @export
 nl_set_measures <- function(experiment,
@@ -175,6 +313,7 @@ nl_set_measures <- function(experiment,
 
   experiment
 }
+
 
 #' Define parameter space for NetLogo experiment
 #'
@@ -207,10 +346,11 @@ nl_set_param_space <- function(experiment, param_values = NULL ) {
 #' @param experiment NetLogo experiment object
 #' @param gui Start NetLogo with GUI (by default NetLogo is run in headless mode)
 #' @return A list of data frames with observations (per run and per simulation step)
-#' @details NetLogo is started and the model is run for each tuple of parameters
+#'   and a special element (experiment) where the calling experiment object is stored.
+#' @details NetLogo is started only once but the model is run for each parameter combination
 #'   defined in parameter space. When repetition (in run options) is > 1 than
-#'   each tuple run is repeated accordingly.
-#'   The result depends on measures defined for each step and for each run.
+#'   each parameter combination is repeated accordingly.
+#'   Returning value depend on measures defined for each step and/or for each run.
 #' @export
 nl_run <- function(experiment, gui = FALSE) {
 
@@ -267,8 +407,20 @@ nl_run_param <- function(experiment, param_space_id) {
 
 nl_single_run <- function(experiment, parameter_space_id = NULL, run_id = NULL) {
   start_time <- Sys.time()
+
+  # set random seed
+  if(!is.null(experiment$run_options$random_seed)) {
+    RNetLogo::NLCommand(sprintf("random-seed %d", experiment$run_options$random_seed))
+  }
   # set parameters from parameter space
   if(!missing(parameter_space_id) && !is.null(experiment$param_space)) {
+    # set world size if specified
+    if(!is.null(experiment$param_space[["world_size"]])) {
+      world_size <- experiment$param_space[parameter_space_id, "world_size"]
+      half_size <-  world_size %/% 2
+      RNetLogo::NLCommand(sprintf("resize-world %d %d %d %d",
+                                  -half_size, half_size, -half_size, half_size))
+    }
     param_names <- setdiff(names(experiment$param_space), nl_special_params)
     for(parameter in param_names) {
       nl_param <- experiment$mapping[parameter]
@@ -392,14 +544,26 @@ print.nl_experiment <- function(x, ...) {
     if(run_options$repetitions > 1) {
       cat("  Repetitions", run_options$repetitions, "\n")
     }
-    cat("  Setup procedures: \n    ")
+    cat("  Setup procedures: ")
+    if(length(run_options$setup_commands) > 1) {
+      cat("\n")
+    }
     cat(run_options$setup_commands, sep = "\n    ")
     cat("  Go command: ", run_options$go_command, "\n")
-    cat("Step measures: ", names(measures$step), "\n")
-    cat("Run measures: ", names(measures$run), "\n")
-    cat("Parameter space:\n")
-    cat("  Size: ", nrow(param_space), "\n")
-    cat("  Parameters: ", names(param_space))
+    if(length(names(measures$step))>0) {
+      cat("Step measures: ", names(measures$step), "\n")
+    }
+    if(length(names(measures$run))>0) {
+      cat("Run measures: ", names(measures$run), "\n")
+    }
+    cat("Parameter space: ")
+    if(!is.null(param_space) && nrow(param_space) > 0) {
+      cat("\n  Size: ", nrow(param_space))
+      cat("\n  Parameters: ", names(param_space))
+    } else {
+      cat("No parameters")
+    }
+    cat("\n")
   })
 }
 

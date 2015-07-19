@@ -2,27 +2,41 @@
 % Please edit documentation in R/nlexperiment.R
 \name{nl_set_measures}
 \alias{nl_set_measures}
-\title{Add measures for NetLogo experiment}
+\title{Set or change measures of existing NetLogo experiment}
 \usage{
 nl_set_measures(experiment, step = NULL, run = NULL, as.data.frame = TRUE,
   step_transform = NULL)
 }
 \arguments{
-\item{experiment}{NetLogo model object from nl_experiment() function}
+\item{experiment}{NetLogo experiment object}
 
-\item{step}{NetLogo reporters for each step (reported at every tick)}
+\item{step}{NetLogo reporters for each step (reported at every tick).
+A list of named character vectors. Use \code{measures} function to get
+the correct structure.}
 
-\item{run}{NetLogo reporters for each run (reported at end of run)}
+\item{run}{NetLogo reporters for each run (reported at end of run).
+A list of named character vectors. Use \code{measures} function to get
+the correct structure.}
 
-\item{as.data.frame}{Reporting in data frame format}
+\item{as.data.frame}{Reporting in data frame format (TRUE by default)}
 
 \item{step_transform}{A function to transform data frame result from
-step reporters.}
+step reporters. When simulation has many steps and only summary
+data is needed, step_transform can reduce memory requirements to
+run experiment.}
 }
 \value{
 NetLogo experiment object
 }
 \description{
-Add measures for NetLogo experiment
+Set or change measures of existing NetLogo experiment
+}
+\details{
+Values of experiment measures are NetLogo reporters.
+  Names of measures will be used in the resulting data frames as
+  column names.
+}
+\seealso{
+To create an experiment object use \code{\link{nl_experiment}}
 }
 

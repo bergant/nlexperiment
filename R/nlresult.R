@@ -35,20 +35,20 @@ nl_show_view <- function(result, param_space_id = NULL, run_id = NULL) {
 #' @param  param_space_id Optional filter on parameter space ID
 #' @param  run_id Optional filter on run ID
 #' @export
-nl_get_run_result <- function(result, param_space_id = NULL, run_id = NULL) {
+nl_get_run_result <- function(result, add_parameters = TRUE) {
 
   if( !requireNamespace("dplyr", quietly = TRUE)) {
     stop("dplyr package needed for this function to work. Please install it.",
          call. = FALSE)
   }
+  res <- result$run
 
-  param_space <- dplyr::mutate(
-    result$experiment$param_space, param_space_id = dplyr::row_number())
+  if(add_parameters) {
+    param_space <- dplyr::mutate(
+      result$experiment$param_space, param_space_id = dplyr::row_number())
+    res <- dplyr::inner_join(param_space, result$run, by = "param_space_id")
+  }
 
-  res <- dplyr::inner_join(param_space, result$run, by = "param_space_id")
-
-  if(!missing(param_space_id)) res <- dplyr::filter(res, param_space_id = param_space_id)
-  if(!missing(run_id)) res <- dplyr::filter(res, param_space_id = run_id)
   res
 }
 

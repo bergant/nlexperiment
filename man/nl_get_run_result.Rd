@@ -4,7 +4,7 @@
 \alias{nl_get_run_result}
 \title{Get run observations joined with parameter space values}
 \usage{
-nl_get_run_result(result, param_space_id = NULL, run_id = NULL)
+nl_get_run_result(result, add_parameters = TRUE)
 }
 \arguments{
 \item{result}{NetLogo result object}

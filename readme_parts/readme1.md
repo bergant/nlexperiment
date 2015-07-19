@@ -34,5 +34,5 @@ Find exported view image files paths in `result$export` or just display them by 
 nl_show_view(result)
 ```
 
-![](../img/README-model_view-1.png) ![](../img/README-model_view-2.png) ![](../img/README-model_view-3.png) 
+![](img/README-model_view-1.png) ![](img/README-model_view-2.png) ![](img/README-model_view-3.png) 
 

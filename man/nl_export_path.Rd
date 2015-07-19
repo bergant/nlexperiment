@@ -12,4 +12,11 @@ nl_export_path(export_path = NULL)
 \description{
 Get and set export path
 }
+\details{
+Setting export path is optional. If not set, running experiments
+  with export options (view images and worlds) will create "export"
+  folder in working directory.
+  Option is defined per session. When R session is restarded
+  and nlexperiment loaded, the export path is empty.
+}
 

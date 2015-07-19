@@ -2,7 +2,7 @@
 % Please edit documentation in R/nlexperiment.R
 \name{nl_set_run_options}
 \alias{nl_set_run_options}
-\title{Set run options to a NetLogo experiment}
+\title{Set run options of a NetLogo experiment object}
 \usage{
 nl_set_run_options(experiment, random_seed = NULL, repetitions = 1,
   max_minutes = 10, setup_commands = "setup", go_command = "go")
@@ -25,6 +25,20 @@ defined number of minutes (with an error and no return value)}
 NetLogo experiment object
 }
 \description{
-Set run options to a NetLogo experiment
+You can set basic run options when creating experiment object
+with \code{\link{nl_experiment}}. To change these or add
+additional options use \code{nl_set_run_options}
+}
+\examples{
+experiment <- nl_experiment(
+  model_file = "my_model.nlogo",
+  while_condition = "any? turtles"
+)
+
+experiment <- nl_set_run_options(
+  experiment,
+  repetitions = 3,
+  setup_commands = c("setup", "change_something")
+)
 }
 

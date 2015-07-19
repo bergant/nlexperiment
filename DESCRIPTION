@@ -1,14 +1,12 @@
 Package: nlexperiment
 Type: Package
-Title: Define and run NetLogo experiments like in NetLogo BehaviorSpace
+Title: NetLogo experiments
 Version: 0.1
 Date: 2015-06-26
 Author: Darko Bergant
 Maintainer: Darko Bergant <darko.bergant@gmail.com>
 Description: Define and run controlled NetLogo experiments
   analogous to NetLogo BehaviorSpace.
-  RNetLogo package (Jan C. Thiele, 2014) is used to run the model and
-  access NetLogo reporters.
 Depends: R (>= 3.1)
 License: GPL-2
 Imports:

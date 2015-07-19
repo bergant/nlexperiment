@@ -13,14 +13,15 @@ nl_run(experiment, gui = FALSE)
 }
 \value{
 A list of data frames with observations (per run and per simulation step)
+  and a special element (experiment) where the calling experiment object is stored.
 }
 \description{
 Run NetLogo experiment
 }
 \details{
-NetLogo is started and the model is run for each tuple of parameters
+NetLogo is started only once but the model is run for each parameter combination
   defined in parameter space. When repetition (in run options) is > 1 than
-  each tuple run is repeated accordingly.
-  The result depends on measures defined for each step and for each run.
+  each parameter combination is repeated accordingly.
+  Returning value depend on measures defined for each step and/or for each run.
 }
 

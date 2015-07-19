@@ -5,9 +5,9 @@
 \title{Create NetLogo experiment object}
 \usage{
 nl_experiment(model_file, max_ticks = NULL, while_condition = NULL,
-  repetitions = 1, step_measures = NULL, run_measures = NULL,
-  mapping = NULL, param_values = NULL, export_view = FALSE,
-  export_world = FALSE)
+  repetitions = 1, random_seed = NULL, step_measures = NULL,
+  run_measures = NULL, mapping = NULL, param_values = NULL,
+  export_view = FALSE, export_world = FALSE)
 }
 \arguments{
 \item{model_file}{An absolute path to your NetLogo model file (.nlogo)}
@@ -20,13 +20,18 @@ This parameter is used when while_condition is not defined.}
 
 \item{repetitions}{How many times to run the model with the same parameters.
 It is set to 1 by default. Result data sets will include run_id as
-additional variable to identify the specific runs.}
+additional variable to identify the specific runs. To change repetitions
+of existing experiment object use \code{\link{nl_set_run_options}}}
 
 \item{step_measures}{Measures per each simulation step in a named character
-vector. Use measures() function to construct measures in right format.}
+vector. Use measures() function to construct measures in right format.
+To change step measures
+of existing experiment object use \code{\link{nl_set_measures}}}
 
 \item{run_measures}{Measures per each simulation run in a named character
-vector. Use measures() function to construct measures in right format.}
+vector. Use measures() function to construct measures in right format.
+To change run measures
+of existing experiment object use \code{\link{nl_set_measures}}}
 
 \item{mapping}{Mapping between R and NetLogo parameters
 in named character vector.
@@ -45,6 +50,27 @@ a csv file for each run}
 NetLogo experiment object
 }
 \description{
-Create NetLogo experiment object
+Use this function to create NetLogo experiment object.
+}
+\examples{
+experiment <- nl_experiment(
+  model_file = "my_model.nlogo",
+  while_condition = "any? turtles",
+  repetitions = 20,
+  run_measures = measures(
+    percent_burned = "(burned-trees / initial-trees) * 100",
+    progress = "max [pxcor] of patches with [pcolor > 0 and pcolor < 55]"
+  ),
+  param_values = list(
+    density = seq(from = 55, to = 62, by = 1)
+  )
+)
+}
+\seealso{
+To run experiment use \code{\link{nl_run}}.
+  To change existing
+  experiment object see \code{\link{nl_set_measures}},
+  \code{\link{nl_set_run_options}} and
+  \code{\link{nl_set_param_space}}.
 }
 
