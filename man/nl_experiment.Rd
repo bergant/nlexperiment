@@ -23,6 +23,9 @@ It is set to 1 by default. Result data sets will include run_id as
 additional variable to identify the specific runs. To change repetitions
 of existing experiment object use \code{\link{nl_set_run_options}}}
 
+\item{random_seed}{If defined, random seed will be set for each run.
+Note: using random seed and repetitions > 1 does not make sense.}
+
 \item{step_measures}{Measures per each simulation step in a named character
 vector. Use measures() function to construct measures in right format.
 To change step measures

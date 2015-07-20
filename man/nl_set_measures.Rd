@@ -11,11 +11,11 @@ nl_set_measures(experiment, step = NULL, run = NULL, as.data.frame = TRUE,
 \item{experiment}{NetLogo experiment object}
 
 \item{step}{NetLogo reporters for each step (reported at every tick).
-A list of named character vectors. Use \code{measures} function to get
+A list of named character vectors. Use \code{\link{measures}} function to get
 the correct structure.}
 
 \item{run}{NetLogo reporters for each run (reported at end of run).
-A list of named character vectors. Use \code{measures} function to get
+A list of named character vectors. Use \code{\link{measures}} function to get
 the correct structure.}
 
 \item{as.data.frame}{Reporting in data frame format (TRUE by default)}

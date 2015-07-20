@@ -13,12 +13,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Settings
+# nlexperiment
+Define and run controlled NetLogo experiments
+  analogous to NetLogo BehaviorSpace.
 
-```{r}
-library(nlexperiment)
-# Set the path to your NetLogo installation
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
+## Installation
+```{r eval=FALSE}
+library(devtools)
+install_github("bergant/finstr")
 ```
 
 

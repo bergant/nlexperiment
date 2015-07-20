@@ -9,9 +9,7 @@ nl_get_run_result(result, add_parameters = TRUE)
 \arguments{
 \item{result}{NetLogo result object}
 
-\item{param_space_id}{Optional filter on parameter space ID}
-
-\item{run_id}{Optional filter on run ID}
+\item{add_parameters}{If parameter values should be appended to the results}
 }
 \description{
 Get run observations joined with parameter space values

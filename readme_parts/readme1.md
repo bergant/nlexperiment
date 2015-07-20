@@ -9,6 +9,9 @@
 Create NetLogo experiment object
 
 ```r
+library(nlexperiment)
+# Set the path to your NetLogo instalation
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
 # Fire model is included in NetLogo sample models:
 fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/Fire.nlogo")
 
@@ -25,7 +28,7 @@ Run the experiment:
 
 ```r
 result <- nl_run(experiment)
-#> Warning: No parameter space defined. Using default parameters
+#> Warning: Parameter space not defined. Using default parameters
 ```
 
 Find exported view image files paths in `result$export` or just display them by calling `nl_show_view` function:

@@ -4,11 +4,16 @@
 #'
 #' @details
 #'
-#' \link{RNetLogo} package (Thiele 2014) makes it possible to run
-#' NetLogo models and get values from reporters.
-#' But it requires some additional programming to define and run
-#' model experiments (more than using
-#' NetLogo Behavior Space for example).
+#' \link{RNetLogo} package (Thiele 2014) opens countless possibilities
+#' by connecting NetLogo to R.
+#' But it does require some programming to define and run
+#' model experiments.
+#' The purpose of \bold{nlexperiment} is to make it simple as possible
+#' while keeping complex functionalities as options.
+#' User can start with
+#' experiment (analogous to NetLogo Behavior Space),
+#' run the experiment, explore the results
+#' and return to refine the experiment definition.
 #'
 #' Functions in \bold{nlexperiment} assume the following steps:
 #' \itemize{
@@ -20,17 +25,20 @@
 #'   experiment definition
 #'   along with the simulation results and makes the process of model analysis
 #'   more concise and reproducible.
+#'   To run the simulation in parallel working processes
+#'   just use the \code{parallel} attribute in \code{nl_run} function.
 #' \item Analyse and present results of simulation(s).
 #' \item When additional questions pop out, changes to
 #'   experiment will be needed.
 #'   Refine the original definition of the experiment by
-#'   changing for example only parameter space (\code{\link{nl_set_param_space}}),
+#'   changing only parameter space (\code{\link{nl_set_param_space}}),
 #'   set different measures (\code{\link{nl_set_measures}}) or set other simulation
 #'   options (\code{\link{nl_set_run_options}}).
 #' }
 #'
 #' @docType package
 #' @name nlexperiment
+#' @aliases nlexperiment
 #' @aliases nlexperiment-package
 #' @references
 #'
@@ -38,17 +46,23 @@
 #'
 #'   Thiele, J. (2014) R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software 58(2) 1-41. \url{http://www.jstatsoft.org/v58/i02/}
 #'
-#'   This package is analogous to the Behavior Space functionality of NetLogo
+#'   The ideas and principles of NetLogo experiment definition is taken from
+#'   the NetLogo's Behavior Space tool
 #'   \url{http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html}
+#'
+#'   The parallel implementation of \code{nl_run} is based on the RNetLogo vignette
+#'   \url{https://cran.r-project.org/web/packages/RNetLogo/vignettes/parallelProcessing.pdf}
+#'
 #' @examples
 #' \dontrun{
 #' # Set the path to your NetLogo installation
 #' nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/")
 #'
 #' # Fire model is included in NetLogo sample models:
-#' fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/Fire.nlogo")
+#' fire_model <- file.path(nl_netlogo_path(),
+#'   "models/Sample Models/Earth Science/Fire.nlogo")
 #'
-#' # Create a NetLogo experiment object
+#' # Create NetLogo experiment object
 #' experiment <- nl_experiment(
 #'   model_file = fire_model,
 #'   while_condition = "any? turtles",
@@ -71,7 +85,7 @@
 #' # plot percent burned by density
 #' ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) +
 #'   geom_violin() +
-#'   geom_jitter(position = position_jitter(width = .2))
+#'   geom_jitter(position = position_jitter(width = 0.2), alpha = 0.3)
 #' }
 NULL
 
@@ -140,6 +154,8 @@ nl_export_path <- function(export_path = NULL) {
 #'   It is set to 1 by default. Result data sets will include run_id as
 #'   additional variable to identify the specific runs. To change repetitions
 #'   of existing experiment object use \code{\link{nl_set_run_options}}
+#' @param random_seed If defined, random seed will be set for each run.
+#'   Note: using random seed and repetitions > 1 does not make sense.
 #' @param step_measures Measures per each simulation step in a named character
 #'   vector. Use measures() function to construct measures in right format.
 #'   To change step measures
@@ -219,6 +235,19 @@ nl_experiment <- function(model_file,
 #' Convert measure list to named vector
 #'
 #' @param ... Named character values
+#' @examples
+#' experiment <- nl_experiment(
+#'   model_file = "my_model.nlogo",
+#'   while_condition = "any? turtles",
+#'   repetitions = 20,
+#'   run_measures = measures(
+#'     percent_burned = "(burned-trees / initial-trees) * 100",
+#'     progress = "max [pxcor] of patches with [pcolor > 0 and pcolor < 55]"
+#'   ),
+#'   param_values = list(
+#'     density = seq(from = 55, to = 62, by = 1)
+#'   )
+#' )
 #' @export
 #' @keywords internal
 measures <- function(...) {
@@ -281,10 +310,10 @@ nl_set_run_options <- function(
 #'
 #' @param experiment NetLogo experiment object
 #' @param step NetLogo reporters for each step (reported at every tick).
-#'   A list of named character vectors. Use \code{measures} function to get
+#'   A list of named character vectors. Use \code{\link{measures}} function to get
 #'   the correct structure.
 #' @param run NetLogo reporters for each run (reported at end of run).
-#'   A list of named character vectors. Use \code{measures} function to get
+#'   A list of named character vectors. Use \code{\link{measures}} function to get
 #'   the correct structure.
 #' @param as.data.frame Reporting in data frame format (TRUE by default)
 #' @param step_transform A function to transform data frame result from
@@ -339,190 +368,6 @@ nl_set_param_space <- function(experiment, param_values = NULL ) {
   experiment
 }
 
-
-
-#' Run NetLogo experiment
-#'
-#' @param experiment NetLogo experiment object
-#' @param gui Start NetLogo with GUI (by default NetLogo is run in headless mode)
-#' @return A list of data frames with observations (per run and per simulation step)
-#'   and a special element (experiment) where the calling experiment object is stored.
-#' @details NetLogo is started only once but the model is run for each parameter combination
-#'   defined in parameter space. When repetition (in run options) is > 1 than
-#'   each parameter combination is repeated accordingly.
-#'   Returning value depend on measures defined for each step and/or for each run.
-#' @export
-nl_run <- function(experiment, gui = FALSE) {
-
-  nl_options$set("wd", getwd())
-
-  # start NetLogo
-  if(is.null(nl_path <- nl_netlogo_path())) {
-    stop("NetLogo path is empty. Use nl_netlogo_path.")
-  }
-  nl_instance <- RNetLogo::NLStart(nl_path, gui = gui)
-  on.exit(RNetLogo::NLQuit())
-  RNetLogo::NLLoadModel( experiment$model_file )
-
-  # run for every parameter set in parameter space
-  if(is.null(experiment$param_space) || nrow(experiment$param_space) == 0) {
-    warning("No parameter space defined. Using default parameters",
-            call. = FALSE)
-    param_space_rows <- NA
-  } else {
-    param_space_rows <- seq_len(nrow(experiment$param_space))
-  }
-  start_time <- Sys.time()
-  ret <- lapply(param_space_rows,
-                function(param_space_id)
-                  nl_run_param(experiment, param_space_id)
-  )
-
-  # concatenate results to dataframes
-  step_df <- do.call(rbind, lapply(ret, function(x) x$step))
-  run_df <- do.call(rbind, lapply(ret, function(x) x$run))
-  export_df <- do.call(rbind, lapply(ret, function(x) x$export))
-  ret <- list(step = step_df, run = run_df, export = export_df)
-
-  # report duration
-  ret$duration <- Sys.time() - start_time
-  ret$experiment <- experiment
-  class(ret) <- c(nl_result_class, class(ret))
-  return(ret)
-}
-
-nl_run_param <- function(experiment, param_space_id) {
-  # run repetitions for same parameters
-  rret <- lapply(seq_len(experiment$run_options$repetitions),
-                 function(run_id) {
-                   nl_single_run(experiment, param_space_id, run_id)
-                 })
-  #rbind result dataframes
-  step_df <- do.call(rbind, lapply(rret, function(x) x$step))
-  run_df <- do.call(rbind, lapply(rret, function(x) x$run))
-  export_df <- do.call(rbind, lapply(rret, function(x) x$export))
-
-  return(list(step = step_df, run = run_df, export = export_df))
-}
-
-nl_single_run <- function(experiment, parameter_space_id = NULL, run_id = NULL) {
-  start_time <- Sys.time()
-
-  # set random seed
-  if(!is.null(experiment$run_options$random_seed)) {
-    RNetLogo::NLCommand(sprintf("random-seed %d", experiment$run_options$random_seed))
-  }
-  # set parameters from parameter space
-  if(!missing(parameter_space_id) && !is.null(experiment$param_space)) {
-    # set world size if specified
-    if(!is.null(experiment$param_space[["world_size"]])) {
-      world_size <- experiment$param_space[parameter_space_id, "world_size"]
-      half_size <-  world_size %/% 2
-      RNetLogo::NLCommand(sprintf("resize-world %d %d %d %d",
-                                  -half_size, half_size, -half_size, half_size))
-    }
-    param_names <- setdiff(names(experiment$param_space), nl_special_params)
-    for(parameter in param_names) {
-      nl_param <- experiment$mapping[parameter]
-      if(is.null(nl_param) || is.na(nl_param)) {
-        nl_param <- parameter
-      }
-      param_value <- experiment$param_space[parameter_space_id, parameter]
-      RNetLogo::NLCommand(sprintf("set %s %s", nl_param, param_value))
-    }
-  }
-
-  # execute setup command(s)
-  for(command in experiment$run_options$setup_commands) {
-    RNetLogo::NLCommand(command)
-  }
-
-  # run
-  if(length(experiment$measures$step) > 0 ) {
-    # if any step measures defined - use RNetLogo::NLDoReportWhile
-    report_step <- RNetLogo::NLDoReportWhile(
-      condition = experiment$while_condition,
-      command = experiment$run_options$go_command,
-      reporter = experiment$measures$step,
-      as.data.frame = experiment$measures$as.data.frame,
-      df.col.names = names(experiment$measures$step),
-      max.minutes = experiment$run_options$max_minutes
-    )
-    report_step$tick <- as.numeric(row.names(report_step))
-    report_step$run_id <- run_id
-    report_step$param_space_id <- parameter_space_id
-    if(!is.null(experiment$measures$step_transform)) {
-      report_step <- experiment$measures$step_transform(report_step)
-    }
-  } else {
-    # no step measures - just run the model
-    RNetLogo::NLDoCommandWhile(
-      condition = experiment$while_condition,
-      experiment$run_options$go_command,
-      max.minutes = experiment$run_options$max_minutes
-    )
-    report_step <- NULL
-  }
-  # compute measures defined per run
-  if(length(experiment$measures$run) > 0) {
-    report_run <- RNetLogo::NLReport(experiment$measures$run)
-    if(experiment$measures$as.data.frame) {
-      report_run <- data.frame(report_run)
-      names(report_run) <- names(experiment$measures$run)
-      report_run$param_space_id <- parameter_space_id
-      report_run$run_id <- run_id
-      report_run$run_duration <- Sys.time() - start_time
-    }
-  } else {
-    report_run <- NULL
-  }
-  # exports
-  if(any(experiment$export_view, experiment$export_world)){
-    export <- nl_single_export(experiment, parameter_space_id, run_id)
-  } else {
-    export <- NULL
-  }
-  return(list(step = report_step, run = report_run, export = export))
-}
-
-#' Export view and/or world for individual run
-#'
-#' @param experiment experiment object
-#' @param experiment experiment object
-#' @keywords internal
-nl_single_export <- function(experiment, param_space_id = NA, run_id = 1) {
-
-
-  file_path <- nl_export_path()
-  if(is.null(file_path)) {
-    file_path <- nl_options$get("wd")
-    file_path <- file.path(file_path, "export")
-    if(!dir.exists(file_path)) dir.create(file_path)
-  }
-  if(is.null(file_path)) file_path <- ""
-  ret <- data.frame(param_space_id = param_space_id,
-                    run_id = run_id,
-                    view = NA,
-                    world = NA)
-  if(experiment$export_view) {
-    filename <- sprintf("view_%d_%d.png",
-                        ifelse(is.null(param_space_id), 1, param_space_id),
-                        ifelse(is.null(run_id), 1, run_id))
-    view_filename <- file.path(file_path, filename)
-    RNetLogo::NLCommand(sprintf('export-view "%s"', view_filename))
-    ret$view <- view_filename
-  }
-
-  if(experiment$export_world) {
-    filename <- sprintf("world_%d_%d.csv",
-                        ifelse(is.null(param_space_id), 1, param_space_id),
-                        ifelse(is.null(run_id), 1, run_id))
-    world_filename <- file.path(file_path, filename)
-    RNetLogo::NLCommand(sprintf('export-world "%s"', world_filename))
-    ret$world <- world_filename
-  }
-  ret
-}
 
 #' Print a NetLogo experiment object
 #'

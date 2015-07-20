@@ -12,5 +12,19 @@ measures(...)
 \description{
 Convert measure list to named vector
 }
+\examples{
+experiment <- nl_experiment(
+  model_file = "my_model.nlogo",
+  while_condition = "any? turtles",
+  repetitions = 20,
+  run_measures = measures(
+    percent_burned = "(burned-trees / initial-trees) * 100",
+    progress = "max [pxcor] of patches with [pcolor > 0 and pcolor < 55]"
+  ),
+  param_values = list(
+    density = seq(from = 55, to = 62, by = 1)
+  )
+)
+}
 \keyword{internal}
 

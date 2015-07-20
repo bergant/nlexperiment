@@ -32,8 +32,7 @@ nl_show_view <- function(result, param_space_id = NULL, run_id = NULL) {
 #' Get run observations joined with parameter space values
 #'
 #' @param  result NetLogo result object
-#' @param  param_space_id Optional filter on parameter space ID
-#' @param  run_id Optional filter on run ID
+#' @param  add_parameters If parameter values should be appended to the results
 #' @export
 nl_get_run_result <- function(result, add_parameters = TRUE) {
 
@@ -44,8 +43,9 @@ nl_get_run_result <- function(result, add_parameters = TRUE) {
   res <- result$run
 
   if(add_parameters) {
+    param_space <- result$experiment$param_space
     param_space <- dplyr::mutate(
-      result$experiment$param_space, param_space_id = dplyr::row_number())
+      param_space, param_space_id = dplyr::row_number(param_space))
     res <- dplyr::inner_join(param_space, result$run, by = "param_space_id")
   }
 

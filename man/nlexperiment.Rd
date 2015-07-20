@@ -9,11 +9,16 @@
 Define and run NetLogo (Wilensky 1999) model experiments.
 }
 \details{
-\link{RNetLogo} package (Thiele 2014) makes it possible to run
-NetLogo models and get values from reporters.
-But it requires some additional programming to define and run
-model experiments (more than using
-NetLogo Behavior Space for example).
+\link{RNetLogo} package (Thiele 2014) opens countless possibilities
+by connecting NetLogo to R.
+But it does require some programming to define and run
+model experiments.
+The purpose of \bold{nlexperiment} is to make it simple as possible
+while keeping complex functionalities as options.
+User can start with
+experiment (analogous to NetLogo Behavior Space),
+run the experiment, explore the results
+and return to refine the experiment definition.
 
 Functions in \bold{nlexperiment} assume the following steps:
 \itemize{
@@ -25,11 +30,13 @@ Functions in \bold{nlexperiment} assume the following steps:
   experiment definition
   along with the simulation results and makes the process of model analysis
   more concise and reproducible.
+  To run the simulation in parallel working processes
+  just use the \code{parallel} attribute in \code{nl_run} function.
 \item Analyse and present results of simulation(s).
 \item When additional questions pop out, changes to
   experiment will be needed.
   Refine the original definition of the experiment by
-  changing for example only parameter space (\code{\link{nl_set_param_space}}),
+  changing only parameter space (\code{\link{nl_set_param_space}}),
   set different measures (\code{\link{nl_set_measures}}) or set other simulation
   options (\code{\link{nl_set_run_options}}).
 }
@@ -40,9 +47,10 @@ Functions in \bold{nlexperiment} assume the following steps:
 nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/")
 
 # Fire model is included in NetLogo sample models:
-fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/Fire.nlogo")
+fire_model <- file.path(nl_netlogo_path(),
+  "models/Sample Models/Earth Science/Fire.nlogo")
 
-# Create a NetLogo experiment object
+# Create NetLogo experiment object
 experiment <- nl_experiment(
   model_file = fire_model,
   while_condition = "any? turtles",
@@ -65,7 +73,7 @@ library(ggplot2)
 # plot percent burned by density
 ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) +
   geom_violin() +
-  geom_jitter(position = position_jitter(width = .2))
+  geom_jitter(position = position_jitter(width = 0.2), alpha = 0.3)
 }
 }
 \references{
@@ -73,7 +81,11 @@ Wilensky, U. (1999) NetLogo. \url{http://ccl.northwestern.edu/netlogo/}. Center 
 
   Thiele, J. (2014) R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software 58(2) 1-41. \url{http://www.jstatsoft.org/v58/i02/}
 
-  This package is analogous to the Behavior Space functionality of NetLogo
+  The ideas and principles of NetLogo experiment definition is taken from
+  the NetLogo's Behavior Space tool
   \url{http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html}
+
+  The parallel implementation of \code{nl_run} is based on the RNetLogo vignette
+  \url{https://cran.r-project.org/web/packages/RNetLogo/vignettes/parallelProcessing.pdf}
 }
 

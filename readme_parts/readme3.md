@@ -13,7 +13,7 @@ and parameter values - parameter density goes from 55 to 62.
 experiment <- nl_experiment(
   model_file = fire_model, 
   while_condition = "any? turtles",
-  repetitions = 4,
+  repetitions = 10,
   run_measures = measures(
     percent_burned = "(burned-trees / initial-trees) * 100",
     progress = "max [pxcor] of patches with [pcolor > 0 and pcolor < 55]"
@@ -27,9 +27,9 @@ experiment <- nl_experiment(
 Run the experiment:
 
 ```r
-result <- nl_run(experiment)
+result <- nl_run(experiment, parallel = TRUE)
 # Join observations with parameter space values:
-dat <- nl_get_run_result(result)
+dat <- nl_get_run_result(result, add_parameters = TRUE)
 ```
 
 Plot the results - percent burned as a function of density:
@@ -39,7 +39,7 @@ library(ggplot2)
 # plot percent burned by density
 ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) + 
   geom_violin() +
-  geom_jitter(position = position_jitter(width = .2)) 
+  geom_jitter(position = position_jitter(width = .1), alpha = 0.3) 
 ```
 
 ![](img/README-plot_run_density-1.png) 
