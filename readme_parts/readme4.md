@@ -6,8 +6,13 @@
 
 
 ## Parameter space
-If parameter space is defined by list of values, it is interpreted as 
-all possible combinations of parameters:
+When parameter space is defined by list of values, it is interpreted as 
+all possible combinations of parameters. In this example, model is set
+to run with all combination of `world_size` and `density`:
+
+*Note: `world_size` is a special parameter name. Instead of setting NetLogo variable 
+it changes the NetLogo world dimensions.*
+
 
 ```r
 experiment <- nl_experiment(
@@ -23,36 +28,25 @@ experiment <- nl_experiment(
     density = seq(from = 56, to = 61)
   )
 )
-
-experiment$param_space
-#>    world_size density
-#> 1         100      56
-#> 2         250      56
-#> 3         100      57
-#> 4         250      57
-#> 5         100      58
-#> 6         250      58
-#> 7         100      59
-#> 8         250      59
-#> 9         100      60
-#> 10        250      60
-#> 11        100      61
-#> 12        250      61
 ```
 
+This experiment has now 12 rows in the parameter space.
+With 30 repetitions this means 
+360 simulation runs.
 
-*Note: `world_size` is a special parameter name. Instead of seting NetLogo variable 
-it adjusts the NetLogo world dimensions.*
 
-Sometimes we do not want all possible combinations of parameter values
-(often because all combinations might produce a huge parameter space). 
+
+Sometimes we do not want to run the model for all combinations of parameter values
+(often because it would yield a huge parameter space and hours of waiting for
+simulations to end). 
 In this case use **data frame instead of a list** in `nl_experiment` or 
 `nl_set_param_space` function to set parameter values. 
-Here is a definition of parameter space with different density values and
-two world sizes but there are only some of the density values for the big world:
+Here is an example of parameter space with different density values and
+two world sizes where only some of the density values are used for the big sized world:
 
 
 ```r
+# Instead of creating new experiment we can change the original experiment
 experiment <- nl_set_param_space( experiment,
   param_values = rbind(
     expand.grid(
@@ -65,7 +59,7 @@ experiment <- nl_set_param_space( experiment,
     )
   )
 )
-
+# Print the parameter space values:
 experiment$param_space
 #>   world_size density
 #> 1        100      56
@@ -88,7 +82,7 @@ result <- nl_run(experiment, parallel = TRUE)
 dat <- nl_get_run_result(result, add_parameters = TRUE)
 ```
 
-Plot the results - percent burned as a function of density:
+Plot the results - with world size as facets:
 
 ```r
 ggplot(dat, mapping = aes(x = factor(density), y=percent_burned, 

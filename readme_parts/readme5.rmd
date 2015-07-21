@@ -24,18 +24,16 @@ library(ggplot2)
 
 
 ## Mapping parameters
-NetLogo identifiers may include any of the following ASCII characters:
-
-`.?=*!<>:#+/%$_^'&-`
-
-which makes variable names that are awkward to use in R data manipulation. 
-To map R variables to NetLogo parameters use `mapping` option:
+NetLogo identifiers may include some ASCII characters (?=*!<>:#+/%$^'&-)
+that makes the R part of data manipulation rather uncomfortable. 
+The following example is using Ant model (Wilensky 1997) to show 
+**how to use nice names in R and map them to NetLogo variables**.
 
 ```{r p5experiment}
 experiment <- nl_experiment(
   model_file = file.path(nl_netlogo_path(), 
                          "models/Sample Models/Biology/Ants.nlogo"), 
-  while_condition = "ticks < 150",
+  max_ticks = 150,
   step_measures = measures(
     pile1 = "sum [food] of patches with [pcolor = cyan]",  
     pile2 = "sum [food] of patches with [pcolor = sky]",  
@@ -54,27 +52,27 @@ experiment <- nl_experiment(
   export_view = TRUE
 )
 
-experiment$param_space
 ```
 
 Run experiment
-```{r p5RunModel}
+```{r p5RunModel, cache=TRUE}
 results <- nl_run(experiment)
 ```
 
 Show views
-```{r p5ShowViews, fig.width=2.2, fig.height=2.25}
-results <- nl_run(experiment)
+```{r p5ShowViews, fig.width=2.2, fig.height=2.25, cache=TRUE}
 nl_show_view(results)
 ```
 
-Show remaining food by parameter space and food pathces
-```{r p5plot}
+Show remaining food by parameter space and food piles
+```{r p5plot, cache=TRUE}
 library(tidyr)
 dat <- nl_get_step_result(results)
 dat <- tidyr::gather(dat, pile, value, pile1, pile2, pile3)
+
+library(ggplot2)
 ggplot(dat, aes(x = tick, y = value, color = pile) ) +
   geom_line() +
-  facet_grid(diffusion_rate ~ evaporation_rate, margins = c(2,3))
+  facet_grid(diffusion_rate ~ evaporation_rate)
 ```
 

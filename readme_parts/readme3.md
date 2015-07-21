@@ -6,14 +6,20 @@
 
 
 ## Observations per each simulation run
-Create NetLogo experiment object with defined *run* measure (percent burned)
-and parameter values - parameter density goes from 55 to 62.
+In this example
+
+* two measures _per simulation run_ are defined (values are reported at the end 
+of each simulation run),
+* the model will be run repetedly `30` times for every parameter value
+* and the model is running with `parallel` option (to save some time)
+
 
 ```r
 experiment <- nl_experiment(
-  model_file = fire_model, 
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Earth Science/Fire.nlogo"), 
   while_condition = "any? turtles",
-  repetitions = 10,
+  repetitions = 30,
   run_measures = measures(
     percent_burned = "(burned-trees / initial-trees) * 100",
     progress = "max [pxcor] of patches with [pcolor > 0 and pcolor < 55]"
@@ -24,32 +30,36 @@ experiment <- nl_experiment(
 )
 ```
 
-Run the experiment:
+Running the experiment with `parallel` option will use 
+several working processes on multi-core processors.
+It can save some time with large parameter space and/or simulation repetitions:
 
 ```r
 result <- nl_run(experiment, parallel = TRUE)
-# Join observations with parameter space values:
-dat <- nl_get_run_result(result, add_parameters = TRUE)
 ```
 
 Plot the results - percent burned as a function of density:
 
 ```r
-library(ggplot2)
+# Join observations with parameter space values:
+dat <- nl_get_run_result(result, add_parameters = TRUE)
 # plot percent burned by density
+library(ggplot2)
 ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) + 
   geom_violin() +
-  geom_jitter(position = position_jitter(width = .1), alpha = 0.3) 
+  geom_jitter(position = position_jitter(width = .1), alpha = 0.3) +
+  labs(x = "Forest density", y = "Percent burned")
 ```
 
 ![](img/README-plot_run_density-1.png) 
 
-Fire progress from left (-125) to right (125) as a function of density:
+Fire progress from left to right as a function of density:
 
 ```r
-ggplot(dat, mapping = aes(x = factor(density), y = progress) ) + 
-  geom_jitter(position = position_jitter(width = .2)) +
-  theme_minimal()
+ggplot(dat, mapping = aes(x = factor(density), y = progress/250 + 0.5) ) + 
+  geom_jitter(position = position_jitter(width = .1), alpha = 0.3)  +
+  theme_minimal() +
+  labs(x = "Forest density", y = "Fire progress")
 ```
 
 ![](img/README-plot_run_rightmost-1.png) 

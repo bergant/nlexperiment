@@ -57,10 +57,19 @@ nl_get_step_result <- function(result, add_parameters = TRUE) {
 #' @export
 #' @keywords internal
 nl_get_result <- function(result, add_parameters = TRUE, type = "run") {
-
-  res <- if(type == "run") res <- result$run else res <- result$step
-
+  message(names(result))
+  res <- result[[type]]
+  if(is.null(res)) {
+    warning("No data in", type, "element", call. = FALSE)
+    return(NULL)
+  }
   if(add_parameters) {
+    if(is.null(result$experiment)) {
+      stop("No reference to experiment in the result")
+    }
+    if(is.null(result$experiment$param_space)) {
+      stop("No parameter space in referenced experiment")
+    }
     param_space <- result$experiment$param_space
     param_space$param_space_id <- seq_along(param_space[[1]])
     if( !requireNamespace("dplyr", quietly = TRUE)) {

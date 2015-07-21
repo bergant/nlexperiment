@@ -13,32 +13,67 @@ knitr::opts_chunk$set(
 )
 ```
 
-# nlexperiment
-Define and run controlled NetLogo experiments
-  analogous to NetLogo BehaviorSpace.
+![nlexperiment](img/logo.png)
+Define and run NetLogo experiments in R
+
+## About
+[NetLogo](http://ccl.northwestern.edu/netlogo/) (Wilensky 1999) 
+is a multi-agent programmable modeling environment.
+[RNetLogo](https://cran.r-project.org/web/packages/RNetLogo/)
+package (Thiele 2014) opened countless possibilities
+by connecting R with NetLogo.
+But it does require some programming in R to define and run
+experiments.
+The purpose of **nlexperiment** is to make
+exploring NetLogo models as simple as possible (like NetLogo 
+[Behavior Space](http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html) tool)
+while keeping more complex functionalities as available options.
 
 ## Installation
+
 ```{r eval=FALSE}
 library(devtools)
 install_github("bergant/nlexperiment")
+```
+
+```{r, echo = FALSE}
+library(nlexperiment)
+# Set the path to your NetLogo instalation
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
+fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/Fire.nlogo")
+library(ggplot2)
 ```
 
 
 ```{r ch1, child="readme_parts/readme1.rmd", cache=TRUE}
 ```
 
-```{r ch2, child="readme_parts/readme2.rmd", cache=TRUE}
+```{r ch2, child="readme_parts/readme2.rmd", cache=FALSE}
 ```
 
-```{r ch3, child="readme_parts/readme3.rmd", cache=TRUE}
+```{r ch3, child="readme_parts/readme3.rmd", cache=FALSE}
 ```
 
-
-```{r ch4, child="readme_parts/readme4.rmd", cache=TRUE}
+```{r ch4, child="readme_parts/readme4.rmd", cache=FALSE}
 ```
-
 
 ```{r ch5, child="readme_parts/readme5.rmd", cache=FALSE}
 ```
 
+## References
+
+* Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
+* Thiele, J. (2014) R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software 58(2) 1-41. http://www.jstatsoft.org/v58/i02/
+
+* Wilensky, U. (1997). NetLogo Fire model. http://ccl.northwestern.edu/netlogo/models/Fire. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
+* Wilensky, U. (1997). NetLogo Ants model. http://ccl.northwestern.edu/netlogo/models/Ants. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
+* The ideas and principles of NetLogo experiment definition is taken from
+the NetLogo's Behavior Space tool
+http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html
+
+* The parallel implementation of `nl_run` function is based on the RNetLogo vignette
+https://cran.r-project.org/web/packages/RNetLogo/vignettes/parallelProcessing.pdf
 

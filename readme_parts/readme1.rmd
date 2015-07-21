@@ -14,24 +14,23 @@ knitr::opts_chunk$set(
 ```
 
 
-```{r, echo = FALSE}
-```
-
-
 ## Simple experiment with fire
-Create NetLogo experiment object
+This sample experiment with NetLogo Fire model (Wilensky 1997) demonstrates
+how to create and run minimal experiment. It runs the model with three parameter
+values (forest density) and exports final NetLogo views to image files:
+
 ```{r SimpleModel}
 library(nlexperiment)
 # Set the path to your NetLogo instalation
 nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
-# Fire model is included in NetLogo sample models:
-fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/Fire.nlogo")
 
-# Create simple NetLogo experiment object
+# Create NetLogo experiment object
 experiment <- nl_experiment(
-  model_file = fire_model, 
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Earth Science/Fire.nlogo"), 
   while_condition = "any? turtles",
-  repetitions = 3,
+  param_values = list(density = c(57, 59, 61)),
+  random_seed = 3,
   export_view = TRUE
 )
 ```
@@ -41,7 +40,7 @@ Run the experiment:
 result <- nl_run(experiment)
 ```
 
-Find exported view image files paths in `result$export` or just display them by calling `nl_show_view` function:
+Find paths to the exported view image files in `result$export` or just display them by calling `nl_show_view` function:
 ```{r model_view, fig.width=2.2, fig.height=2.2}
 nl_show_view(result)
 ```

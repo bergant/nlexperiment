@@ -1,11 +1,24 @@
 
 
 
-# nlexperiment
-Define and run controlled NetLogo experiments
-  analogous to NetLogo BehaviorSpace.
+![nlexperiment](img/logo.png)
+Define and run NetLogo experiments in R
+
+## About
+[NetLogo](http://ccl.northwestern.edu/netlogo/) (Wilensky 1999) 
+is a multi-agent programmable modeling environment.
+[RNetLogo](https://cran.r-project.org/web/packages/RNetLogo/)
+package (Thiele 2014) opened countless possibilities
+by connecting R with NetLogo.
+But it does require some programming in R to define and run
+experiments.
+The purpose of **nlexperiment** is to make
+exploring NetLogo models as simple as possible (like NetLogo 
+[Behavior Space](http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html) tool)
+while keeping more complex functionalities as available options.
 
 ## Installation
+
 
 ```r
 library(devtools)
@@ -20,22 +33,24 @@ install_github("bergant/nlexperiment")
 
 
 
-
 ## Simple experiment with fire
-Create NetLogo experiment object
+This sample experiment with NetLogo Fire model (Wilensky 1997) demonstrates
+how to create and run minimal experiment. It runs the model with three parameter
+values (forest density) and exports final NetLogo views to image files:
+
 
 ```r
 library(nlexperiment)
 # Set the path to your NetLogo instalation
 nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
-# Fire model is included in NetLogo sample models:
-fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/Fire.nlogo")
 
-# Create simple NetLogo experiment object
+# Create NetLogo experiment object
 experiment <- nl_experiment(
-  model_file = fire_model, 
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Earth Science/Fire.nlogo"), 
   while_condition = "any? turtles",
-  repetitions = 3,
+  param_values = list(density = c(57, 59, 61)),
+  random_seed = 3,
   export_view = TRUE
 )
 ```
@@ -44,10 +59,9 @@ Run the experiment:
 
 ```r
 result <- nl_run(experiment)
-#> Warning: No parameter space defined. Using default parameters
 ```
 
-Find exported view image files paths in `result$export` or just display them by calling `nl_show_view` function:
+Find paths to the exported view image files in `result$export` or just display them by calling `nl_show_view` function:
 
 ```r
 nl_show_view(result)
@@ -65,13 +79,18 @@ nl_show_view(result)
 
 
 ## Observations per each simulation step
-Create NetLogo experiment object with step measure defined:
+From statistical point of view, the interesting part of experiment is 
+getting some quantitative information. 
+This sample demonstrates how to set measures
+for each simulation step.
 
 ```r
 experiment <- nl_experiment(
-  model_file = fire_model, 
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Earth Science/Fire.nlogo"), 
   while_condition = "any? turtles",
-  repetitions = 3,
+  param_values = list(density = c(57, 59, 61)),
+  random_seed = 1,
   step_measures = measures(
     percent_burned = "(burned-trees / initial-trees) * 100"
   )
@@ -82,22 +101,27 @@ Run the experiment:
 
 ```r
 result <- nl_run(experiment)
-#> Warning: No parameter space defined. Using default parameters
 ```
 
-Observe how fire advances in time for different model runs:
+Plot of burned forest as a function of time for different forest densities:
 
 ```r
+# get the observation data for step measures
+dat <- nl_get_step_result(result, add_parameters = TRUE) 
+# plot the observations
 library(ggplot2)
-
-ggplot(result$step, mapping = aes(x = tick, y=percent_burned) ) + 
-  geom_point(size = 0.5) +
-  facet_grid(. ~ run_id)
+ggplot(dat, mapping = aes(x = tick, y = percent_burned)) + 
+  geom_step() +
+  facet_grid(. ~ density) +
+  ylab("Percent burned")
 ```
 
 ![](img/README-model_step_plot-1.png) 
 
-Note that `run_id` and `tick` values are included in the `results$step` by default.
+*Note: values `run_id` and `tick` are included in the `results$step` by default.
+Parameter values are included only by reference to `parameter_space_id`. The 
+function `nl_get_step_result` joins parameter space to observation data.*
+
 
 
 
@@ -108,13 +132,18 @@ Note that `run_id` and `tick` values are included in the `results$step` by defau
 
 
 ## Observations per each simulation run
-Create NetLogo experiment object with defined *run* measure (percent burned)
-and parameter values - parameter density goes from `55` to `62` and repeat
-simulation `30` times for every parameter:
+In this example
+
+* two measures _per simulation run_ are defined (values are reported at the end 
+of each simulation run),
+* the model will be run repetedly `30` times for every parameter value
+* and the model is running with `parallel` option (to save some time)
+
 
 ```r
 experiment <- nl_experiment(
-  model_file = fire_model, 
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Earth Science/Fire.nlogo"), 
   while_condition = "any? turtles",
   repetitions = 30,
   run_measures = measures(
@@ -127,34 +156,36 @@ experiment <- nl_experiment(
 )
 ```
 
-Running the experiment with `parallel` option will run
-simulations with several working processes on multi-core processors.
+Running the experiment with `parallel` option will use 
+several working processes on multi-core processors.
 It can save some time with large parameter space and/or simulation repetitions:
 
 ```r
 result <- nl_run(experiment, parallel = TRUE)
-# Join observations with parameter space values:
-dat <- nl_get_run_result(result, add_parameters = TRUE)
 ```
 
 Plot the results - percent burned as a function of density:
 
 ```r
-library(ggplot2)
+# Join observations with parameter space values:
+dat <- nl_get_run_result(result, add_parameters = TRUE)
 # plot percent burned by density
+library(ggplot2)
 ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) + 
   geom_violin() +
-  geom_jitter(position = position_jitter(width = .1), alpha = 0.3) 
+  geom_jitter(position = position_jitter(width = .1), alpha = 0.3) +
+  labs(x = "Forest density", y = "Percent burned")
 ```
 
 ![](img/README-plot_run_density-1.png) 
 
-Fire progress from left (-125) to right (125) as a function of density:
+Fire progress from left to right as a function of density:
 
 ```r
-ggplot(dat, mapping = aes(x = factor(density), y = progress) ) + 
+ggplot(dat, mapping = aes(x = factor(density), y = progress/250 + 0.5) ) + 
   geom_jitter(position = position_jitter(width = .1), alpha = 0.3)  +
-  theme_minimal()
+  theme_minimal() +
+  labs(x = "Forest density", y = "Fire progress")
 ```
 
 ![](img/README-plot_run_rightmost-1.png) 
@@ -168,10 +199,14 @@ ggplot(dat, mapping = aes(x = factor(density), y = progress) ) +
 
 
 
-
 ## Parameter space
 When parameter space is defined by list of values, it is interpreted as 
-all possible combinations of parameters:
+all possible combinations of parameters. In this example, model is set
+to run with all combination of `world_size` and `density`:
+
+*Note: `world_size` is a special parameter name. Instead of setting NetLogo variable 
+it changes the NetLogo world dimensions.*
+
 
 ```r
 experiment <- nl_experiment(
@@ -187,29 +222,17 @@ experiment <- nl_experiment(
     density = seq(from = 56, to = 61)
   )
 )
-
-experiment$param_space
-#>    world_size density
-#> 1         100      56
-#> 2         250      56
-#> 3         100      57
-#> 4         250      57
-#> 5         100      58
-#> 6         250      58
-#> 7         100      59
-#> 8         250      59
-#> 9         100      60
-#> 10        250      60
-#> 11        100      61
-#> 12        250      61
 ```
 
+This experiment has now 12 rows in the parameter space.
+With 30 repetitions this means 
+360 simulation runs.
 
-*Note: `world_size` is a special parameter name. Instead of setting NetLogo variable 
-it changes the NetLogo world dimensions.*
+
 
 Sometimes we do not want to run the model for all combinations of parameter values
-(often because all combinations might produce a huge parameter space). 
+(often because it would yield a huge parameter space and hours of waiting for
+simulations to end). 
 In this case use **data frame instead of a list** in `nl_experiment` or 
 `nl_set_param_space` function to set parameter values. 
 Here is an example of parameter space with different density values and
@@ -217,6 +240,7 @@ two world sizes where only some of the density values are used for the big sized
 
 
 ```r
+# Instead of creating new experiment we can change the original experiment
 experiment <- nl_set_param_space( experiment,
   param_values = rbind(
     expand.grid(
@@ -229,7 +253,7 @@ experiment <- nl_set_param_space( experiment,
     )
   )
 )
-
+# Print the parameter space values:
 experiment$param_space
 #>   world_size density
 #> 1        100      56
@@ -279,21 +303,18 @@ ggplot(dat, mapping = aes(x = factor(density), y=percent_burned,
 
 
 
-
 ## Mapping parameters
-NetLogo identifiers may include any of the following ASCII characters:
-
-`.?=*!<>:#+/%$_^'&-`
-
-which makes variable names that are awkward to use in R data manipulation. 
-To map R variables to NetLogo parameters use `mapping` option:
+NetLogo identifiers may include some ASCII characters (?=*!<>:#+/%$^'&-)
+that makes the R part of data manipulation rather uncomfortable. 
+The following example is using Ant model (Wilensky 1997) to show 
+**how to use nice names in R and map them to NetLogo variables**.
 
 
 ```r
 experiment <- nl_experiment(
   model_file = file.path(nl_netlogo_path(), 
                          "models/Sample Models/Biology/Ants.nlogo"), 
-  while_condition = "ticks < 150",
+  max_ticks = 150,
   step_measures = measures(
     pile1 = "sum [food] of patches with [pcolor = cyan]",  
     pile2 = "sum [food] of patches with [pcolor = sky]",  
@@ -311,15 +332,6 @@ experiment <- nl_experiment(
   random_seed = 1,
   export_view = TRUE
 )
-
-experiment$param_space
-#>   population diffusion_rate evaporation_rate
-#> 1        125             50                5
-#> 2        125             60                5
-#> 3        125             50               10
-#> 4        125             60               10
-#> 5        125             50               15
-#> 6        125             60               15
 ```
 
 Run experiment
@@ -331,24 +343,41 @@ results <- nl_run(experiment)
 Show views
 
 ```r
-results <- nl_run(experiment)
 nl_show_view(results)
 ```
 
 ![](img/README-p5ShowViews-1.png) ![](img/README-p5ShowViews-2.png) ![](img/README-p5ShowViews-3.png) ![](img/README-p5ShowViews-4.png) ![](img/README-p5ShowViews-5.png) ![](img/README-p5ShowViews-6.png) 
 
-Show remaining food by parameter space and food pathces
+Show remaining food by parameter space and food piles
 
 ```r
 library(tidyr)
 dat <- nl_get_step_result(results)
 dat <- tidyr::gather(dat, pile, value, pile1, pile2, pile3)
+
+library(ggplot2)
 ggplot(dat, aes(x = tick, y = value, color = pile) ) +
   geom_line() +
-  facet_grid(diffusion_rate ~ evaporation_rate, margins = c(2,3))
+  facet_grid(diffusion_rate ~ evaporation_rate)
 ```
 
 ![](img/README-p5plot-1.png) 
 
 
+## References
+
+* Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
+* Thiele, J. (2014) R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software 58(2) 1-41. http://www.jstatsoft.org/v58/i02/
+
+* Wilensky, U. (1997). NetLogo Fire model. http://ccl.northwestern.edu/netlogo/models/Fire. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
+* Wilensky, U. (1997). NetLogo Ants model. http://ccl.northwestern.edu/netlogo/models/Ants. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
+* The ideas and principles of NetLogo experiment definition is taken from
+the NetLogo's Behavior Space tool
+http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html
+
+* The parallel implementation of `nl_run` function is based on the RNetLogo vignette
+https://cran.r-project.org/web/packages/RNetLogo/vignettes/parallelProcessing.pdf
 

@@ -25,7 +25,12 @@ library(ggplot2)
 
 ## Parameter space
 When parameter space is defined by list of values, it is interpreted as 
-all possible combinations of parameters:
+all possible combinations of parameters. In this example, model is set
+to run with all combination of `world_size` and `density`:
+
+*Note: `world_size` is a special parameter name. Instead of setting NetLogo variable 
+it changes the NetLogo world dimensions.*
+
 ```{r p4experiment}
 experiment <- nl_experiment(
   model_file = fire_model, 
@@ -41,21 +46,24 @@ experiment <- nl_experiment(
   )
 )
 
-experiment$param_space
 ```
 
+This experiment has now `r nrow(experiment$param_space)` rows in the parameter space.
+With `r experiment$run_options$repetitions` repetitions this means 
+`r nrow(experiment$param_space) * experiment$run_options$repetitions` simulation runs.
 
-*Note: `world_size` is a special parameter name. Instead of setting NetLogo variable 
-it changes the NetLogo world dimensions.*
+
 
 Sometimes we do not want to run the model for all combinations of parameter values
-(often because all combinations might produce a huge parameter space). 
+(often because it would yield a huge parameter space and hours of waiting for
+simulations to end). 
 In this case use **data frame instead of a list** in `nl_experiment` or 
 `nl_set_param_space` function to set parameter values. 
 Here is an example of parameter space with different density values and
 two world sizes where only some of the density values are used for the big sized world:
 
 ```{r p4ParamSpace}
+# Instead of creating new experiment we can change the original experiment
 experiment <- nl_set_param_space( experiment,
   param_values = rbind(
     expand.grid(
@@ -68,13 +76,13 @@ experiment <- nl_set_param_space( experiment,
     )
   )
 )
-
+# Print the parameter space values:
 experiment$param_space
 ```
 
 
 Run the experiment with the `parallel` attribute:
-```{r p4RunModel}
+```{r p4RunModel, cache=TRUE}
 result <- nl_run(experiment, parallel = TRUE)
 # Join observations with parameter space values:
 dat <- nl_get_run_result(result, add_parameters = TRUE)
