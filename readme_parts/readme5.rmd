@@ -58,12 +58,12 @@ experiment$param_space
 ```
 
 Run experiment
-```{r p5RunModel, fig.width=2.2, fig.height=2.25}
+```{r p5RunModel}
 results <- nl_run(experiment)
 ```
 
 Show views
-```{r p5ShowViews, fig.width=2.5, fig.height=2.6}
+```{r p5ShowViews, fig.width=2.2, fig.height=2.25}
 results <- nl_run(experiment)
 nl_show_view(results)
 ```

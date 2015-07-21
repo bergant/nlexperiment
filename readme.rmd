@@ -38,7 +38,7 @@ install_github("bergant/nlexperiment")
 ```
 
 
-```{r ch4, child="readme_parts/readme5.rmd", cache=TRUE}
+```{r ch5, child="readme_parts/readme5.rmd", cache=FALSE}
 ```
 
 
