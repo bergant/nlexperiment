@@ -24,7 +24,7 @@ library(ggplot2)
 
 
 ## Mapping parameters
-NetLogo identifiers may include some ASCII characters (?=*!<>:#+/%$^'&-)
+NetLogo identifiers may include some ASCII characters `(?=*!<>:#+/%$^'&-)`
 that makes the R part of data manipulation rather uncomfortable. 
 The following example is using Ant model (Wilensky 1997) to show 
 **how to use nice names in R and map them to NetLogo variables**.

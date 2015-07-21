@@ -304,7 +304,7 @@ ggplot(dat, mapping = aes(x = factor(density), y=percent_burned,
 
 
 ## Mapping parameters
-NetLogo identifiers may include some ASCII characters (?=*!<>:#+/%$^'&-)
+NetLogo identifiers may include some ASCII characters `(?=*!<>:#+/%$^'&-)`
 that makes the R part of data manipulation rather uncomfortable. 
 The following example is using Ant model (Wilensky 1997) to show 
 **how to use nice names in R and map them to NetLogo variables**.
@@ -381,3 +381,4 @@ http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html
 * The parallel implementation of `nl_run` function is based on the RNetLogo vignette
 https://cran.r-project.org/web/packages/RNetLogo/vignettes/parallelProcessing.pdf
 
+* Rickert, J. (2014) Agent Based Models and RNetLogo http://blog.revolutionanalytics.com/2014/07/agent-based-models-and-rnetlogo.html

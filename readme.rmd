@@ -77,3 +77,4 @@ http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html
 * The parallel implementation of `nl_run` function is based on the RNetLogo vignette
 https://cran.r-project.org/web/packages/RNetLogo/vignettes/parallelProcessing.pdf
 
+* Rickert, J. (2014) Agent Based Models and RNetLogo http://blog.revolutionanalytics.com/2014/07/agent-based-models-and-rnetlogo.html
