@@ -10,10 +10,11 @@ Define and run NetLogo (Wilensky 1999) model experiments.
 }
 \details{
 \link{RNetLogo} package (Thiele 2014) opens countless possibilities
-by connecting NetLogo to R.
+by connecting R with NetLogo.
 But it does require some programming to define and run
 model experiments.
-The purpose of \bold{nlexperiment} is to make it simple as possible
+The purpose of \bold{nlexperiment} is to make exploring NetLogo models
+as simple as possible
 while keeping complex functionalities as options.
 User can start with
 experiment (analogous to NetLogo Behavior Space),

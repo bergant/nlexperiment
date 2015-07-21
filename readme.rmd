@@ -20,7 +20,7 @@ Define and run controlled NetLogo experiments
 ## Installation
 ```{r eval=FALSE}
 library(devtools)
-install_github("bergant/finstr")
+install_github("bergant/nlexperiment")
 ```
 
 
@@ -33,5 +33,12 @@ install_github("bergant/finstr")
 ```{r ch3, child="readme_parts/readme3.rmd", cache=TRUE}
 ```
 
+
+```{r ch4, child="readme_parts/readme4.rmd", cache=TRUE}
+```
+
+
+```{r ch4, child="readme_parts/readme5.rmd", cache=TRUE}
+```
 
 

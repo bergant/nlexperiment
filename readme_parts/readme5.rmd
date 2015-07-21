@@ -1,0 +1,81 @@
+---
+output: 
+  html_document: 
+    keep_md: yes
+    self_contained: no
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "img/README-"
+)
+```
+
+
+```{r, echo = FALSE}
+library(nlexperiment)
+# Set the path to your NetLogo instalation
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
+fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/Fire.nlogo")
+library(ggplot2)
+```
+
+
+## Mapping parameters
+NetLogo identifiers may include any of the following ASCII characters:
+
+`.?=*!<>:#+/%$_^'&-`
+
+which are awkward to use in R data manipulation. 
+To map R variables to NetLogo parameters use `mapping` option:
+
+
+```{r p5experiment}
+experiment <- nl_experiment(
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Biology/Ants.nlogo"), 
+  while_condition = "ticks < 150",
+  step_measures = measures(
+    pile1 = "sum [food] of patches with [pcolor = cyan]",  
+    pile2 = "sum [food] of patches with [pcolor = sky]",  
+    pile3 = "sum [food] of patches with [pcolor = blue]"  
+  ),
+  param_values = list(
+    population = 125,
+    diffusion_rate = c(50, 60),
+    evaporation_rate = c(5, 10, 15)
+  ),
+  random_seed = 1,
+  mapping = c(
+    diffusion_rate = "diffusion-rate",
+    evaporation_rate = "evaporation-rate"
+    ),
+  export_view = TRUE
+)
+
+experiment$param_space
+```
+
+Run experiment
+```{r p5RunModel, fig.width=2.5, fig.height=2.6}
+results <- nl_run(experiment)
+```
+
+Show views
+```{r p5ShowViews, fig.width=2.5, fig.height=2.6}
+results <- nl_run(experiment)
+nl_show_view(results)
+```
+
+Show remaining food by parameter space and food pathces
+```{r p5plot}
+library(tidyr)
+dat <- nl_get_step_result(results)
+dat <- tidyr::gather(dat, pile, value, pile1, pile2, pile3)
+ggplot(dat, aes(x = tick, y = value, color = pile) ) +
+  geom_line() +
+  facet_grid(diffusion_rate ~ evaporation_rate, margins = c(2,3))
+```
+

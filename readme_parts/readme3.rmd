@@ -24,7 +24,8 @@ fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/F
 
 ## Observations per each simulation run
 Create NetLogo experiment object with defined *run* measure (percent burned)
-and parameter values - parameter density goes from 55 to 62.
+and parameter values - parameter density goes from `55` to `62` and repeat
+simulation `30` times for every parameter:
 ```{r ModelRunMeasures2}
 experiment <- nl_experiment(
   model_file = fire_model, 
@@ -40,7 +41,9 @@ experiment <- nl_experiment(
 )
 ```
 
-Run the experiment:
+Running the experiment with `parallel` option will run
+simulations with several working processes on multi-core processors.
+It can save some time with large parameter space and/or simulation repetitions:
 ```{r RunModelWithRunMeasures}
 result <- nl_run(experiment, parallel = TRUE)
 # Join observations with parameter space values:

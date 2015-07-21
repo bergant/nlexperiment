@@ -5,10 +5,11 @@
 #' @details
 #'
 #' \link{RNetLogo} package (Thiele 2014) opens countless possibilities
-#' by connecting NetLogo to R.
+#' by connecting R with NetLogo.
 #' But it does require some programming to define and run
 #' model experiments.
-#' The purpose of \bold{nlexperiment} is to make it simple as possible
+#' The purpose of \bold{nlexperiment} is to make exploring NetLogo models
+#' as simple as possible
 #' while keeping complex functionalities as options.
 #' User can start with
 #' experiment (analogous to NetLogo Behavior Space),
@@ -216,7 +217,6 @@ nl_experiment <- function(model_file,
     export_world = export_world
   )
   class(experiment) <- c(nl_experiment_class, class(experiment))
-
 
   # set default run options (1000 iterations)
   experiment <- nl_set_run_options(experiment,
