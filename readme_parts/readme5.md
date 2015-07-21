@@ -8,11 +8,10 @@
 ## Mapping parameters
 NetLogo identifiers may include any of the following ASCII characters:
 
-> `.?=*!<>:#+/%$_^'&-`
+`.?=*!<>:#+/%$_^'&-`
 
-which may be awkward to use in R data manipulation. 
+which makes variable names that are awkward to use in R data manipulation. 
 To map R variables to NetLogo parameters use `mapping` option:
-
 
 
 ```r
@@ -30,11 +29,11 @@ experiment <- nl_experiment(
     diffusion_rate = c(50, 60),
     evaporation_rate = c(5, 10, 15)
   ),
-  random_seed = 1,
   mapping = c(
     diffusion_rate = "diffusion-rate",
     evaporation_rate = "evaporation-rate"
     ),
+  random_seed = 1,
   export_view = TRUE
 )
 
