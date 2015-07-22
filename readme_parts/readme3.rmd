@@ -45,9 +45,8 @@ experiment <- nl_experiment(
 )
 ```
 
-Running the experiment with `parallel` option will use 
-several working processes on multi-core processors.
-It can save some time with large parameter space and/or simulation repetitions:
+Run the experiment with `parallel` option:
+
 ```{r RunModelWithRunMeasures, cache=TRUE}
 result <- nl_run(experiment, parallel = TRUE)
 ```

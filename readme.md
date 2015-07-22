@@ -5,17 +5,13 @@
 Define and run NetLogo experiments in R
 
 ## About
-[NetLogo](http://ccl.northwestern.edu/netlogo/) (Wilensky 1999) 
-is a multi-agent programmable modeling environment.
-[RNetLogo](https://cran.r-project.org/web/packages/RNetLogo/)
-package (Thiele 2014) opened countless possibilities
-by connecting R with NetLogo.
-But it does require some programming in R to define and run
-experiments.
-The purpose of **nlexperiment** is to make
-exploring NetLogo models as simple as possible (like NetLogo 
+The goal of **nlexperiment** is to make
+exploring agent based models in [NetLogo](http://ccl.northwestern.edu/netlogo/) (Wilensky 1999) as simple as possible (like NetLogo 
 [Behavior Space](http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html) tool)
-while keeping more complex functionalities as available options.
+while keeping complex functionalities available for
+advanced users.
+It uses [RNetLogo](https://cran.r-project.org/web/packages/RNetLogo/)
+package (Thiele 2014) as an interface to NetLogo.
 
 ## Installation
 
@@ -156,9 +152,8 @@ experiment <- nl_experiment(
 )
 ```
 
-Running the experiment with `parallel` option will use 
-several working processes on multi-core processors.
-It can save some time with large parameter space and/or simulation repetitions:
+Run the experiment with `parallel` option:
+
 
 ```r
 result <- nl_run(experiment, parallel = TRUE)
