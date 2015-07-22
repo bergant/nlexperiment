@@ -41,7 +41,7 @@ library(ggplot2)
 ```
 
 
-```{r ch1, child="readme_parts/readme1.rmd", cache=TRUE}
+```{r ch1, child="readme_parts/readme1.rmd", cache=FALSE}
 ```
 
 ```{r ch2, child="readme_parts/readme2.rmd", cache=FALSE}

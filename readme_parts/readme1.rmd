@@ -30,7 +30,7 @@ experiment <- nl_experiment(
                          "models/Sample Models/Earth Science/Fire.nlogo"), 
   while_condition = "any? turtles",
   param_values = list(density = c(57, 59, 61)),
-  random_seed = 3,
+  random_seed = 1,
   export_view = TRUE
 )
 ```
