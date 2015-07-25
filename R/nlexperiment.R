@@ -4,13 +4,13 @@
 #'
 #' @details
 #'
-#' \link{RNetLogo} package (Thiele 2014) opens countless possibilities
+#' \pkg{RNetLogo} package (Thiele 2014) opens countless possibilities
 #' by connecting R with NetLogo.
-#' But it does require some programming to define and run
+#' But it does require some R programming to define and run
 #' model experiments.
 #' The purpose of \bold{nlexperiment} is to make exploring NetLogo models
 #' as simple as possible
-#' while keeping complex functionalities as options.
+#' while keeping complex functionalities available to advanced R users.
 #' User can start with
 #' experiment (analogous to NetLogo Behavior Space),
 #' run the experiment, explore the results
@@ -38,7 +38,7 @@
 #' }
 #'
 #' @docType package
-#' @name nlexperiment
+#' @name nlexperiment-package
 #' @aliases nlexperiment
 #' @aliases nlexperiment-package
 #' @references
@@ -59,13 +59,10 @@
 #' # Set the path to your NetLogo installation
 #' nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/")
 #'
-#' # Fire model is included in NetLogo sample models:
-#' fire_model <- file.path(nl_netlogo_path(),
-#'   "models/Sample Models/Earth Science/Fire.nlogo")
-#'
-#' # Create NetLogo experiment object
+#' # Create NetLogo experiment of Net Logo Fire model
 #' experiment <- nl_experiment(
-#'   model_file = fire_model,
+#'   model_file = file.path(nl_netlogo_path(),
+#'       "models/Sample Models/Earth Science/Fire.nlogo")
 #'   while_condition = "any? turtles",
 #'   repetitions = 10,
 #'   run_measures = measures(
@@ -77,13 +74,14 @@
 #'   )
 #' )
 #'
-#' # Run the experiment
-#' result <- nl_run(experiment)
+#' # Run the experiment using multi-core processing
+#' result <- nl_run(experiment, parallel = TRUE)
 #'
+#' # Get observations data frame
 #' dat <- nl_get_run_result(result)
 #'
-#' library(ggplot2)
 #' # plot percent burned by density
+#' library(ggplot2)
 #' ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) +
 #'   geom_violin() +
 #'   geom_jitter(position = position_jitter(width = 0.2), alpha = 0.3)
@@ -174,6 +172,9 @@ nl_export_path <- function(export_path = NULL) {
 #'   a png image files for each run (when running the experiment)
 #' @param export_world If set to TRUE, the world will be exported to
 #'   a csv file for each run
+#' @param data_handler Function to handle observations. If handler is defined
+#'   the observations will not be stored in result elements when running
+#'   the experiment with `nl_run` function.
 #' @examples
 #' experiment <- nl_experiment(
 #'   model_file = "my_model.nlogo",
@@ -203,8 +204,11 @@ nl_experiment <- function(model_file,
                           run_measures = NULL,
                           mapping = NULL,
                           param_values = NULL,
+                          agents_before = NULL,
+                          agents_after = NULL,
                           export_view = FALSE,
-                          export_world = FALSE
+                          export_world = FALSE,
+                          data_handler = NULL
                           ) {
   if(missing(while_condition) && !missing(max_ticks)) {
     while_condition <- sprintf("ticks < %s", max_ticks)
@@ -221,11 +225,17 @@ nl_experiment <- function(model_file,
   # set default run options (1000 iterations)
   experiment <- nl_set_run_options(experiment,
                                    repetitions = repetitions,
-                                   random_seed = random_seed)
+                                   random_seed = random_seed,
+                                   data_handler = data_handler)
   # set default measures (no measures)
   experiment <- nl_set_measures(experiment,
                                 step = step_measures,
                                 run = run_measures)
+  # set agent reports
+  experiment <- nl_set_agent_reports(experiment,
+                                     agents_before = agents_before,
+                                     agents_after = agents_after)
+
   # set default param space (empty data.frame)
   experiment <- nl_set_param_space(experiment, param_values = param_values)
 
@@ -254,6 +264,29 @@ measures <- function(...) {
   unlist(list(...))
 }
 
+#' Create an agent set reporter
+#'
+#' Create an agent set reporter to set agent reporters in `nl_experiment` or
+#'   `nl_set_agent_reports`
+#'
+#' @param vars A string or vector/list of strings with the variable names of the agent(s).
+#' @param agentset A string specifying the agent or agentset to be queried.
+#' @examples
+#' experiment <- nl_experiment(
+#'   model_file = file.path(nl_netlogo_path(),
+#'      "models/Sample models/Networks/Preferential attachment.nlogo"),
+#'   max_ticks = 10,
+#'   export_view = TRUE,
+#'   agents_after = list(
+#'     vertices = agent_set(c("who", "xcor", "ycor"), "turtles")
+#'   )
+#' )
+#' @export
+#' @keywords internal
+agent_set <- function(vars, agents) {
+  list(vars = vars, agents = agents)
+}
+
 #' Set run options of a NetLogo experiment object
 #'
 #' You can set basic run options when creating experiment object
@@ -265,8 +298,12 @@ measures <- function(...) {
 #' @param repetitions Number of repetitions (when random seed is not defined)
 #' @param max_minutes If max.minutes > 0 the execution stops after the
 #'     defined number of minutes (with an error and no return value)
+#'     Default value is 10.
 #' @param setup_commands NetLogo command strings to execute to setup the model
 #' @param go_command NetLogo command string to execute the step in the model
+#' @param data_handler Function to handle observations. If handler is defined
+#'   the observations will not be stored in result elements when running
+#'   the experiment with `nl_run` function.
 #' @return NetLogo experiment object
 #' @examples
 #'
@@ -288,7 +325,8 @@ nl_set_run_options <- function(
   repetitions = 1,
   max_minutes = 10,
   setup_commands = "setup",
-  go_command = "go"
+  go_command = "go",
+  data_handler = NULL
 ) {
 
   if(!inherits(experiment, nl_experiment_class))
@@ -300,7 +338,8 @@ nl_set_run_options <- function(
     repetitions = repetitions,
     max_minutes = max_minutes,
     setup_commands = setup_commands,
-    go_command = go_command
+    go_command = go_command,
+    data_handler = data_handler
   )
   experiment
 }
@@ -343,6 +382,31 @@ nl_set_measures <- function(experiment,
   experiment
 }
 
+#' Set or change agent reports
+#'
+#' Set reporting of variable value(s) of one or more agent(s) as a data.frame
+#'
+#' @param experiment NetLogo experiment object
+#' @param agents_before A list of agent reports to be accessed before each run
+#' @param agents_after A list of agent reports to be accessed after each run
+#' @seealso To create an experiment object use \code{\link{nl_experiment}}
+#' @return NetLogo experiment object
+#' @export
+nl_set_agent_reports <- function(experiment,
+                                 agents_before = NULL,
+                                 agents_after = NULL) {
+  if(!inherits(experiment, nl_experiment_class))
+    stop("Not a NetLogo experiment object")
+
+  if(!missing(agents_before)) {
+    experiment$agents_before <- agents_before
+  }
+  if(!missing(agents_after)) {
+    experiment$agents_after <- agents_after
+  }
+  experiment
+}
+
 
 #' Define parameter space for NetLogo experiment
 #'
@@ -379,8 +443,8 @@ print.nl_experiment <- function(x, ...) {
     stop("Not a NetLogo experiment object")
 
   with(x, {
-    cat("NetLogo experiment object - ", basename(model_file), "\n")
-    cat("Model: ", model_file, "\n")
+    cat("NetLogo experiment object\n")
+    cat("Model:\n ", basename(model_file), "\n  in", dirname(model_file), "\n")
     cat("Run condition: ", while_condition, "\n")
     cat("Run options:\n")
     if(!is.null(run_options$random_seed)) {
@@ -412,3 +476,16 @@ print.nl_experiment <- function(x, ...) {
   })
 }
 
+
+#' Roadmap
+#'
+#' @details
+#' \itemize{
+#' \item Get agents' data
+#' \item condition changes as a function of parameters?
+#' \item Data handler sample -
+#' \item Parameter space - examples (sampling, calibrating, ...)
+#' }
+#' @name nlexperiment.roadmap
+#' @keywords internal
+NULL

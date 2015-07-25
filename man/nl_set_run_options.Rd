@@ -5,7 +5,8 @@
 \title{Set run options of a NetLogo experiment object}
 \usage{
 nl_set_run_options(experiment, random_seed = NULL, repetitions = 1,
-  max_minutes = 10, setup_commands = "setup", go_command = "go")
+  max_minutes = 10, setup_commands = "setup", go_command = "go",
+  data_handler = NULL)
 }
 \arguments{
 \item{experiment}{NetLogo experiment object from nl_experiment() function}
@@ -15,11 +16,16 @@ nl_set_run_options(experiment, random_seed = NULL, repetitions = 1,
 \item{repetitions}{Number of repetitions (when random seed is not defined)}
 
 \item{max_minutes}{If max.minutes > 0 the execution stops after the
-defined number of minutes (with an error and no return value)}
+defined number of minutes (with an error and no return value)
+Default value is 10.}
 
 \item{setup_commands}{NetLogo command strings to execute to setup the model}
 
 \item{go_command}{NetLogo command string to execute the step in the model}
+
+\item{data_handler}{Function to handle observations. If handler is defined
+the observations will not be stored in result elements when running
+the experiment with `nl_run` function.}
 }
 \value{
 NetLogo experiment object

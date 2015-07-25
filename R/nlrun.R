@@ -1,3 +1,27 @@
+#' Run steps (internal doc)
+#'
+#' \itemize{
+#' \item nl_run | nl_run_parallel
+#'   \itemize{
+#'     \item nl_run_init
+#'     \item nl_single_run
+#'     \itemize{
+#'       \item nl_single_run_setup setting parameters, setup commands
+#'       \item execute NLDoReportWhile | NLDoCommandWhile
+#'       \item get run measures
+#'       \item nl_single_agent_report
+#'       \item nl_single_export
+#'       \item calling external data handler
+#'     }
+#'     \item nl_run_wrap_results
+#'     \item nl_run_end
+#'   }
+#' }
+#'
+#' @name run.steps
+#' @keywords internal
+NULL
+
 #' Run NetLogo experiment
 #'
 #' @param experiment NetLogo experiment object
@@ -25,11 +49,14 @@
 #' @seealso See \code{\link{nl_experiment}} for creating NetLogo experiment object.
 #' @export
 nl_run <- function(experiment, print_progress = FALSE, gui = FALSE, parallel = FALSE) {
-  if(parallel) {
-    return(nl_run_parallel(experiment, print_progress, gui))
-  }
   if(is.null(nl_path <- nl_netlogo_path())) {
     stop("NetLogo path is empty. Use nl_netlogo_path.")
+  }
+  if(!file.exists(experiment$model_file)) {
+    stop("File does not exist ", experiment$model_file)
+  }
+  if(parallel) {
+    return(nl_run_parallel(experiment, nl_path, print_progress, gui))
   }
   on.exit(nl_run_end())
   nl_run_init(gui = gui, nl_path = nl_path, model_path = experiment$model_file)
@@ -53,14 +80,12 @@ nl_run <- function(experiment, print_progress = FALSE, gui = FALSE, parallel = F
 }
 
 
-nl_run_parallel <- function(experiment, print_progress = FALSE, gui = FALSE) {
+
+nl_run_parallel <- function(experiment, nl_path, print_progress = FALSE, gui = FALSE) {
 
   if( !requireNamespace("parallel", quietly = TRUE)) {
     stop("parallel package needed for this function to work. Please install it.",
          call. = FALSE)
-  }
-  if(is.null(nl_path <- nl_netlogo_path())) {
-    stop("NetLogo path is empty. Use nl_netlogo_path.")
   }
 
   processors <- parallel::detectCores()
@@ -114,17 +139,43 @@ nl_run_schedule <- function(experiment) {
 
 nl_run_wrap_results <- function(experiment, ret, start_time) {
   # concatenate results to dataframes
-  step_df <- do.call(rbind, lapply(ret, function(x) x$step))
-  run_df <- do.call(rbind, lapply(ret, function(x) x$run))
-  export_df <- do.call(rbind, lapply(ret, function(x) x$export))
-  ret <- list(step = step_df, run = run_df, export = export_df)
+  if(is.null(experiment$run_options$data_handler)) {
+    step_df <- do.call(rbind, lapply(ret, function(x) x$step))
+    run_df <- do.call(rbind, lapply(ret, function(x) x$run))
+    export_df <- do.call(rbind, lapply(ret, function(x) x$export))
+    ret1 <- list(step = step_df, run = run_df, export = export_df)
+
+    if(!is.null(ret[[1]]$agents_before)) {
+      ret1$agents_before <-
+        setNames(
+          lapply(seq_along(ret[[1]]$agents_before), function(i) {
+            do.call(rbind, lapply(ret, function(x) {x$agents_before[[i]]}))
+          }),
+          names(ret[[1]]$agents_before)
+        )
+    }
+    if(!is.null(ret[[1]]$agents_after)) {
+      ret1$agents_after <-
+        setNames(
+          lapply(seq_along(ret[[1]]$agents_after), function(i) {
+            do.call(rbind, lapply(ret, function(x) {x$agents_after[[i]]}))
+          }),
+          names(ret[[1]]$agents_after)
+        )
+    }
+  }
+  else
+  {
+    ret1 <- list()
+  }
 
   # report duration
-  ret$duration <- Sys.time() - start_time
-  ret$experiment <- experiment
-  class(ret) <- c(nl_result_class, class(ret))
-  ret
+  ret1$duration <- Sys.time() - start_time
+  ret1$experiment <- experiment
+  class(ret1) <- c(nl_result_class, class(ret1))
+  ret1
 }
+
 
 nl_run_init <- function(dummy = NULL, gui, nl_path, model_path) {
   #Start NetLogo and load model
@@ -145,33 +196,16 @@ nl_single_run <- function(experiment, parameter_space_id = NULL, run_id = NULL,
   }
   start_time <- Sys.time()
 
-  # set random seed
-  if(!is.null(experiment$run_options$random_seed)) {
-    RNetLogo::NLCommand(sprintf("random-seed %d", experiment$run_options$random_seed))
-  }
-  # set parameters from parameter space
-  if(!missing(parameter_space_id) && !is.null(experiment$param_space)) {
-    # set world size if specified
-    if(!is.null(experiment$param_space[["world_size"]])) {
-      world_size <- experiment$param_space[parameter_space_id, "world_size"]
-      half_size <-  world_size %/% 2
-      RNetLogo::NLCommand(sprintf("resize-world %d %d %d %d",
-                                  -half_size, half_size, -half_size, half_size))
-    }
-    param_names <- setdiff(names(experiment$param_space), nl_special_params)
-    for(parameter in param_names) {
-      nl_param <- experiment$mapping[parameter]
-      if(is.null(nl_param) || is.na(nl_param)) {
-        nl_param <- parameter
-      }
-      param_value <- experiment$param_space[parameter_space_id, parameter]
-      RNetLogo::NLCommand(sprintf("set %s %s", nl_param, param_value))
-    }
-  }
+  # set up parameters and setup NetLogo commands
+  nl_single_run_setup(experiment, parameter_space_id, run_id, print_progress)
 
-  # execute setup command(s)
-  for(command in experiment$run_options$setup_commands) {
-    RNetLogo::NLCommand(command)
+  #agents before
+  agents_before <- NULL
+  if(!is.null(experiment$agents_before)) {
+    agents_before <-
+      nl_single_agent_report(experiment$agents_before,
+                             parameter_space_id,
+                             run_id)
   }
 
   # run
@@ -213,13 +247,78 @@ nl_single_run <- function(experiment, parameter_space_id = NULL, run_id = NULL,
   } else {
     report_run <- NULL
   }
+  ret <- list(step = report_step, run = report_run)
+
+  #agents
+
+  if(!is.null(experiment$agents_after)) {
+    ret$agents_after <-
+      nl_single_agent_report(experiment$agents_after,
+                             parameter_space_id,
+                             run_id)
+  }
+  if(!is.null(agents_before)) {
+    ret$agents_before <- agents_before
+  }
+
   # exports
   if(any(experiment$export_view, experiment$export_world)){
-    export <- nl_single_export(experiment, parameter_space_id, run_id)
-  } else {
-    export <- NULL
+    ret$export <- nl_single_export(experiment, parameter_space_id, run_id)
   }
-  return(list(step = report_step, run = report_run, export = export))
+
+  # if external data handler is defined
+  if(!is.null(experiment$run_options$data_handler)) {
+    experiment$run_options$data_handler(ret)
+    ret <- NULL
+  }
+
+  return(ret)
+}
+
+#' Set up parameters and setup commands before run
+#'
+#' Internal function - called from nl_single_run
+#'
+#' @param experiment see nl_single_run
+#' @param parameter_space_id see nl_single_run
+#' @param run_id see nl_single_run
+#' @keywords internal
+nl_single_run_setup <- function(experiment, parameter_space_id = NULL, run_id = NULL,
+                                print_progress = FALSE) {
+
+  # set random seed
+  if(!is.null(experiment$run_options$random_seed)) {
+    rseed <- experiment$run_options$random_seed
+    if(length(experiment$run_options$random_seed) > 0) {
+      rseed <- rseed[min(run_id,length(rseed))]
+    }
+    RNetLogo::NLCommand(sprintf("random-seed %d", rseed))
+  }
+  # set parameters from parameter space
+  if(!missing(parameter_space_id) && !is.null(experiment$param_space)) {
+    # set world size if specified
+    if(!is.null(experiment$param_space[["world_size"]])) {
+      world_size <- experiment$param_space[parameter_space_id, "world_size"]
+      half_size <-  world_size %/% 2
+      RNetLogo::NLCommand(sprintf("resize-world %d %d %d %d",
+                                  -half_size, half_size, -half_size, half_size))
+    }
+    # set other parameters
+    param_names <- setdiff(names(experiment$param_space), nl_special_params)
+    for(parameter in param_names) {
+      nl_param <- experiment$mapping[parameter]
+      if(is.null(nl_param) || is.na(nl_param)) {
+        nl_param <- parameter
+      }
+      param_value <- experiment$param_space[parameter_space_id, parameter]
+      RNetLogo::NLCommand(sprintf("set %s %s", nl_param, param_value))
+    }
+  }
+
+  # execute setup command(s)
+  for(command in experiment$run_options$setup_commands) {
+    RNetLogo::NLCommand(command)
+  }
 }
 
 #' Export view and/or world for individual run
@@ -242,7 +341,10 @@ nl_single_export <- function(experiment, param_space_id = NA, run_id = 1) {
                     view = NA,
                     world = NA)
   if(experiment$export_view) {
-    filename <- sprintf("view_%d_%d.png",
+    fhash <- digest::digest(experiment, algo = "murmur32")
+
+    filename <- sprintf("view_%s_%d_%d.png",
+                        fhash,
                         ifelse(is.null(param_space_id), 1, param_space_id),
                         ifelse(is.null(run_id), 1, run_id))
     view_filename <- file.path(file_path, filename)
@@ -259,4 +361,17 @@ nl_single_export <- function(experiment, param_space_id = NA, run_id = 1) {
     ret$world <- world_filename
   }
   ret
+}
+
+nl_single_agent_report <- function(agent_report,
+                                   parameter_space_id = NA,
+                                   run_id = 1) {
+
+  lapply(agent_report, function(x) {
+    df1 <- RNetLogo::NLGetAgentSet(x$vars, x$agents)
+    if(!is.null(names(x$vars))) names(df1) <- names(x$vars)
+    df1$run_id <- run_id
+    df1$param_space_id <- parameter_space_id
+    df1
+  })
 }

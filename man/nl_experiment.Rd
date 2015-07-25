@@ -7,7 +7,8 @@
 nl_experiment(model_file, max_ticks = NULL, while_condition = NULL,
   repetitions = 1, random_seed = NULL, step_measures = NULL,
   run_measures = NULL, mapping = NULL, param_values = NULL,
-  export_view = FALSE, export_world = FALSE)
+  agents_before = NULL, agents_after = NULL, export_view = FALSE,
+  export_world = FALSE, data_handler = NULL)
 }
 \arguments{
 \item{model_file}{An absolute path to your NetLogo model file (.nlogo)}
@@ -48,6 +49,10 @@ a png image files for each run (when running the experiment)}
 
 \item{export_world}{If set to TRUE, the world will be exported to
 a csv file for each run}
+
+\item{data_handler}{Function to handle observations. If handler is defined
+the observations will not be stored in result elements when running
+the experiment with `nl_run` function.}
 }
 \value{
 NetLogo experiment object

@@ -30,30 +30,30 @@ experiment <- nl_experiment(
 )
 ```
 
-Running the experiment with `parallel` option will use 
-several working processes on multi-core processors.
-It can save some time with large parameter space and/or simulation repetitions:
+Run the experiment with `parallel` option:
+
 
 ```r
 result <- nl_run(experiment, parallel = TRUE)
+# Join observations with parameter space values:
+dat <- nl_get_run_result(result, add_parameters = TRUE)
 ```
 
 Plot the results - percent burned as a function of density:
 
 ```r
-# Join observations with parameter space values:
-dat <- nl_get_run_result(result, add_parameters = TRUE)
 # plot percent burned by density
 library(ggplot2)
 ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) + 
   geom_violin() +
-  geom_jitter(position = position_jitter(width = .1), alpha = 0.3) +
+  #geom_jitter(position = position_jitter(width = .1), alpha = 0.3) +
   labs(x = "Forest density", y = "Percent burned")
 ```
 
-![](img/README-plot_run_density-1.png) 
+![](img/README-p3plot1-1.png) 
 
-Fire progress from left to right as a function of density:
+Fire advances from left to right. It is interesting to observe
+final fire position (left border = 0 and right = 1) as a function of density.
 
 ```r
 ggplot(dat, mapping = aes(x = factor(density), y = progress/250 + 0.5) ) + 
@@ -62,5 +62,5 @@ ggplot(dat, mapping = aes(x = factor(density), y = progress/250 + 0.5) ) +
   labs(x = "Forest density", y = "Fire progress")
 ```
 
-![](img/README-plot_run_rightmost-1.png) 
+![](img/README-p3plot2-1.png) 
 

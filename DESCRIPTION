@@ -10,7 +10,8 @@ Description: Define and run controlled NetLogo experiments
 Depends: R (>= 3.1)
 License: GPL-2
 Imports:
-    RNetLogo
+    RNetLogo,
+    digest
 Suggests:
     knitr,
     dplyr,

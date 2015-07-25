@@ -22,7 +22,7 @@ values (forest density) and exports final NetLogo views to image files:
 ```{r SimpleModel}
 library(nlexperiment)
 # Set the path to your NetLogo instalation
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
 
 # Create NetLogo experiment object
 experiment <- nl_experiment(
@@ -36,12 +36,14 @@ experiment <- nl_experiment(
 ```
 
 Run the experiment:
-```{r SimpleModelRun}
+```{r SimpleModelRun, cache=TRUE}
 result <- nl_run(experiment)
 ```
 
-Find paths to the exported view image files in `result$export` or just display them by calling `nl_show_view` function:
-```{r model_view, fig.width=2.2, fig.height=2.2}
-nl_show_view(result)
+Find paths to the exported view image files in `result$export` or just display them by calling `nl_show_views_grid` function:
+
+```{r model_view, fig.height=3}
+library(ggplot2)
+nl_show_views_grid(result, "density")
 ```
 

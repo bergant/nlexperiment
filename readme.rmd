@@ -14,9 +14,9 @@ knitr::opts_chunk$set(
 ```
 
 ![nlexperiment](img/logo.png)
-Define and run NetLogo experiments in R
 
-## About
+####Define and run NetLogo experiments in R##
+
 The goal of **nlexperiment** is to make
 exploring agent based models in [NetLogo](http://ccl.northwestern.edu/netlogo/) (Wilensky 1999) as simple as possible (like NetLogo 
 [Behavior Space](http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html) tool)
@@ -27,15 +27,14 @@ package (Thiele 2014) as an interface to NetLogo.
 
 ## Installation
 
-```{r eval=FALSE}
-library(devtools)
-install_github("bergant/nlexperiment")
-```
+`library(devtools)`   
+`install_github("bergant/nlexperiment")`
+
 
 ```{r, echo = FALSE}
 library(nlexperiment)
 # Set the path to your NetLogo instalation
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
 fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/Fire.nlogo")
 library(ggplot2)
 ```
@@ -44,16 +43,19 @@ library(ggplot2)
 ```{r ch1, child="readme_parts/readme1.rmd", cache=FALSE}
 ```
 
-```{r ch2, child="readme_parts/readme2.rmd", cache=FALSE}
+```{r ch2, child="readme_parts/readme2.rmd", cache=FALSE, eval=TRUE}
 ```
 
-```{r ch3, child="readme_parts/readme3.rmd", cache=FALSE}
+```{r ch3, child="readme_parts/readme3.rmd", cache=FALSE, eval=TRUE}
 ```
 
-```{r ch4, child="readme_parts/readme4.rmd", cache=FALSE}
+```{r ch4, child="readme_parts/readme4.rmd", cache=FALSE, eval=TRUE}
 ```
 
-```{r ch5, child="readme_parts/readme5.rmd", cache=FALSE}
+```{r ch5, child="readme_parts/readme5.rmd", cache=FALSE, eval=TRUE}
+```
+
+```{r ch5, child="readme_parts/readme6.rmd", cache=FALSE, eval=TRUE}
 ```
 
 ## References
@@ -65,6 +67,8 @@ library(ggplot2)
 * Wilensky, U. (1997). NetLogo Fire model. http://ccl.northwestern.edu/netlogo/models/Fire. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 * Wilensky, U. (1997). NetLogo Ants model. http://ccl.northwestern.edu/netlogo/models/Ants. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
+* Wilensky, U. (2005). NetLogo Preferential Attachment model. http://ccl.northwestern.edu/netlogo/models/PreferentialAttachment. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 * The ideas and principles of NetLogo experiment definition is taken from
 the NetLogo's Behavior Space tool

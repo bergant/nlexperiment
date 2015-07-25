@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```{r, echo = FALSE}
 library(nlexperiment)
 # Set the path to your NetLogo instalation
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
 fire_model <- file.path(nl_netlogo_path(), "models/Sample Models/Earth Science/Fire.nlogo")
 library(ggplot2)
 ```
@@ -41,18 +41,25 @@ experiment <- nl_experiment(
   ),
   param_values = list(
     population = 125,
-    diffusion_rate = c(50, 60),
+    diffusion_rate = c(50, 70),
     evaporation_rate = c(5, 10, 15)
   ),
   mapping = c(
     diffusion_rate = "diffusion-rate",
     evaporation_rate = "evaporation-rate"
     ),
-  random_seed = 1,
+  random_seed = 2,
   export_view = TRUE
 )
 
 ```
+
+_Note:_
+
+* _Element `mapping` maps `difussion_rate` and `evaporation_rate` names to NetLogo variables `diffusion-rate` and `evaporation-rate`._
+* _It is not required to include all parameters in mapping. Variable `population` 
+is used as is._
+
 
 Run experiment
 ```{r p5RunModel, cache=TRUE}
@@ -60,12 +67,12 @@ results <- nl_run(experiment)
 ```
 
 Show views
-```{r p5ShowViews, fig.width=2.2, fig.height=2.25, cache=TRUE}
-nl_show_view(results)
+```{r p5ShowViews, cache=FALSE}
+nl_show_views_grid(results, "evaporation_rate", "diffusion_rate")
 ```
 
 Show remaining food by parameter space and food piles
-```{r p5plot, cache=TRUE}
+```{r p5plot, cache=FALSE}
 library(tidyr)
 dat <- nl_get_step_result(results)
 dat <- tidyr::gather(dat, pile, value, pile1, pile2, pile3)

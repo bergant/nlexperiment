@@ -6,7 +6,7 @@
 
 
 ## Mapping parameters
-NetLogo identifiers may include some ASCII characters (?=*!<>:#+/%$^'&-)
+NetLogo identifiers may include some ASCII characters `(?=*!<>:#+/%$^'&-)`
 that makes the R part of data manipulation rather uncomfortable. 
 The following example is using Ant model (Wilensky 1997) to show 
 **how to use nice names in R and map them to NetLogo variables**.
@@ -24,17 +24,24 @@ experiment <- nl_experiment(
   ),
   param_values = list(
     population = 125,
-    diffusion_rate = c(50, 60),
+    diffusion_rate = c(50, 70),
     evaporation_rate = c(5, 10, 15)
   ),
   mapping = c(
     diffusion_rate = "diffusion-rate",
     evaporation_rate = "evaporation-rate"
     ),
-  random_seed = 1,
+  random_seed = 2,
   export_view = TRUE
 )
 ```
+
+_Note:_
+
+* _Element `mapping` maps `difussion_rate` and `evaporation_rate` names to NetLogo variables `diffusion-rate` and `evaporation-rate`._
+* _It is not required to include all parameters in mapping. Variable `population` 
+is used as is._
+
 
 Run experiment
 
@@ -45,10 +52,10 @@ results <- nl_run(experiment)
 Show views
 
 ```r
-nl_show_view(results)
+nl_show_views_grid(results, "evaporation_rate", "diffusion_rate")
 ```
 
-![](img/README-p5ShowViews-1.png) ![](img/README-p5ShowViews-2.png) ![](img/README-p5ShowViews-3.png) ![](img/README-p5ShowViews-4.png) ![](img/README-p5ShowViews-5.png) ![](img/README-p5ShowViews-6.png) 
+![](img/README-p5ShowViews-1.png) 
 
 Show remaining food by parameter space and food piles
 

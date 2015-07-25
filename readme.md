@@ -2,9 +2,9 @@
 
 
 ![nlexperiment](img/logo.png)
-Define and run NetLogo experiments in R
 
-## About
+####Define and run NetLogo experiments in R##
+
 The goal of **nlexperiment** is to make
 exploring agent based models in [NetLogo](http://ccl.northwestern.edu/netlogo/) (Wilensky 1999) as simple as possible (like NetLogo 
 [Behavior Space](http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html) tool)
@@ -15,11 +15,9 @@ package (Thiele 2014) as an interface to NetLogo.
 
 ## Installation
 
+`library(devtools)`   
+`install_github("bergant/nlexperiment")`
 
-```r
-library(devtools)
-install_github("bergant/nlexperiment")
-```
 
 
 
@@ -38,7 +36,7 @@ values (forest density) and exports final NetLogo views to image files:
 ```r
 library(nlexperiment)
 # Set the path to your NetLogo instalation
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
 
 # Create NetLogo experiment object
 experiment <- nl_experiment(
@@ -57,13 +55,15 @@ Run the experiment:
 result <- nl_run(experiment)
 ```
 
-Find paths to the exported view image files in `result$export` or just display them by calling `nl_show_view` function:
+Find paths to the exported view image files in `result$export` or just display them by calling `nl_show_views_grid` function:
+
 
 ```r
-nl_show_view(result)
+library(ggplot2)
+nl_show_views_grid(result, "density")
 ```
 
-![](img/README-model_view-1.png) ![](img/README-model_view-2.png) ![](img/README-model_view-3.png) 
+![](img/README-model_view-1.png) 
 
 
 
@@ -157,24 +157,25 @@ Run the experiment with `parallel` option:
 
 ```r
 result <- nl_run(experiment, parallel = TRUE)
+# Join observations with parameter space values:
+dat <- nl_get_run_result(result, add_parameters = TRUE)
 ```
 
 Plot the results - percent burned as a function of density:
 
 ```r
-# Join observations with parameter space values:
-dat <- nl_get_run_result(result, add_parameters = TRUE)
 # plot percent burned by density
 library(ggplot2)
 ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) + 
   geom_violin() +
-  geom_jitter(position = position_jitter(width = .1), alpha = 0.3) +
+  #geom_jitter(position = position_jitter(width = .1), alpha = 0.3) +
   labs(x = "Forest density", y = "Percent burned")
 ```
 
-![](img/README-plot_run_density-1.png) 
+![](img/README-p3plot1-1.png) 
 
-Fire progress from left to right as a function of density:
+Fire advances from left to right. It is interesting to observe
+final fire position (left border = 0 and right = 1) as a function of density.
 
 ```r
 ggplot(dat, mapping = aes(x = factor(density), y = progress/250 + 0.5) ) + 
@@ -183,7 +184,7 @@ ggplot(dat, mapping = aes(x = factor(density), y = progress/250 + 0.5) ) +
   labs(x = "Forest density", y = "Fire progress")
 ```
 
-![](img/README-plot_run_rightmost-1.png) 
+![](img/README-p3plot2-1.png) 
 
 
 
@@ -317,17 +318,24 @@ experiment <- nl_experiment(
   ),
   param_values = list(
     population = 125,
-    diffusion_rate = c(50, 60),
+    diffusion_rate = c(50, 70),
     evaporation_rate = c(5, 10, 15)
   ),
   mapping = c(
     diffusion_rate = "diffusion-rate",
     evaporation_rate = "evaporation-rate"
     ),
-  random_seed = 1,
+  random_seed = 2,
   export_view = TRUE
 )
 ```
+
+_Note:_
+
+* _Element `mapping` maps `difussion_rate` and `evaporation_rate` names to NetLogo variables `diffusion-rate` and `evaporation-rate`._
+* _It is not required to include all parameters in mapping. Variable `population` 
+is used as is._
+
 
 Run experiment
 
@@ -338,10 +346,10 @@ results <- nl_run(experiment)
 Show views
 
 ```r
-nl_show_view(results)
+nl_show_views_grid(results, "evaporation_rate", "diffusion_rate")
 ```
 
-![](img/README-p5ShowViews-1.png) ![](img/README-p5ShowViews-2.png) ![](img/README-p5ShowViews-3.png) ![](img/README-p5ShowViews-4.png) ![](img/README-p5ShowViews-5.png) ![](img/README-p5ShowViews-6.png) 
+![](img/README-p5ShowViews-1.png) 
 
 Show remaining food by parameter space and food piles
 
@@ -359,6 +367,85 @@ ggplot(dat, aes(x = tick, y = value, color = pile) ) +
 ![](img/README-p5plot-1.png) 
 
 
+
+
+
+
+
+
+
+
+## Reading agent variables
+While `run_measures` (see [Observation per run](#observations-per-each-simulation-run)) is good enough for aggregate measures, sometimes we need values for each agent individually.
+Example shows usage of `agents_after` parameter to get vertices from Preferential attachment
+model.
+
+
+```r
+experiment <- nl_experiment(
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample models/Networks/Preferential attachment.nlogo"), 
+  max_ticks = 50,
+  agents_after = list(
+    vertices = agent_set(
+      vars = c("who", "xcor", "ycor"), 
+      agents = "turtles"),
+    edges = agent_set(
+      vars = c(e1 = "[who] of end1", e2 ="[who] of end2"), 
+      agents = "links")
+  ),
+  repetitions = 2,
+  random_seed = c(42, 69)
+)
+```
+
+_Note:_
+
+* _Here random seed is defined as a vector. It is applied to each repetition respectively._
+* _Variables in agent set may or may not include variable names._
+* _Element `agents_before` is analogous tp `agents_after` - it just gets the data before model runs.)_
+
+Run experiment
+
+```r
+result <- nl_run(experiment)
+#> Warning: Parameter space not defined. Using default parameters
+```
+
+Show graph by using **igraph** package:
+
+
+```r
+library(igraph, quietly = TRUE, warn.conflicts = FALSE)
+par(mfrow=c(1,2), mai=c(0,0,0,0))
+for(i in 1:experiment$run_options$repetitions) {
+  g_edges <- subset(result$agents_after$edges, run_id == i)
+  g1 <- graph.data.frame(g_edges, directed = FALSE)
+  V(g1)$size <- sqrt(degree(g1))*6
+  V(g1)$label <- ifelse(as.numeric(V(g1)$name) < 4, as.numeric(V(g1)$name), NA)
+  plot.igraph(g1, margin = 0, 
+              vertex.label.font = V(g1)$size * 0.07,
+              vertex.label.color = "white",
+              vertex.color="darkseagreen4",
+              edge.color = "gray",
+              vertex.frame.color="#ffffff",
+              edge.curved=.1
+  )
+}
+```
+
+![](img/README-p6Sigraph-1.png) 
+
+_Note:_
+
+* _Data frame `result$agents_after$edges` includes variables from all simulation runs._
+* _Use `param_space_id` and/or `run_id` columns to subset individual run or parameter combination_
+
+
+
+
+
+
 ## References
 
 * Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
@@ -368,6 +455,8 @@ ggplot(dat, aes(x = tick, y = value, color = pile) ) +
 * Wilensky, U. (1997). NetLogo Fire model. http://ccl.northwestern.edu/netlogo/models/Fire. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 * Wilensky, U. (1997). NetLogo Ants model. http://ccl.northwestern.edu/netlogo/models/Ants. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
+* Wilensky, U. (2005). NetLogo Preferential Attachment model. http://ccl.northwestern.edu/netlogo/models/PreferentialAttachment. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 * The ideas and principles of NetLogo experiment definition is taken from
 the NetLogo's Behavior Space tool
