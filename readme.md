@@ -352,11 +352,11 @@ ggplot(dat, aes(x = tick, y = value, color = pile) ) +
 
 
 
-## Parameter space 2
+## Explicit definition of parameter sets (fur model)
 The following example is using NetLogo Fur model (Wilensky 2003) to show 
 explicit parameter space definition and parameter mapping.
 
-In NetLogo Fur model we can set the following variables:
+There are 5 parameters in the NetLogo Fur model:
 
 * ratio 
 * outer-radius-y
@@ -365,33 +365,34 @@ In NetLogo Fur model we can set the following variables:
 * inner-radius-x
 
 But considering constraints and model symmetry
-we can reduce it only to ratio and ellipse aspect ratio. We will
+we can reduce it only to ratio and ellipse aspect ratio. It is sufficient to
 create parameter sets based on combinations of
 
 * `radius_diff` (the difference between x and y radius) and
 * `ratio` (the inhibitor concentration parameter)
+* `gap` (distance between inner and outer circle)
 
 For simplicity lets keep the `gap` between the circles constant:
 
 
 ```r
 # prepare parameter space
-param_space <- 
+param_sets <- 
   expand.grid(
     gap = 3, 
     radius_diff = seq(from = 0, to = 2, by = 0.5), 
     ratio = seq(from = 0.30, to = 0.65, by = 0.05)
 )
 # add NetLogo variables
-param_space <- 
-  within(param_space, {
+param_sets <- 
+  within(param_sets, {
     inner_radius_x <- 3
     outer_radius_x <- 3 + gap
     inner_radius_y <- inner_radius_x + radius_diff
     outer_radius_y <- inner_radius_y + gap
   })
 
-mapping <- setNames(gsub("_", "-", names(param_space)),names(param_space))
+mapping <- setNames(gsub("_", "-", names(param_sets)),names(param_sets))
 mapping[c("gap", "radius_diff")] <- c("","")
 
 #knitr::kable(as.data.frame(mapping), caption = "Mapping", format = "markdown")
@@ -408,8 +409,8 @@ cbind(mapping)
 
 _Note:_ 
 
-* _We created mapping simply by converting the `_` characters to `-`._ 
-* _Variables `gap` and `radius_diff` are mapped to empty string._
+* _Mapping is here done by converting the `_` characters to `-`._ 
+* _Variables `gap` and `radius_diff` should be mapped to empty string._
 
 Define experiment:
 
@@ -420,7 +421,7 @@ experiment <- nl_experiment(
                          "models/Sample Models/Biology/Fur.nlogo"), 
   iterations = 20,
   repetitions = 1,
-  param_values = param_space,
+  param_values = param_sets,
   mapping = mapping,  
   export_view = TRUE,
   patches_after = list(
@@ -429,6 +430,11 @@ experiment <- nl_experiment(
   random_seed = 3
 )
 ```
+
+_Note:_ 
+
+* _Element `param_values` is now a data frame with explicit parameter sets_ 
+
 
 Run experiment
 
@@ -626,13 +632,28 @@ ggplot(dat2, aes(x = scout_prob, y = survival_prob)) +
 
 * Wilensky, U. (2005). NetLogo Preferential Attachment model. http://ccl.northwestern.edu/netlogo/models/PreferentialAttachment. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
+* Wilensky, U., & Shargel, B. (2002). BehaviorSpace. Center for Connected Learning and Computer Based Modeling, Northwestern University, Evanston, IL. http://ccl.northwestern.edu/netlogo/behaviorspace.html
+
+
 ## Resources
 
-* The ideas and principles of NetLogo experiment definition is taken from
-the NetLogo's Behavior Space tool
-http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html
+* nlexperiment is using RNetLogo package to connect to NetLogo
+https://cran.r-project.org/web/packages/RNetLogo/index.html
 
 * The parallel implementation of `nl_run` function is based on the RNetLogo vignette
 https://cran.r-project.org/web/packages/RNetLogo/vignettes/parallelProcessing.pdf
 
-* Rickert, J. (2014) Agent Based Models and RNetLogo http://blog.revolutionanalytics.com/2014/07/agent-based-models-and-rnetlogo.html
+* Basic ideas and principles of NetLogo experiment definition is taken from
+the NetLogo's Behavior Space tool
+http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html
+
+* This tutorial follows examples and methods from Thiele, Kurth & Grimm (2014)
+article and its Supplementary Material
+http://sourceforge.net/projects/calibrationsensitivityanalysis/
+
+* This document is created with knitr package
+https://cran.r-project.org/web/packages/knitr/index.html
+
+* Graphics are created with ggplot2 package
+https://cran.r-project.org/web/packages/ggplot2/index.html
+

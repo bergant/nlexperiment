@@ -79,13 +79,28 @@ library(ggplot2)
 
 * Wilensky, U. (2005). NetLogo Preferential Attachment model. http://ccl.northwestern.edu/netlogo/models/PreferentialAttachment. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
+* Wilensky, U., & Shargel, B. (2002). BehaviorSpace. Center for Connected Learning and Computer Based Modeling, Northwestern University, Evanston, IL. http://ccl.northwestern.edu/netlogo/behaviorspace.html
+
+
 ## Resources
 
-* The ideas and principles of NetLogo experiment definition is taken from
-the NetLogo's Behavior Space tool
-http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html
+* nlexperiment requires RNetLogo to connect to NetLogo
+https://cran.r-project.org/web/packages/RNetLogo/index.html
 
 * The parallel implementation of `nl_run` function is based on the RNetLogo vignette
 https://cran.r-project.org/web/packages/RNetLogo/vignettes/parallelProcessing.pdf
 
-* Rickert, J. (2014) Agent Based Models and RNetLogo http://blog.revolutionanalytics.com/2014/07/agent-based-models-and-rnetlogo.html
+* Basic ideas and principles of NetLogo experiment definition is taken from
+the NetLogo's Behavior Space tool
+http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html
+
+* This tutorial follows examples and methods from Thiele, Kurth & Grimm (2014)
+article and its Supplementary Material
+http://sourceforge.net/projects/calibrationsensitivityanalysis/
+
+* This document is created with knitr package
+https://cran.r-project.org/web/packages/knitr/index.html
+
+* Graphics are created with ggplot2 package
+https://cran.r-project.org/web/packages/ggplot2/index.html
+
