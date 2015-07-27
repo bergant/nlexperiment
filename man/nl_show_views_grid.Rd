@@ -4,7 +4,7 @@
 \alias{nl_show_views_grid}
 \title{Show exported views images in grid}
 \usage{
-nl_show_views_grid(result, x_param = NULL, y_param = NULL)
+nl_show_views_grid(result, x_param = NULL, y_param = NULL, img_gap = 0.03)
 }
 \arguments{
 \item{result}{Result from \code{nl_run} function}
@@ -12,6 +12,8 @@ nl_show_views_grid(result, x_param = NULL, y_param = NULL)
 \item{x_param}{Name of parameter on x axis}
 
 \item{y_param}{Name of parameter on y axis}
+
+\item{img_gap}{A gap between the images}
 }
 \description{
 Show exported views images in grid

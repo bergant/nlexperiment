@@ -168,6 +168,8 @@ nl_export_path <- function(export_path = NULL) {
 #' @param mapping Mapping between R and NetLogo parameters
 #'   in named character vector.
 #'   For example: c(diffusion_rate = "diffusion-rate", population = "population")
+#' @param agents_after Agents reporters see \code{\link{nl_set_agent_reports}}
+#' @param patches_after Patches reporters see \code{\link{nl_set_agent_reports}}
 #' @param export_view If set to TRUE, the views will be exported to
 #'   a png image files for each run (when running the experiment)
 #' @param export_world If set to TRUE, the world will be exported to
@@ -204,8 +206,8 @@ nl_experiment <- function(model_file,
                           run_measures = NULL,
                           mapping = NULL,
                           param_values = NULL,
-                          agents_before = NULL,
                           agents_after = NULL,
+                          patches_after = NULL,
                           export_view = FALSE,
                           export_world = FALSE,
                           data_handler = NULL
@@ -233,8 +235,8 @@ nl_experiment <- function(model_file,
                                 run = run_measures)
   # set agent reports
   experiment <- nl_set_agent_reports(experiment,
-                                     agents_before = agents_before,
-                                     agents_after = agents_after)
+                                     agents_after = agents_after,
+                                     patches_after = patches_after)
 
   # set default param space (empty data.frame)
   experiment <- nl_set_param_space(experiment, param_values = param_values)
@@ -275,16 +277,30 @@ measures <- function(...) {
 #' experiment <- nl_experiment(
 #'   model_file = file.path(nl_netlogo_path(),
 #'      "models/Sample models/Networks/Preferential attachment.nlogo"),
-#'   max_ticks = 10,
+#'   max_ticks = 30,
 #'   export_view = TRUE,
 #'   agents_after = list(
-#'     vertices = agent_set(c("who", "xcor", "ycor"), "turtles")
+#'     vertices = agent_set(c("who", "xcor", "ycor"), "turtles"),
+#'     edges = agent_set(vars = c(e1 = "[who] of end1", e2 ="[who] of end2"), agents = "links")
 #'   )
 #' )
 #' @export
 #' @keywords internal
 agent_set <- function(vars, agents) {
   list(vars = vars, agents = agents)
+}
+
+#' Create a patch set reporter
+#'
+#' Create a patch set reporter to set patch reporters in `nl_experiment` or
+#'   `nl_set_agent_reports`
+#'
+#' @param vars A string or vector/list of strings with the variable names of the agent(s).
+#' @param patches A string specifying the patches to be queried.
+#' @export
+#' @keywords internal
+patch_set <- function(vars, patches) {
+  list(vars = vars, patches = patches)
 }
 
 #' Set run options of a NetLogo experiment object
@@ -387,14 +403,18 @@ nl_set_measures <- function(experiment,
 #' Set reporting of variable value(s) of one or more agent(s) as a data.frame
 #'
 #' @param experiment NetLogo experiment object
-#' @param agents_before A list of agent reports to be accessed before each run
-#' @param agents_after A list of agent reports to be accessed after each run
+#' @param agents_after A list of agent reports to be accessed after each run.
+#' @param patches_after A list of patches reports to be accessed after each run
+#' @param agents_before A list of agent reports to be accessed before each run.
+#' @param patches_before A list of patches reports to be accessed before each run
 #' @seealso To create an experiment object use \code{\link{nl_experiment}}
 #' @return NetLogo experiment object
 #' @export
 nl_set_agent_reports <- function(experiment,
                                  agents_before = NULL,
-                                 agents_after = NULL) {
+                                 agents_after = NULL,
+                                 patches_before = NULL,
+                                 patches_after = NULL) {
   if(!inherits(experiment, nl_experiment_class))
     stop("Not a NetLogo experiment object")
 
@@ -403,6 +423,12 @@ nl_set_agent_reports <- function(experiment,
   }
   if(!missing(agents_after)) {
     experiment$agents_after <- agents_after
+  }
+  if(!missing(patches_before)) {
+    experiment$patches_before <- patches_before
+  }
+  if(!missing(patches_after)) {
+    experiment$patches_after <- patches_after
   }
   experiment
 }

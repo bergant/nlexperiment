@@ -29,6 +29,8 @@ NULL
 #' @param print_progress Set to TRUE if you want to follow the progress in the console
 #' @param parallel Runs experiment in parallel worker processes
 #'   (requires \link[parallel]{parallel} package)
+#' @param max_cores (optional) only relevant if parallel = TRUE.
+#'   If not defined all available processors will be used
 #' @return Returns a list of values which depend on measures defined for each step
 #'   and/or for each run, parameter space, repetitions and export options.
 #'   \itemize{
@@ -48,7 +50,8 @@ NULL
 #'   Use parallel option if there are more than a few runs per processor core.
 #' @seealso See \code{\link{nl_experiment}} for creating NetLogo experiment object.
 #' @export
-nl_run <- function(experiment, print_progress = FALSE, gui = FALSE, parallel = FALSE) {
+nl_run <- function(experiment, print_progress = FALSE, gui = FALSE,
+                   parallel = FALSE, max_cores = NULL) {
   if(is.null(nl_path <- nl_netlogo_path())) {
     stop("NetLogo path is empty. Use nl_netlogo_path.")
   }
@@ -56,7 +59,7 @@ nl_run <- function(experiment, print_progress = FALSE, gui = FALSE, parallel = F
     stop("File does not exist ", experiment$model_file)
   }
   if(parallel) {
-    return(nl_run_parallel(experiment, nl_path, print_progress, gui))
+    return(nl_run_parallel(experiment, nl_path, print_progress, gui, max_cores))
   }
   on.exit(nl_run_end())
   nl_run_init(gui = gui, nl_path = nl_path, model_path = experiment$model_file)
@@ -81,7 +84,9 @@ nl_run <- function(experiment, print_progress = FALSE, gui = FALSE, parallel = F
 
 
 
-nl_run_parallel <- function(experiment, nl_path, print_progress = FALSE, gui = FALSE) {
+nl_run_parallel <- function(experiment, nl_path, print_progress = FALSE,
+                            gui = FALSE,
+                            max_cores = NULL) {
 
   if( !requireNamespace("parallel", quietly = TRUE)) {
     stop("parallel package needed for this function to work. Please install it.",
@@ -89,6 +94,9 @@ nl_run_parallel <- function(experiment, nl_path, print_progress = FALSE, gui = F
   }
 
   processors <- parallel::detectCores()
+  if(!missing(max_cores)) {
+    processors <- min(processors, max_cores)
+  }
   cl <- parallel::makeCluster(processors)
 
   on.exit({
@@ -146,22 +154,16 @@ nl_run_wrap_results <- function(experiment, ret, start_time) {
     ret1 <- list(step = step_df, run = run_df, export = export_df)
 
     if(!is.null(ret[[1]]$agents_before)) {
-      ret1$agents_before <-
-        setNames(
-          lapply(seq_along(ret[[1]]$agents_before), function(i) {
-            do.call(rbind, lapply(ret, function(x) {x$agents_before[[i]]}))
-          }),
-          names(ret[[1]]$agents_before)
-        )
+      ret1$agents_before <- nl_run_wrap_result_agents(ret, "agents_before")
     }
     if(!is.null(ret[[1]]$agents_after)) {
-      ret1$agents_after <-
-        setNames(
-          lapply(seq_along(ret[[1]]$agents_after), function(i) {
-            do.call(rbind, lapply(ret, function(x) {x$agents_after[[i]]}))
-          }),
-          names(ret[[1]]$agents_after)
-        )
+      ret1$agents_after <- nl_run_wrap_result_agents(ret, "agents_after")
+    }
+    if(!is.null(ret[[1]]$patches_after)) {
+      ret1$patches_after <- nl_run_wrap_result_agents(ret, "patches_after")
+    }
+    if(!is.null(ret[[1]]$patches_before)) {
+      ret1$patches_before <- nl_run_wrap_result_agents(ret, "patches_before")
     }
   }
   else
@@ -176,6 +178,14 @@ nl_run_wrap_results <- function(experiment, ret, start_time) {
   ret1
 }
 
+nl_run_wrap_result_agents <- function(ret, type) {
+    setNames(
+      lapply(seq_along(ret[[1]][[type]]), function(i) {
+        do.call(rbind, lapply(ret, function(x) {x[[type]][[i]]}))
+      }),
+      names(ret[[1]][[type]])
+    )
+}
 
 nl_run_init <- function(dummy = NULL, gui, nl_path, model_path) {
   #Start NetLogo and load model
@@ -204,6 +214,14 @@ nl_single_run <- function(experiment, parameter_space_id = NULL, run_id = NULL,
   if(!is.null(experiment$agents_before)) {
     agents_before <-
       nl_single_agent_report(experiment$agents_before,
+                             parameter_space_id,
+                             run_id)
+  }
+  #patches before
+  patches_before <- NULL
+  if(!is.null(experiment$patches_before)) {
+    patches_before <-
+      nl_single_patch_report(experiment$patches_before,
                              parameter_space_id,
                              run_id)
   }
@@ -261,6 +279,17 @@ nl_single_run <- function(experiment, parameter_space_id = NULL, run_id = NULL,
     ret$agents_before <- agents_before
   }
 
+  # patches
+  if(!is.null(experiment$patches_after)) {
+    ret$patches_after <-
+      nl_single_patch_report(experiment$patches_after,
+                             parameter_space_id,
+                             run_id)
+  }
+  if(!is.null(patches_before)) {
+    ret$patches_before <- patches_before
+  }
+
   # exports
   if(any(experiment$export_view, experiment$export_world)){
     ret$export <- nl_single_export(experiment, parameter_space_id, run_id)
@@ -310,8 +339,10 @@ nl_single_run_setup <- function(experiment, parameter_space_id = NULL, run_id = 
       if(is.null(nl_param) || is.na(nl_param)) {
         nl_param <- parameter
       }
-      param_value <- experiment$param_space[parameter_space_id, parameter]
-      RNetLogo::NLCommand(sprintf("set %s %s", nl_param, param_value))
+      if(nl_param != "") {
+        param_value <- experiment$param_space[parameter_space_id, parameter]
+        RNetLogo::NLCommand(sprintf("set %s %s", nl_param, param_value))
+      }
     }
   }
 
@@ -369,6 +400,19 @@ nl_single_agent_report <- function(agent_report,
 
   lapply(agent_report, function(x) {
     df1 <- RNetLogo::NLGetAgentSet(x$vars, x$agents)
+    if(!is.null(names(x$vars))) names(df1) <- names(x$vars)
+    df1$run_id <- run_id
+    df1$param_space_id <- parameter_space_id
+    df1
+  })
+}
+
+nl_single_patch_report <- function(patch_report,
+                                   parameter_space_id = NA,
+                                   run_id = 1) {
+
+  lapply(patch_report, function(x) {
+    df1 <- RNetLogo::NLGetPatches(x$vars, x$patches)
     if(!is.null(names(x$vars))) names(df1) <- names(x$vars)
     df1$run_id <- run_id
     df1$param_space_id <- parameter_space_id

@@ -8,7 +8,7 @@
 ## Parameter space
 When parameter space is defined by list of values, it is interpreted as 
 all possible combinations of parameters. In this example, model is set
-to run with all combination of `world_size` and `density`:
+to run with all combinations of `world_size` and `density`:
 
 *Note: `world_size` is a special parameter name. Instead of setting NetLogo variable 
 it changes the NetLogo world dimensions.*
@@ -30,17 +30,18 @@ experiment <- nl_experiment(
 )
 ```
 
-This experiment has now 12 rows in the parameter space.
+We have now 12 rows in the parameter space.
 With 30 repetitions this means 
 360 simulation runs.
-
-
 
 Sometimes we do not want to run the model for all combinations of parameter values
 (often because it would yield a huge parameter space and hours of waiting for
 simulations to end). 
-In this case use **data frame instead of a list** in `nl_experiment` or 
-`nl_set_param_space` function to set parameter values. 
+
+There are several sampling methods (also available as packages in R). See Thiele, Kurth, & Grimm (2014) for [overview](http://jasss.soc.surrey.ac.uk/17/3/11.html). 
+
+In this case use a **data frame with explicit parameter sets** instead of a list in `nl_experiment` or `nl_set_param_space` function. 
+
 Here is an example of parameter space with different density values and
 two world sizes where only some of the density values are used for the big sized world:
 

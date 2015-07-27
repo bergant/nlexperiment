@@ -4,7 +4,8 @@
 \alias{nl_run}
 \title{Run NetLogo experiment}
 \usage{
-nl_run(experiment, print_progress = FALSE, gui = FALSE, parallel = FALSE)
+nl_run(experiment, print_progress = FALSE, gui = FALSE, parallel = FALSE,
+  max_cores = NULL)
 }
 \arguments{
 \item{experiment}{NetLogo experiment object}
@@ -15,6 +16,9 @@ nl_run(experiment, print_progress = FALSE, gui = FALSE, parallel = FALSE)
 
 \item{parallel}{Runs experiment in parallel worker processes
 (requires \link[parallel]{parallel} package)}
+
+\item{max_cores}{(optional) only relevant if parallel = TRUE.
+If not defined all available processors will be used}
 }
 \value{
 Returns a list of values which depend on measures defined for each step

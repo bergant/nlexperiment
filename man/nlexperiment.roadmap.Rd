@@ -11,6 +11,7 @@ Roadmap
 \item Get agents' data
 \item condition changes as a function of parameters?
 \item Data handler sample -
+\item Parameter space - examples (sampling, calibrating, ...)
 }
 }
 \keyword{internal}

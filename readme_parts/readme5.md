@@ -5,11 +5,9 @@
 
 
 
-## Mapping parameters
-NetLogo identifiers may include some ASCII characters `(?=*!<>:#+/%$^'&-)`
-that makes the R part of data manipulation rather uncomfortable. 
+## Simple parameter space definition
 The following example is using Ant model (Wilensky 1997) to show 
-**how to use nice names in R and map them to NetLogo variables**.
+simple parameter space definition and parameter mapping.
 
 
 ```r
@@ -38,9 +36,13 @@ experiment <- nl_experiment(
 
 _Note:_
 
-* _Element `mapping` maps `difussion_rate` and `evaporation_rate` names to NetLogo variables `diffusion-rate` and `evaporation-rate`._
+* _When parameters are defined as a list of value vecors, parameter space is
+  constructed as combination of all possible parameter sets
 * _It is not required to include all parameters in mapping. Variable `population` 
 is used as is._
+* _NetLogo identifiers may include some ASCII characters `(?=*!<>:#+/%$^'&-)`
+that makes the R part of data manipulation rather uncomfortable._
+* _Element `mapping` maps `difussion_rate` and `evaporation_rate` names to NetLogo variables `diffusion-rate` and `evaporation-rate`._
 
 
 Run experiment
@@ -57,7 +59,7 @@ nl_show_views_grid(results, "evaporation_rate", "diffusion_rate")
 
 ![](img/README-p5ShowViews-1.png) 
 
-Show remaining food by parameter space and food piles
+Show remaining food by difussion rate and evaporation rate for all food piles
 
 ```r
 library(tidyr)

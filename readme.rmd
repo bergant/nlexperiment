@@ -49,14 +49,16 @@ library(ggplot2)
 ```{r ch3, child="readme_parts/readme3.rmd", cache=FALSE, eval=TRUE}
 ```
 
-```{r ch4, child="readme_parts/readme4.rmd", cache=FALSE, eval=TRUE}
+```{r ch4, child="readme_parts/readme6.rmd", cache=FALSE, eval=TRUE}
 ```
 
 ```{r ch5, child="readme_parts/readme5.rmd", cache=FALSE, eval=TRUE}
 ```
 
-```{r ch5, child="readme_parts/readme6.rmd", cache=FALSE, eval=TRUE}
+```{r ch6, child="readme_parts/readme7.rmd", cache=FALSE, eval=TRUE}
 ```
+
+
 
 ## References
 
@@ -64,11 +66,17 @@ library(ggplot2)
 
 * Thiele, J. (2014) R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software 58(2) 1-41. http://www.jstatsoft.org/v58/i02/
 
+* Thiele, J. C., Kurth, W., & Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11.
+
 * Wilensky, U. (1997). NetLogo Fire model. http://ccl.northwestern.edu/netlogo/models/Fire. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 * Wilensky, U. (1997). NetLogo Ants model. http://ccl.northwestern.edu/netlogo/models/Ants. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
+Wilensky, U. (2003). NetLogo Fur model. http://ccl.northwestern.edu/netlogo/models/Fur. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
 * Wilensky, U. (2005). NetLogo Preferential Attachment model. http://ccl.northwestern.edu/netlogo/models/PreferentialAttachment. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
+## Resources
 
 * The ideas and principles of NetLogo experiment definition is taken from
 the NetLogo's Behavior Space tool

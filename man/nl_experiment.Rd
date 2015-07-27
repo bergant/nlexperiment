@@ -7,7 +7,7 @@
 nl_experiment(model_file, max_ticks = NULL, while_condition = NULL,
   repetitions = 1, random_seed = NULL, step_measures = NULL,
   run_measures = NULL, mapping = NULL, param_values = NULL,
-  agents_before = NULL, agents_after = NULL, export_view = FALSE,
+  agents_after = NULL, patches_after = NULL, export_view = FALSE,
   export_world = FALSE, data_handler = NULL)
 }
 \arguments{
@@ -43,6 +43,10 @@ For example: c(diffusion_rate = "diffusion-rate", population = "population")}
 
 \item{param_values}{A data.frame with parameter values or
 a list of values to be expanded to all combinations of values}
+
+\item{agents_after}{Agents reporters see \code{\link{nl_set_agent_reports}}}
+
+\item{patches_after}{Patches reporters see \code{\link{nl_set_agent_reports}}}
 
 \item{export_view}{If set to TRUE, the views will be exported to
 a png image files for each run (when running the experiment)}

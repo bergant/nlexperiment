@@ -34,9 +34,11 @@ nl_show_view <- function(result, param_space_id = NULL, run_id = NULL) {
 #' @param result Result from \code{nl_run} function
 #' @param x_param Name of parameter on x axis
 #' @param y_param Name of parameter on y axis
+#' @param img_gap A gap between the images
 #' @export
 nl_show_views_grid <- function(result,
-                               x_param = NULL, y_param = NULL) {
+                               x_param = NULL, y_param = NULL,
+                               img_gap = 0.03) {
 
 
   if( !requireNamespace("ggplot2", quietly = TRUE)) {
@@ -69,7 +71,7 @@ nl_show_views_grid <- function(result,
   x_cor_ind <- match( as.character(dat[[x_param]]), levels(x_cor))
   y_cor_ind <- match( as.character(dat[[y_param]]), levels(y_cor))
 
-  gap <- 0.03
+  gap <- img_gap
 
   g1 <-
     ggplot2::ggplot(dat, ggplot2::aes_string(

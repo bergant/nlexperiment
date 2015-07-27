@@ -4,14 +4,19 @@
 \alias{nl_set_agent_reports}
 \title{Set or change agent reports}
 \usage{
-nl_set_agent_reports(experiment, agents_before = NULL, agents_after = NULL)
+nl_set_agent_reports(experiment, agents_before = NULL, agents_after = NULL,
+  patches_before = NULL, patches_after = NULL)
 }
 \arguments{
 \item{experiment}{NetLogo experiment object}
 
-\item{agents_before}{A list of agent reports to be accessed before each run}
+\item{agents_before}{A list of agent reports to be accessed before each run.}
 
-\item{agents_after}{A list of agent reports to be accessed after each run}
+\item{agents_after}{A list of agent reports to be accessed after each run.}
+
+\item{patches_before}{A list of patches reports to be accessed before each run}
+
+\item{patches_after}{A list of patches reports to be accessed after each run}
 }
 \value{
 NetLogo experiment object
