@@ -49,22 +49,20 @@ param_space <-
 mapping <- setNames(gsub("_", "-", names(param_space)),names(param_space))
 mapping[c("gap", "radius_diff")] <- c("","")
 
-knitr::kable(as.data.frame(mapping), caption = "Mapping")
+knitr::kable(as.data.frame(mapping), caption = "Mapping", format = "markdown")
 ```
 
 
 
-Table: Mapping
-
-                 mapping        
----------------  ---------------
-gap                             
-radius_diff                     
-ratio            ratio          
-outer_radius_y   outer-radius-y 
-inner_radius_y   inner-radius-y 
-outer_radius_x   outer-radius-x 
-inner_radius_x   inner-radius-x 
+|               |mapping        |
+|:--------------|:--------------|
+|gap            |               |
+|radius_diff    |               |
+|ratio          |ratio          |
+|outer_radius_y |outer-radius-y |
+|inner_radius_y |inner-radius-y |
+|outer_radius_x |outer-radius-x |
+|inner_radius_x |inner-radius-x |
 
 _Note:_ 
 

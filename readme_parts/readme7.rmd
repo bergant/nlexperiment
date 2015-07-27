@@ -65,7 +65,7 @@ param_space <-
 mapping <- setNames(gsub("_", "-", names(param_space)),names(param_space))
 mapping[c("gap", "radius_diff")] <- c("","")
 
-knitr::kable(as.data.frame(mapping), caption = "Mapping")
+knitr::kable(as.data.frame(mapping), caption = "Mapping", format = "markdown")
 ```
 
 _Note:_ 
