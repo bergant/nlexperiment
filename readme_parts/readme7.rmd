@@ -60,12 +60,11 @@ param_space <-
     outer_radius_y <- inner_radius_y + gap
   })
 
-#knitr::kable(param_space, caption = "Parameter space")
-
 mapping <- setNames(gsub("_", "-", names(param_space)),names(param_space))
 mapping[c("gap", "radius_diff")] <- c("","")
 
-knitr::kable(as.data.frame(mapping), caption = "Mapping", format = "markdown")
+#knitr::kable(as.data.frame(mapping), caption = "Mapping", format = "markdown")
+cbind(mapping)
 ```
 
 _Note:_ 
