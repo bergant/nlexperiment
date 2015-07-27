@@ -41,22 +41,22 @@ experiment <- nl_experiment(
 
 Run the experiment:
 ```{r StepModelRun, cache=TRUE}
-result <- nl_run(experiment)
+result <- nl_run(experiment)     
 ```
 
 Plot of burned forest as a function of time for different forest densities:
 ```{r model_step_plot, fig.height=4, cache=TRUE}
 # get the observation data for step measures
-dat <- nl_get_step_result(result, add_parameters = TRUE) 
+dat <- nl_get_result(result, type = "step") 
 # plot the observations
 library(ggplot2)
-ggplot(dat, mapping = aes(x = tick, y = percent_burned)) + 
+ggplot(dat, mapping = aes(x = step_id, y = percent_burned)) + 
   geom_step() +
   facet_grid(. ~ density) +
-  ylab("Percent burned")
+  labs(y = "Percent burned", x = "Iteration")
 ```
 
-*Note: values `run_id` and `tick` are included in the `results$step` by default.
+*Note: values `run_id` and `step_id` are included in the `results$step` by default.
 Parameter values are included only by reference to `parameter_space_id`. The 
-function `nl_get_step_result` joins parameter space to observation data.*
+function `nl_get_result` joins parameter space to observation data.*
 

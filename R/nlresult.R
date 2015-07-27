@@ -131,10 +131,9 @@ nl_get_step_result <- function(result, add_parameters = TRUE) {
 #' Get step observations joined with parameter space values
 #'
 #' @param  result NetLogo result object
-#' @param  add_parameters If parameter values should be appended to the results
-#' @param  type Observation type: "run" or "step"
+#' @param  add_parameters Add parameter values from parameter space to the results
+#' @param  type Observation type: "run", "step", "criteria" or "export"
 #' @export
-#' @keywords internal
 nl_get_result <- function(result, add_parameters = TRUE, type = "run") {
 
   res <- result[[type]]

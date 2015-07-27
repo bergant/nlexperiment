@@ -5,11 +5,11 @@
 
 
 
-## Parameter space 2
+## Explicit definition of parameter sets (fur model)
 The following example is using NetLogo Fur model (Wilensky 2003) to show 
 explicit parameter space definition and parameter mapping.
 
-In NetLogo Fur model we can set the following variables:
+There are 5 parameters in the NetLogo Fur model:
 
 * ratio 
 * outer-radius-y
@@ -18,33 +18,34 @@ In NetLogo Fur model we can set the following variables:
 * inner-radius-x
 
 But considering constraints and model symmetry
-we can reduce it only to ratio and ellipse aspect ratio. We will
+we can reduce it only to ratio and ellipse aspect ratio. It is sufficient to
 create parameter sets based on combinations of
 
 * `radius_diff` (the difference between x and y radius) and
 * `ratio` (the inhibitor concentration parameter)
+* `gap` (distance between inner and outer circle)
 
 For simplicity lets keep the `gap` between the circles constant:
 
 
 ```r
 # prepare parameter space
-param_space <- 
+param_sets <- 
   expand.grid(
     gap = 3, 
     radius_diff = seq(from = 0, to = 2, by = 0.5), 
     ratio = seq(from = 0.30, to = 0.65, by = 0.05)
 )
 # add NetLogo variables
-param_space <- 
-  within(param_space, {
+param_sets <- 
+  within(param_sets, {
     inner_radius_x <- 3
     outer_radius_x <- 3 + gap
     inner_radius_y <- inner_radius_x + radius_diff
     outer_radius_y <- inner_radius_y + gap
   })
 
-mapping <- setNames(gsub("_", "-", names(param_space)),names(param_space))
+mapping <- setNames(gsub("_", "-", names(param_sets)),names(param_sets))
 mapping[c("gap", "radius_diff")] <- c("","")
 
 #knitr::kable(as.data.frame(mapping), caption = "Mapping", format = "markdown")
@@ -61,8 +62,8 @@ cbind(mapping)
 
 _Note:_ 
 
-* _We created mapping simply by converting the `_` characters to `-`._ 
-* _Variables `gap` and `radius_diff` are mapped to empty string._
+* _Mapping is here done by converting the `_` characters to `-`._ 
+* _Variables `gap` and `radius_diff` should be mapped to empty string._
 
 Define experiment:
 
@@ -71,9 +72,9 @@ Define experiment:
 experiment <- nl_experiment( 
   model_file = file.path(nl_netlogo_path(), 
                          "models/Sample Models/Biology/Fur.nlogo"), 
-  max_ticks = 20,
+  iterations = 20,
   repetitions = 1,
-  param_values = param_space,
+  param_values = param_sets,
   mapping = mapping,  
   export_view = TRUE,
   patches_after = list(
@@ -83,10 +84,15 @@ experiment <- nl_experiment(
 )
 ```
 
+_Note:_ 
+
+* _Element `param_values` is now a data frame with explicit parameter sets_ 
+
+
 Run experiment
 
 ```r
-result <- nl_run(experiment, parallel = TRUE, max_cores = 3)  
+result <- nl_run(experiment, parallel = TRUE, max_cores = 3) 
 ```
 
 Show resulting fur patterns:

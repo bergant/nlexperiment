@@ -9,12 +9,11 @@ nl_get_result(result, add_parameters = TRUE, type = "run")
 \arguments{
 \item{result}{NetLogo result object}
 
-\item{add_parameters}{If parameter values should be appended to the results}
+\item{add_parameters}{Add parameter values from parameter space to the results}
 
-\item{type}{Observation type: "run" or "step"}
+\item{type}{Observation type: "run", "step", "criteria" or "export"}
 }
 \description{
 Get step observations joined with parameter space values
 }
-\keyword{internal}
 

@@ -19,7 +19,7 @@ Create an agent set reporter to set agent reporters in `nl_experiment` or
 experiment <- nl_experiment(
   model_file = file.path(nl_netlogo_path(),
      "models/Sample models/Networks/Preferential attachment.nlogo"),
-  max_ticks = 30,
+  iterations = 30,
   export_view = TRUE,
   agents_after = list(
     vertices = agent_set(c("who", "xcor", "ycor"), "turtles"),

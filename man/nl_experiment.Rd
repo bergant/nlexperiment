@@ -4,17 +4,18 @@
 \alias{nl_experiment}
 \title{Create NetLogo experiment object}
 \usage{
-nl_experiment(model_file, max_ticks = NULL, while_condition = NULL,
+nl_experiment(model_file, iterations = NULL, while_condition = NULL,
   repetitions = 1, random_seed = NULL, step_measures = NULL,
   run_measures = NULL, mapping = NULL, param_values = NULL,
   agents_after = NULL, patches_after = NULL, export_view = FALSE,
-  export_world = FALSE, data_handler = NULL)
+  export_world = FALSE, setup_commands = "setup", go_command = "go",
+  criteria_function = NULL, data_handler = NULL)
 }
 \arguments{
 \item{model_file}{An absolute path to your NetLogo model file (.nlogo)}
 
-\item{max_ticks}{Number of iterations to run.
-This parameter is used when while_condition is not defined.}
+\item{iterations}{Number of iterations to run.
+Alternatively define while_condition to stop simulation.}
 
 \item{while_condition}{A string with a NetLogo conditional reporter.
 (for example: "ticks < 100")}
@@ -53,6 +54,15 @@ a png image files for each run (when running the experiment)}
 
 \item{export_world}{If set to TRUE, the world will be exported to
 a csv file for each run}
+
+\item{setup_commands}{NetLogo command strings to execute to setup the model}
+
+\item{go_command}{NetLogo command string to execute the step in the model}
+
+\item{criteria_function}{A criteria function. Must take one parameter
+which is a list of results of each simulation run.
+In the result list it may expect \code{step} or \code{run} data frames as
+list elements. Should return numeric value (or named vector)}
 
 \item{data_handler}{Function to handle observations. If handler is defined
 the observations will not be stored in result elements when running

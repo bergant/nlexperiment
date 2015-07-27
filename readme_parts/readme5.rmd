@@ -31,7 +31,7 @@ simple parameter space definition and parameter mapping.
 experiment <- nl_experiment(
   model_file = file.path(nl_netlogo_path(), 
                          "models/Sample Models/Biology/Ants.nlogo"), 
-  max_ticks = 150,
+  iterations = 150,
   step_measures = measures(
     pile1 = "sum [food] of patches with [pcolor = cyan]",  
     pile2 = "sum [food] of patches with [pcolor = sky]",  
@@ -69,7 +69,7 @@ results <- nl_run(experiment)
 ```
 
 Show views
-```{r p5ShowViews, cache=FALSE}
+```{r p5ShowViews}
 nl_show_views_grid(results, "evaporation_rate", "diffusion_rate")
 ```
 

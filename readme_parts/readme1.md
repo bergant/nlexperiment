@@ -11,7 +11,7 @@ values (forest density) and exports final NetLogo views to image files:
 ```r
 library(nlexperiment)
 # Set the path to your NetLogo instalation
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/") 
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
 
 # Create NetLogo experiment object
 experiment <- nl_experiment(

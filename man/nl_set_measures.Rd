@@ -4,8 +4,8 @@
 \alias{nl_set_measures}
 \title{Set or change measures of existing NetLogo experiment}
 \usage{
-nl_set_measures(experiment, step = NULL, run = NULL, as.data.frame = TRUE,
-  step_transform = NULL)
+nl_set_measures(experiment, step = NULL, run = NULL,
+  criteria_function = NULL, as.data.frame = TRUE, step_transform = NULL)
 }
 \arguments{
 \item{experiment}{NetLogo experiment object}
@@ -17,6 +17,11 @@ the correct structure.}
 \item{run}{NetLogo reporters for each run (reported at end of run).
 A list of named character vectors. Use \code{\link{measures}} function to get
 the correct structure.}
+
+\item{criteria_function}{A criteria function. Must take one parameter
+which is a list of results of each simulation run.
+In the result list it may expect \code{step} or \code{run} data frames as
+list elements. Should return numeric value (or named vector)}
 
 \item{as.data.frame}{Reporting in data frame format (TRUE by default)}
 

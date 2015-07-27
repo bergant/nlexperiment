@@ -14,7 +14,7 @@ simple parameter space definition and parameter mapping.
 experiment <- nl_experiment(
   model_file = file.path(nl_netlogo_path(), 
                          "models/Sample Models/Biology/Ants.nlogo"), 
-  max_ticks = 150,
+  iterations = 150,
   step_measures = measures(
     pile1 = "sum [food] of patches with [pcolor = cyan]",  
     pile2 = "sum [food] of patches with [pcolor = sky]",  

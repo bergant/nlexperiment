@@ -145,8 +145,8 @@ nl_export_path <- function(export_path = NULL) {
 #' Use this function to create NetLogo experiment object.
 #'
 #' @param model_file An absolute path to your NetLogo model file (.nlogo)
-#' @param max_ticks Number of iterations to run.
-#'    This parameter is used when while_condition is not defined.
+#' @param iterations Number of iterations to run.
+#'    Alternatively define while_condition to stop simulation.
 #' @param while_condition A string with a NetLogo conditional reporter.
 #'     (for example: "ticks < 100")
 #' @param repetitions How many times to run the model with the same parameters.
@@ -174,6 +174,12 @@ nl_export_path <- function(export_path = NULL) {
 #'   a png image files for each run (when running the experiment)
 #' @param export_world If set to TRUE, the world will be exported to
 #'   a csv file for each run
+#' @param setup_commands NetLogo command strings to execute to setup the model
+#' @param go_command NetLogo command string to execute the step in the model
+#' @param criteria_function A criteria function. Must take one parameter
+#'   which is a list of results of each simulation run.
+#'   In the result list it may expect \code{step} or \code{run} data frames as
+#'   list elements. Should return numeric value (or named vector)
 #' @param data_handler Function to handle observations. If handler is defined
 #'   the observations will not be stored in result elements when running
 #'   the experiment with `nl_run` function.
@@ -198,7 +204,7 @@ nl_export_path <- function(export_path = NULL) {
 #'   \code{\link{nl_set_param_space}}.
 #' @export
 nl_experiment <- function(model_file,
-                          max_ticks = NULL,
+                          iterations = NULL,
                           while_condition = NULL,
                           repetitions = 1,
                           random_seed = NULL,
@@ -210,13 +216,17 @@ nl_experiment <- function(model_file,
                           patches_after = NULL,
                           export_view = FALSE,
                           export_world = FALSE,
+                          setup_commands = "setup",
+                          go_command = "go",
+                          criteria_function = NULL,
                           data_handler = NULL
                           ) {
-  if(missing(while_condition) && !missing(max_ticks)) {
-    while_condition <- sprintf("ticks < %s", max_ticks)
+  if(missing(while_condition) && missing(iterations)) {
+    stop("Define number of iterations or while_condition")
   }
   experiment <- list(
     model_file = model_file,
+    iterations = iterations,
     while_condition = while_condition,
     mapping = mapping,
     export_view = export_view,
@@ -228,11 +238,14 @@ nl_experiment <- function(model_file,
   experiment <- nl_set_run_options(experiment,
                                    repetitions = repetitions,
                                    random_seed = random_seed,
+                                   setup_commands = setup_commands,
+                                   go_command = go_command,
                                    data_handler = data_handler)
   # set default measures (no measures)
   experiment <- nl_set_measures(experiment,
                                 step = step_measures,
-                                run = run_measures)
+                                run = run_measures,
+                                criteria_function = criteria_function)
   # set agent reports
   experiment <- nl_set_agent_reports(experiment,
                                      agents_after = agents_after,
@@ -277,7 +290,7 @@ measures <- function(...) {
 #' experiment <- nl_experiment(
 #'   model_file = file.path(nl_netlogo_path(),
 #'      "models/Sample models/Networks/Preferential attachment.nlogo"),
-#'   max_ticks = 30,
+#'   iterations = 30,
 #'   export_view = TRUE,
 #'   agents_after = list(
 #'     vertices = agent_set(c("who", "xcor", "ycor"), "turtles"),
@@ -370,6 +383,10 @@ nl_set_run_options <- function(
 #' @param run NetLogo reporters for each run (reported at end of run).
 #'   A list of named character vectors. Use \code{\link{measures}} function to get
 #'   the correct structure.
+#' @param criteria_function A criteria function. Must take one parameter
+#'   which is a list of results of each simulation run.
+#'   In the result list it may expect \code{step} or \code{run} data frames as
+#'   list elements. Should return numeric value (or named vector)
 #' @param as.data.frame Reporting in data frame format (TRUE by default)
 #' @param step_transform A function to transform data frame result from
 #'   step reporters. When simulation has many steps and only summary
@@ -384,6 +401,7 @@ nl_set_run_options <- function(
 nl_set_measures <- function(experiment,
                         step = NULL,
                         run = NULL,
+                        criteria_function = NULL,
                         as.data.frame = TRUE,
                         step_transform = NULL) {
   if(!inherits(experiment, nl_experiment_class))
@@ -392,6 +410,7 @@ nl_set_measures <- function(experiment,
   experiment$measures <-
     list(step = step,
          run = run,
+         criteria_function = criteria_function,
          as.data.frame = as.data.frame,
          step_transform = step_transform)
 
@@ -481,7 +500,7 @@ print.nl_experiment <- function(x, ...) {
     }
     cat("  Setup procedures: ")
     if(length(run_options$setup_commands) > 1) {
-      cat("\n")
+      cat("\n    ")
     }
     cat(run_options$setup_commands, sep = "\n    ")
     cat("  Go command: ", run_options$go_command, "\n")

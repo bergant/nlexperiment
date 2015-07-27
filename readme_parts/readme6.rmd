@@ -31,7 +31,7 @@ model.
 experiment <- nl_experiment(
   model_file = file.path(nl_netlogo_path(), 
                          "models/Sample models/Networks/Preferential attachment.nlogo"), 
-  max_ticks = 50,
+  iterations = 50,
   agents_after = list(
     vertices = agent_set(
       vars = c("who", "xcor", "ycor"), 

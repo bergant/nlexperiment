@@ -151,7 +151,9 @@ nl_run_wrap_results <- function(experiment, ret, start_time) {
     step_df <- do.call(rbind, lapply(ret, function(x) x$step))
     run_df <- do.call(rbind, lapply(ret, function(x) x$run))
     export_df <- do.call(rbind, lapply(ret, function(x) x$export))
-    ret1 <- list(step = step_df, run = run_df, export = export_df)
+    criteria_df <- do.call(rbind, lapply(ret, function(x) x$criteria))
+    ret1 <- list(step = step_df, run = run_df,
+                 export = export_df, criteria = criteria_df)
 
     if(!is.null(ret[[1]]$agents_before)) {
       ret1$agents_before <- nl_run_wrap_result_agents(ret, "agents_before")
@@ -229,15 +231,26 @@ nl_single_run <- function(experiment, parameter_space_id = NULL, run_id = NULL,
   # run
   if(length(experiment$measures$step) > 0 ) {
     # if any step measures defined - use RNetLogo::NLDoReportWhile
-    report_step <- RNetLogo::NLDoReportWhile(
-      condition = experiment$while_condition,
-      command = experiment$run_options$go_command,
-      reporter = experiment$measures$step,
-      as.data.frame = experiment$measures$as.data.frame,
-      df.col.names = names(experiment$measures$step),
-      max.minutes = experiment$run_options$max_minutes
-    )
-    report_step$tick <- as.numeric(row.names(report_step))
+    if(!is.null(experiment$while_condition)) {
+      report_step <- RNetLogo::NLDoReportWhile(
+        condition = experiment$while_condition,
+        command = experiment$run_options$go_command,
+        reporter = experiment$measures$step,
+        as.data.frame = experiment$measures$as.data.frame,
+        df.col.names = names(experiment$measures$step),
+        max.minutes = experiment$run_options$max_minutes
+      )
+    }
+    else {
+      report_step <- RNetLogo::NLDoReport(
+        iterations = experiment$iterations,
+        command = experiment$run_options$go_command,
+        reporter = experiment$measures$step,
+        as.data.frame = experiment$measures$as.data.frame,
+        df.col.names = names(experiment$measures$step)
+      )
+    }
+    report_step$step_id <- as.numeric(row.names(report_step))
     report_step$run_id <- run_id
     report_step$param_space_id <- parameter_space_id
     if(!is.null(experiment$measures$step_transform)) {
@@ -245,11 +258,18 @@ nl_single_run <- function(experiment, parameter_space_id = NULL, run_id = NULL,
     }
   } else {
     # no step measures - just run the model
-    RNetLogo::NLDoCommandWhile(
-      condition = experiment$while_condition,
-      experiment$run_options$go_command,
-      max.minutes = experiment$run_options$max_minutes
-    )
+    if(!is.null(experiment$while_condition)) {
+      RNetLogo::NLDoCommandWhile(
+        condition = experiment$while_condition,
+        experiment$run_options$go_command,
+        max.minutes = experiment$run_options$max_minutes
+      )
+    } else {
+      RNetLogo::NLDoCommand(
+        iterations = experiment$iterations,
+        experiment$run_options$go_command
+      )
+    }
     report_step <- NULL
   }
   # compute measures defined per run
@@ -295,6 +315,15 @@ nl_single_run <- function(experiment, parameter_space_id = NULL, run_id = NULL,
     ret$export <- nl_single_export(experiment, parameter_space_id, run_id)
   }
 
+  # if criteria function is defined
+  if(!is.null(experiment$measures$criteria_function)) {
+    criteria_vec <- experiment$measures$criteria_function(ret)
+    #ret <- NULL
+    ret$criteria <- as.data.frame(t(unlist(criteria_vec)))
+    ret$criteria$param_space_id <- parameter_space_id
+    ret$criteria$run_id <- run_id
+    ret$step <- NULL
+  }
   # if external data handler is defined
   if(!is.null(experiment$run_options$data_handler)) {
     experiment$run_options$data_handler(ret)

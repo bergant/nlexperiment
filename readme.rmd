@@ -58,6 +58,9 @@ library(ggplot2)
 ```{r ch6, child="readme_parts/readme7.rmd", cache=FALSE, eval=TRUE}
 ```
 
+```{r ch7, child="readme_parts/readme8.rmd", cache=FALSE, eval=TRUE}
+```
+
 
 
 ## References
