@@ -391,27 +391,20 @@ param_space <-
     outer_radius_y <- inner_radius_y + gap
   })
 
-#knitr::kable(param_space, caption = "Parameter space")
-
 mapping <- setNames(gsub("_", "-", names(param_space)),names(param_space))
 mapping[c("gap", "radius_diff")] <- c("","")
 
-knitr::kable(as.data.frame(mapping), caption = "Mapping")
+#knitr::kable(as.data.frame(mapping), caption = "Mapping", format = "markdown")
+cbind(mapping)
+#>                mapping         
+#> gap            ""              
+#> radius_diff    ""              
+#> ratio          "ratio"         
+#> outer_radius_y "outer-radius-y"
+#> inner_radius_y "inner-radius-y"
+#> outer_radius_x "outer-radius-x"
+#> inner_radius_x "inner-radius-x"
 ```
-
-
-
-Table: Mapping
-
-                 mapping        
----------------  ---------------
-gap                             
-radius_diff                     
-ratio            ratio          
-outer_radius_y   outer-radius-y 
-inner_radius_y   inner-radius-y 
-outer_radius_x   outer-radius-x 
-inner_radius_x   inner-radius-x 
 
 _Note:_ 
 
@@ -464,13 +457,13 @@ nl_show_views_grid(
 
 * Thiele, J. (2014) R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software 58(2) 1-41. http://www.jstatsoft.org/v58/i02/
 
-* Thiele, J. C., Kurth, W., & Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11.
+* Thiele, J. C., Kurth, W., & Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11. http://jasss.soc.surrey.ac.uk/17/3/11.html
 
 * Wilensky, U. (1997). NetLogo Fire model. http://ccl.northwestern.edu/netlogo/models/Fire. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 * Wilensky, U. (1997). NetLogo Ants model. http://ccl.northwestern.edu/netlogo/models/Ants. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
-Wilensky, U. (2003). NetLogo Fur model. http://ccl.northwestern.edu/netlogo/models/Fur. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+* Wilensky, U. (2003). NetLogo Fur model. http://ccl.northwestern.edu/netlogo/models/Fur. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 * Wilensky, U. (2005). NetLogo Preferential Attachment model. http://ccl.northwestern.edu/netlogo/models/PreferentialAttachment. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
