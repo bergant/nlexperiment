@@ -637,7 +637,7 @@ ggplot(dat2, aes(x = scout_prob, y = survival_prob)) +
 
 ## Resources
 
-* nlexperiment is using RNetLogo package to connect to NetLogo
+* nlexperiment requires RNetLogo to connect to NetLogo
 https://cran.r-project.org/web/packages/RNetLogo/index.html
 
 * The parallel implementation of `nl_run` function is based on the RNetLogo vignette
@@ -651,9 +651,9 @@ http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html
 article and its Supplementary Material
 http://sourceforge.net/projects/calibrationsensitivityanalysis/
 
-* This document is created with knitr package
+* This document was created with knitr package
 https://cran.r-project.org/web/packages/knitr/index.html
 
-* Graphics are created with ggplot2 package
+* Graphics were created with ggplot2 package
 https://cran.r-project.org/web/packages/ggplot2/index.html
 
