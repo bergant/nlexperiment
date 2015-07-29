@@ -4,13 +4,13 @@
 \alias{nl_single_run_setup}
 \title{Set up parameters and setup commands before run}
 \usage{
-nl_single_run_setup(experiment, parameter_space_id = NULL, run_id = NULL,
-  print_progress = FALSE)
+nl_single_run_setup(experiment, parameter_set_id = NULL, run_id = NULL,
+  print_progress = FALSE, param_set = NULL)
 }
 \arguments{
 \item{experiment}{see nl_single_run}
 
-\item{parameter_space_id}{see nl_single_run}
+\item{parameter_set_id}{see nl_single_run}
 
 \item{run_id}{see nl_single_run}
 }

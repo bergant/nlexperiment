@@ -27,7 +27,7 @@ experiment <- nl_experiment(
 Run the experiment:
 
 ```r
-result <- nl_run(experiment)
+result <- nl_run(experiment) 
 ```
 
 Find paths to the exported view image files in `result$export` or just display them by calling `nl_show_views_grid` function:

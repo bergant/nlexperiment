@@ -2,14 +2,14 @@
 #' Show view(s) from a NetLogo result object
 #'
 #' @param result NetLogo result object
-#' @param param_space_id Optional filter on parameter space ID
+#' @param param_set_id Optional filter on parameter space ID
 #' @param run_id Optional filter on run ID
 #' @export
-nl_show_view <- function(result, param_space_id = NULL, run_id = NULL) {
+nl_show_view <- function(result, param_set_id = NULL, run_id = NULL) {
 
   row_filter <- rep(TRUE, nrow(result$export))
-  if(!missing(param_space_id)) {
-    row_filter <- row_filter & result$export$param_space_id %in% param_space_id
+  if(!missing(param_set_id)) {
+    row_filter <- row_filter & result$export$param_set_id %in% param_set_id
   }
   if(!missing(run_id)) {
     row_filter <- row_filter & result$export$run_id == run_id
@@ -29,7 +29,7 @@ nl_show_view <- function(result, param_space_id = NULL, run_id = NULL) {
   invisible(img_files)
 }
 
-#' Show exported views images in grid
+#' Show exported views images in a grid
 #'
 #' @param result Result from \code{nl_run} function
 #' @param x_param Name of parameter on x axis
@@ -49,10 +49,10 @@ nl_show_views_grid <- function(result,
     stop("png package needed for this function to work. Please install it.",
          call. = FALSE)
   }
-  param_space <- result[["experiment"]][["param_space"]]
-  if(nrow(param_space) > 0) {
-    param_space[["param_space_id"]] <- 1:nrow(param_space)
-    dat <- merge(param_space, result[["export"]], by = "param_space_id")
+  param_sets <- result[["experiment"]][["param_sets"]]
+  if(nrow(param_sets) > 0) {
+    param_sets[["param_set_id"]] <- 1:nrow(param_sets)
+    dat <- merge(param_sets, result[["export"]], by = "param_set_id")
   } else {
     dat <- result[["export"]]
   }
@@ -145,15 +145,15 @@ nl_get_result <- function(result, add_parameters = TRUE, type = "run") {
     if(is.null(result$experiment)) {
       stop("No reference to experiment in the result")
     }
-    if(is.null(result$experiment$param_space)) {
+    if(is.null(result$experiment$param_sets)) {
       stop("No parameter space in referenced experiment")
     }
-    param_space <- result$experiment$param_space
-    param_space$param_space_id <- seq_along(param_space[[1]])
+    param_sets <- result$experiment$param_sets
+    param_sets$param_set_id <- seq_along(param_sets[[1]])
     if( !requireNamespace("dplyr", quietly = TRUE)) {
-      res <- merge(param_space, res, by = "param_space_id")
+      res <- merge(param_sets, res, by = "param_set_id")
     } else {
-      res <- dplyr::inner_join(param_space, res, by = "param_space_id")
+      res <- dplyr::inner_join(param_sets, res, by = "param_set_id")
     }
   }
 

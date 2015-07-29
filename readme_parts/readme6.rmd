@@ -54,12 +54,12 @@ _Note:_
 
 Run experiment
 ```{r p6RunModel, cache=TRUE}
-result <- nl_run(experiment)
+result <- nl_run(experiment) 
 ```
 
 Show graph by using **igraph** package:
 
-```{r p6Sigraph, dpi=200, fig.height=4, cache=FALSE}
+```{r p6Sigraph, dpi=200, fig.height=4}
 library(igraph, quietly = TRUE, warn.conflicts = FALSE)
 par(mfrow=c(1,2), mai=c(0,0,0,0))
 for(i in 1:experiment$run_options$repetitions) {

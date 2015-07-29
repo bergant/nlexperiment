@@ -22,7 +22,7 @@ If not defined all available processors will be used}
 }
 \value{
 Returns a list of values which depend on measures defined for each step
-  and/or for each run, parameter space, repetitions and export options.
+  and/or for each run, parameter sets, repetitions and export options.
   \itemize{
   \item Element \code{step} is a result of step measures.
   \item Element \code{run} is a result of run measures.
@@ -37,9 +37,9 @@ Run NetLogo experiment
 }
 \details{
 Model is run for each parameter combination
-  defined in parameter space. If \code{repetition} (defined in experiment)
+  defined in parameter sets If \code{repetition} (defined in experiment)
   is greater than \code{1} then
-  each parameter combination is repeated accordingly.
+  each run for a parameter set is repeated accordingly.
 
   Use parallel option if there are more than a few runs per processor core.
 }

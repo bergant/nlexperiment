@@ -35,7 +35,7 @@ Run the experiment with `parallel` option:
 
 ```r
 result <- nl_run(experiment, parallel = TRUE)
-# Join observations with parameter space values:
+# Join observations with parameter set values:
 dat <- nl_get_run_result(result, add_parameters = TRUE)
 ```
 

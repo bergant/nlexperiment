@@ -4,12 +4,12 @@
 \alias{nl_show_view}
 \title{Show view(s) from a NetLogo result object}
 \usage{
-nl_show_view(result, param_space_id = NULL, run_id = NULL)
+nl_show_view(result, param_set_id = NULL, run_id = NULL)
 }
 \arguments{
 \item{result}{NetLogo result object}
 
-\item{param_space_id}{Optional filter on parameter space ID}
+\item{param_set_id}{Optional filter on parameter space ID}
 
 \item{run_id}{Optional filter on run ID}
 }

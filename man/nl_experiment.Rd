@@ -9,7 +9,8 @@ nl_experiment(model_file, iterations = NULL, while_condition = NULL,
   run_measures = NULL, mapping = NULL, param_values = NULL,
   agents_after = NULL, patches_after = NULL, export_view = FALSE,
   export_world = FALSE, setup_commands = "setup", go_command = "go",
-  criteria_function = NULL, data_handler = NULL)
+  eval_criteria = NULL, eval_aggregate_fun = NULL, eval_mutate = NULL,
+  data_handler = NULL)
 }
 \arguments{
 \item{model_file}{An absolute path to your NetLogo model file (.nlogo)}
@@ -59,10 +60,15 @@ a csv file for each run}
 
 \item{go_command}{NetLogo command string to execute the step in the model}
 
-\item{criteria_function}{A criteria function. Must take one parameter
-which is a list of results of each simulation run.
-In the result list it may expect \code{step} or \code{run} data frames as
-list elements. Should return numeric value (or named vector)}
+\item{eval_criteria}{A criteria calculation expressions.
+May use \code{step} or \code{run} data frames to calculate criteria.
+Elements from \code{step} should be aggregated.
+Must return named numeric vector.}
+
+\item{eval_aggregate_fun}{Aggregation function
+(used to aggregate criteria values when repetitions > 1)}
+
+\item{eval_mutate}{Add criteria based on aggregated values}
 
 \item{data_handler}{Function to handle observations. If handler is defined
 the observations will not be stored in result elements when running
@@ -93,6 +99,6 @@ To run experiment use \code{\link{nl_run}}.
   To change existing
   experiment object see \code{\link{nl_set_measures}},
   \code{\link{nl_set_run_options}} and
-  \code{\link{nl_set_param_space}}.
+  \code{\link{nl_set_param_values}}.
 }
 

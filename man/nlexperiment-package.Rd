@@ -23,8 +23,8 @@ and return to refine the experiment definition.
 
 Functions in \bold{nlexperiment} assume the following steps:
 \itemize{
-\item Define NetLogo experiment object with parameter space definition,
-   selected measures and other related simulation options
+\item Define NetLogo experiment object with parameter sets,
+   measures and other related simulation options
    (see \code{\link{nl_experiment}} function).
 \item Run experiment (see \code{\link{nl_run}}).
   The result of running an experiment keeps original
@@ -37,7 +37,7 @@ Functions in \bold{nlexperiment} assume the following steps:
 \item When additional questions pop out, changes to
   experiment will be needed.
   Refine the original definition of the experiment by
-  changing only parameter space (\code{\link{nl_set_param_space}}),
+  changing only parameter sets (\code{\link{nl_set_param_values}}),
   set different measures (\code{\link{nl_set_measures}}) or set other simulation
   options (\code{\link{nl_set_run_options}}).
 }

@@ -4,7 +4,7 @@
 \alias{nl_single_export}
 \title{Export view and/or world for individual run}
 \usage{
-nl_single_export(experiment, param_space_id = NA, run_id = 1)
+nl_single_export(experiment, param_set_id = NA, run_id = 1)
 }
 \arguments{
 \item{experiment}{experiment object}

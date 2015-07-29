@@ -22,9 +22,9 @@ library(ggplot2)
 ```
 
 
-## Explicit definition of parameter sets (fur model)
+## Parameter space mapping
 The following example is using NetLogo Fur model (Wilensky 2003) to show 
-explicit parameter space definition and parameter mapping.
+explicit definition of parameter sets and parameter mapping.
 
 There are 5 parameters in the NetLogo Fur model:
 
@@ -45,7 +45,7 @@ create parameter sets based on combinations of
 For simplicity lets keep the `gap` between the circles constant:
 
 ```{r p7paramSpace}
-# prepare parameter space
+# prepare parameter set in transposed parameter space 
 param_sets <- 
   expand.grid(
     gap = 3, 
@@ -64,7 +64,6 @@ param_sets <-
 mapping <- setNames(gsub("_", "-", names(param_sets)),names(param_sets))
 mapping[c("gap", "radius_diff")] <- c("","")
 
-#knitr::kable(as.data.frame(mapping), caption = "Mapping", format = "markdown")
 cbind(mapping)
 ```
 

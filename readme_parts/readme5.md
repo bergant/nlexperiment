@@ -48,7 +48,7 @@ that makes the R part of data manipulation rather uncomfortable._
 Run experiment
 
 ```r
-results <- nl_run(experiment)
+results <- nl_run(experiment) 
 ```
 
 Show views
@@ -67,7 +67,7 @@ dat <- nl_get_step_result(results)
 dat <- tidyr::gather(dat, pile, value, pile1, pile2, pile3)
 
 library(ggplot2)
-ggplot(dat, aes(x = tick, y = value, color = pile) ) +
+ggplot(dat, aes(x = step_id, y = value, color = pile) ) +
   geom_line() +
   facet_grid(diffusion_rate ~ evaporation_rate)
 ```

@@ -10,11 +10,12 @@
     \item nl_run_init
     \item nl_single_run
     \itemize{
-      \item nl_single_run_setup setting parameters, setup commands
-      \item execute NLDoReportWhile | NLDoCommandWhile
+      \item nl_single_run_setup (setting parameters, setup commands)
+      \item execute RNetLogo::NLDo*
       \item get run measures
       \item nl_single_agent_report
       \item nl_single_export
+      \item calling criteria function
       \item calling external data handler
     }
     \item nl_run_wrap_results

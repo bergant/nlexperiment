@@ -18,8 +18,8 @@
 #'
 #' Functions in \bold{nlexperiment} assume the following steps:
 #' \itemize{
-#' \item Define NetLogo experiment object with parameter space definition,
-#'    selected measures and other related simulation options
+#' \item Define NetLogo experiment object with parameter sets,
+#'    measures and other related simulation options
 #'    (see \code{\link{nl_experiment}} function).
 #' \item Run experiment (see \code{\link{nl_run}}).
 #'   The result of running an experiment keeps original
@@ -32,7 +32,7 @@
 #' \item When additional questions pop out, changes to
 #'   experiment will be needed.
 #'   Refine the original definition of the experiment by
-#'   changing only parameter space (\code{\link{nl_set_param_space}}),
+#'   changing only parameter sets (\code{\link{nl_set_param_values}}),
 #'   set different measures (\code{\link{nl_set_measures}}) or set other simulation
 #'   options (\code{\link{nl_set_run_options}}).
 #' }
@@ -88,7 +88,7 @@
 #' }
 NULL
 
-# package options (used for NetLogo path and other session settings)
+# package options
 nl_options_class <- function() {
   options <- list()
   set <- function(key, value) {
@@ -112,14 +112,12 @@ nl_special_params <- c("world_size")
 #' @param nl_path An absolute path to your NetLogo installation
 #'   (the folder where the NetLogo.jar is) starting from the root.
 #'   On Windows, for example, something like "C:/Program Files/NetLogo 5.1.0".
-#' @details Option is defined per session. When R session is restarded
-#'   and nlexperiment loaded, NetLogo path is empty.
 #' @export
 nl_netlogo_path <- function(nl_path = NULL) {
   if(missing(nl_path)) {
-    nl_options$get("nl_path")
+    getOption("nlexperiment.netlogo_path")
   } else {
-    nl_options$set("nl_path", nl_path)
+    invisible(options(nlexperiment.netlogo_path = nl_path))
   }
 }
 
@@ -134,9 +132,9 @@ nl_netlogo_path <- function(nl_path = NULL) {
 #' @export
 nl_export_path <- function(export_path = NULL) {
   if(missing(export_path)) {
-    nl_options$get("export_path")
+    getOption("nlexperiment.export_path")
   } else {
-    nl_options$set("export_path", export_path)
+    invisible(options(nlexperiment.export_path = export_path))
   }
 }
 
@@ -176,10 +174,13 @@ nl_export_path <- function(export_path = NULL) {
 #'   a csv file for each run
 #' @param setup_commands NetLogo command strings to execute to setup the model
 #' @param go_command NetLogo command string to execute the step in the model
-#' @param criteria_function A criteria function. Must take one parameter
-#'   which is a list of results of each simulation run.
-#'   In the result list it may expect \code{step} or \code{run} data frames as
-#'   list elements. Should return numeric value (or named vector)
+#' @param eval_criteria A criteria calculation expressions.
+#'   May use \code{step} or \code{run} data frames to calculate criteria.
+#'   Elements from \code{step} should be aggregated.
+#'   Must return named numeric vector.
+#' @param eval_aggregate_fun Aggregation function
+#'   (used to aggregate criteria values when repetitions > 1)
+#' @param eval_mutate Add criteria based on aggregated values
 #' @param data_handler Function to handle observations. If handler is defined
 #'   the observations will not be stored in result elements when running
 #'   the experiment with `nl_run` function.
@@ -201,7 +202,7 @@ nl_export_path <- function(export_path = NULL) {
 #'   To change existing
 #'   experiment object see \code{\link{nl_set_measures}},
 #'   \code{\link{nl_set_run_options}} and
-#'   \code{\link{nl_set_param_space}}.
+#'   \code{\link{nl_set_param_values}}.
 #' @export
 nl_experiment <- function(model_file,
                           iterations = NULL,
@@ -218,7 +219,9 @@ nl_experiment <- function(model_file,
                           export_world = FALSE,
                           setup_commands = "setup",
                           go_command = "go",
-                          criteria_function = NULL,
+                          eval_criteria = NULL,
+                          eval_aggregate_fun = NULL,
+                          eval_mutate = NULL,
                           data_handler = NULL
                           ) {
   if(missing(while_condition) && missing(iterations)) {
@@ -241,18 +244,21 @@ nl_experiment <- function(model_file,
                                    setup_commands = setup_commands,
                                    go_command = go_command,
                                    data_handler = data_handler)
-  # set default measures (no measures)
+  # set measures and evaluation criteria
   experiment <- nl_set_measures(experiment,
                                 step = step_measures,
                                 run = run_measures,
-                                criteria_function = criteria_function)
+                                eval_criteria = eval_criteria,
+                                eval_aggregate_fun = eval_aggregate_fun,
+                                eval_mutate = eval_mutate)
   # set agent reports
   experiment <- nl_set_agent_reports(experiment,
                                      agents_after = agents_after,
                                      patches_after = patches_after)
 
-  # set default param space (empty data.frame)
-  experiment <- nl_set_param_space(experiment, param_values = param_values)
+  # set parameter sets
+  experiment <- nl_set_param_values(experiment,
+                                    param_values = param_values)
 
   return(experiment)
 }
@@ -278,6 +284,20 @@ nl_experiment <- function(model_file,
 measures <- function(...) {
   unlist(list(...))
 }
+
+#' Criteria expression from a list of expressions
+#'
+#' Used in evaluate element in \code{\link{nl_experiment}} or
+#'   \code{\link{nl_set_measures}}
+#'
+#' @details Must evaluate to a numeric
+#' @param ... expressions
+#' @export
+#' @keywords internal
+criteria <- function(...) {
+  substitute(list(...))
+}
+
 
 #' Create an agent set reporter
 #'
@@ -383,10 +403,13 @@ nl_set_run_options <- function(
 #' @param run NetLogo reporters for each run (reported at end of run).
 #'   A list of named character vectors. Use \code{\link{measures}} function to get
 #'   the correct structure.
-#' @param criteria_function A criteria function. Must take one parameter
-#'   which is a list of results of each simulation run.
-#'   In the result list it may expect \code{step} or \code{run} data frames as
-#'   list elements. Should return numeric value (or named vector)
+#' @param eval_criteria A criteria calculation expressions.
+#'   May use \code{step} or \code{run} data frames to calculate criteria.
+#'   Elements from \code{step} should be aggregated.
+#'   Must return named numeric vector.
+#' @param eval_aggregate_fun Aggregate criteria.
+#'   It makes sense when when repetitions > 1
+#' @param eval_mutate Add criteria based on aggregated values
 #' @param as.data.frame Reporting in data frame format (TRUE by default)
 #' @param step_transform A function to transform data frame result from
 #'   step reporters. When simulation has many steps and only summary
@@ -401,7 +424,9 @@ nl_set_run_options <- function(
 nl_set_measures <- function(experiment,
                         step = NULL,
                         run = NULL,
-                        criteria_function = NULL,
+                        eval_criteria = NULL,
+                        eval_aggregate_fun = NULL,
+                        eval_mutate = NULL,
                         as.data.frame = TRUE,
                         step_transform = NULL) {
   if(!inherits(experiment, nl_experiment_class))
@@ -410,7 +435,9 @@ nl_set_measures <- function(experiment,
   experiment$measures <-
     list(step = step,
          run = run,
-         criteria_function = criteria_function,
+         eval_criteria = eval_criteria,
+         eval_aggregate_fun = eval_aggregate_fun,
+         eval_mutate = eval_mutate,
          as.data.frame = as.data.frame,
          step_transform = step_transform)
 
@@ -453,27 +480,27 @@ nl_set_agent_reports <- function(experiment,
 }
 
 
-#' Define parameter space for NetLogo experiment
+#' Define parameter sets for NetLogo experiment
 #'
 #' @param experiment NetLogo experiment object from nl_experiment() function
 #' @param param_values A data.frame with parameter values or
 #'   a list of values to be expanded to all combinations of values
 #' @return NetLogo experiment object
 #' @export
-nl_set_param_space <- function(experiment, param_values = NULL ) {
+nl_set_param_values <- function(experiment, param_values = NULL ) {
   if(!inherits(experiment, nl_experiment_class))
     stop("Not a NetLogo experiment object")
 
   if(missing(param_values) || is.null(param_values)) {
-    param_space <- data.frame()
+    param_sets <- data.frame()
   } else if(inherits(param_values, "data.frame")) {
-    param_space <- param_values
+    param_sets <- param_values
   } else if(inherits(param_values, "list")) {
-    param_space <- expand.grid(param_values)
+    param_sets <- expand.grid(param_values)
   } else {
     stop("Attribute param_values should be a data frame or a list")
   }
-  experiment$param_space <- param_space
+  experiment$param_sets <- param_sets
   experiment
 }
 
@@ -510,10 +537,10 @@ print.nl_experiment <- function(x, ...) {
     if(length(names(measures$run))>0) {
       cat("Run measures: ", names(measures$run), "\n")
     }
-    cat("Parameter space: ")
-    if(!is.null(param_space) && nrow(param_space) > 0) {
-      cat("\n  Size: ", nrow(param_space))
-      cat("\n  Parameters: ", names(param_space))
+    cat("Parameter sets: ")
+    if(!is.null(param_sets) && nrow(param_sets) > 0) {
+      cat("\n  Size: ", nrow(param_sets))
+      cat("\n  Parameters: ", names(param_sets))
     } else {
       cat("No parameters")
     }

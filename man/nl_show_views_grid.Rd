@@ -2,7 +2,7 @@
 % Please edit documentation in R/nlresult.R
 \name{nl_show_views_grid}
 \alias{nl_show_views_grid}
-\title{Show exported views images in grid}
+\title{Show exported views images in a grid}
 \usage{
 nl_show_views_grid(result, x_param = NULL, y_param = NULL, img_gap = 0.03)
 }
@@ -16,6 +16,6 @@ nl_show_views_grid(result, x_param = NULL, y_param = NULL, img_gap = 0.03)
 \item{img_gap}{A gap between the images}
 }
 \description{
-Show exported views images in grid
+Show exported views images in a grid
 }
 

@@ -14,8 +14,4 @@ On Windows, for example, something like "C:/Program Files/NetLogo 5.1.0".}
 \description{
 Get and set netlogo path
 }
-\details{
-Option is defined per session. When R session is restarded
-  and nlexperiment loaded, NetLogo path is empty.
-}
 

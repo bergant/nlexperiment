@@ -38,8 +38,8 @@ _Note:_
 Run experiment
 
 ```r
-result <- nl_run(experiment)
-#> Warning: Parameter space not defined. Using default parameters
+result <- nl_run(experiment) 
+#> Warning: Parameter sets not defined. Using default parameters
 ```
 
 Show graph by using **igraph** package:

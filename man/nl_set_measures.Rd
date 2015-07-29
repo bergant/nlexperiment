@@ -4,8 +4,9 @@
 \alias{nl_set_measures}
 \title{Set or change measures of existing NetLogo experiment}
 \usage{
-nl_set_measures(experiment, step = NULL, run = NULL,
-  criteria_function = NULL, as.data.frame = TRUE, step_transform = NULL)
+nl_set_measures(experiment, step = NULL, run = NULL, eval_criteria = NULL,
+  eval_aggregate_fun = NULL, eval_mutate = NULL, as.data.frame = TRUE,
+  step_transform = NULL)
 }
 \arguments{
 \item{experiment}{NetLogo experiment object}
@@ -18,10 +19,15 @@ the correct structure.}
 A list of named character vectors. Use \code{\link{measures}} function to get
 the correct structure.}
 
-\item{criteria_function}{A criteria function. Must take one parameter
-which is a list of results of each simulation run.
-In the result list it may expect \code{step} or \code{run} data frames as
-list elements. Should return numeric value (or named vector)}
+\item{eval_criteria}{A criteria calculation expressions.
+May use \code{step} or \code{run} data frames to calculate criteria.
+Elements from \code{step} should be aggregated.
+Must return named numeric vector.}
+
+\item{eval_aggregate_fun}{Aggregate criteria.
+It makes sense when when repetitions > 1}
+
+\item{eval_mutate}{Add criteria based on aggregated values}
 
 \item{as.data.frame}{Reporting in data frame format (TRUE by default)}
 

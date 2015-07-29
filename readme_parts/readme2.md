@@ -27,7 +27,7 @@ experiment <- nl_experiment(
 Run the experiment:
 
 ```r
-result <- nl_run(experiment)     
+result <- nl_run(experiment)
 ```
 
 Plot of burned forest as a function of time for different forest densities:
@@ -46,6 +46,6 @@ ggplot(dat, mapping = aes(x = step_id, y = percent_burned)) +
 ![](img/README-model_step_plot-1.png) 
 
 *Note: values `run_id` and `step_id` are included in the `results$step` by default.
-Parameter values are included only by reference to `parameter_space_id`. The 
-function `nl_get_result` joins parameter space to observation data.*
+Parameter values are included only by reference to `parameter_set_id`. The 
+function `nl_get_result` joins parameter sets to observation data.*
 
