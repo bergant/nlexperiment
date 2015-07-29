@@ -19,9 +19,9 @@ library(nlexperiment)
 ```
 
 
-## Simple parameter space definition
+## Simple parameter sets definition
 The following example is using Ant model (Wilensky 1997) to show 
-simple parameter space definition and parameter mapping.
+simple parameter sets definition and parameter mapping.
 
 ```{r p5experiment}
 experiment <- nl_experiment(
@@ -50,8 +50,8 @@ experiment <- nl_experiment(
 
 _Note:_
 
-* _When parameters are defined as a list of value vecors, parameter space is
-  constructed as combination of all possible parameter sets
+* _When parameters are defined as a list of value vecors, parameter sets are
+  constructed as combination of all possible parameter value combination_
 * _It is not required to include all parameters in mapping. Variable `population` 
 is used as is._
 * _NetLogo identifiers may include some ASCII characters `(?=*!<>:#+/%$^'&-)`

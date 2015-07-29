@@ -5,9 +5,9 @@
 
 
 
-## Explicit definition of parameter sets (fur model)
+## Parameter space mapping
 The following example is using NetLogo Fur model (Wilensky 2003) to show 
-explicit parameter space definition and parameter mapping.
+explicit definition of parameter sets and parameter mapping.
 
 There are 5 parameters in the NetLogo Fur model:
 
@@ -29,7 +29,7 @@ For simplicity lets keep the `gap` between the circles constant:
 
 
 ```r
-# prepare parameter space
+# prepare parameter set in transposed parameter space 
 param_sets <- 
   expand.grid(
     gap = 3, 
@@ -48,7 +48,6 @@ param_sets <-
 mapping <- setNames(gsub("_", "-", names(param_sets)),names(param_sets))
 mapping[c("gap", "radius_diff")] <- c("","")
 
-#knitr::kable(as.data.frame(mapping), caption = "Mapping", format = "markdown")
 cbind(mapping)
 #>                mapping         
 #> gap            ""              
@@ -92,7 +91,7 @@ _Note:_
 Run experiment
 
 ```r
-result <- nl_run(experiment, parallel = TRUE, max_cores = 3) 
+result <- nl_run(experiment, parallel = TRUE, max_cores = 3)  
 ```
 
 Show resulting fur patterns:

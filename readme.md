@@ -52,7 +52,7 @@ experiment <- nl_experiment(
 Run the experiment:
 
 ```r
-result <- nl_run(experiment)
+result <- nl_run(experiment) 
 ```
 
 Find paths to the exported view image files in `result$export` or just display them by calling `nl_show_views_grid` function:
@@ -96,7 +96,7 @@ experiment <- nl_experiment(
 Run the experiment:
 
 ```r
-result <- nl_run(experiment)     
+result <- nl_run(experiment)
 ```
 
 Plot of burned forest as a function of time for different forest densities:
@@ -115,8 +115,8 @@ ggplot(dat, mapping = aes(x = step_id, y = percent_burned)) +
 ![](img/README-model_step_plot-1.png) 
 
 *Note: values `run_id` and `step_id` are included in the `results$step` by default.
-Parameter values are included only by reference to `parameter_space_id`. The 
-function `nl_get_result` joins parameter space to observation data.*
+Parameter values are included only by reference to `parameter_set_id`. The 
+function `nl_get_result` joins parameter sets to observation data.*
 
 
 
@@ -157,7 +157,7 @@ Run the experiment with `parallel` option:
 
 ```r
 result <- nl_run(experiment, parallel = TRUE)
-# Join observations with parameter space values:
+# Join observations with parameter set values:
 dat <- nl_get_run_result(result, add_parameters = TRUE)
 ```
 
@@ -228,8 +228,8 @@ _Note:_
 Run experiment
 
 ```r
-result <- nl_run(experiment)
-#> Warning: Parameter space not defined. Using default parameters
+result <- nl_run(experiment) 
+#> Warning: Parameter sets not defined. Using default parameters
 ```
 
 Show graph by using **igraph** package:
@@ -274,9 +274,9 @@ _Note:_
 
 
 
-## Simple parameter space definition
+## Simple parameter sets definition
 The following example is using Ant model (Wilensky 1997) to show 
-simple parameter space definition and parameter mapping.
+simple parameter sets definition and parameter mapping.
 
 
 ```r
@@ -305,8 +305,8 @@ experiment <- nl_experiment(
 
 _Note:_
 
-* _When parameters are defined as a list of value vecors, parameter space is
-  constructed as combination of all possible parameter sets
+* _When parameters are defined as a list of value vecors, parameter sets are
+  constructed as combination of all possible parameter value combination_
 * _It is not required to include all parameters in mapping. Variable `population` 
 is used as is._
 * _NetLogo identifiers may include some ASCII characters `(?=*!<>:#+/%$^'&-)`
@@ -317,7 +317,7 @@ that makes the R part of data manipulation rather uncomfortable._
 Run experiment
 
 ```r
-results <- nl_run(experiment)
+results <- nl_run(experiment) 
 ```
 
 Show views
@@ -336,7 +336,7 @@ dat <- nl_get_step_result(results)
 dat <- tidyr::gather(dat, pile, value, pile1, pile2, pile3)
 
 library(ggplot2)
-ggplot(dat, aes(x = tick, y = value, color = pile) ) +
+ggplot(dat, aes(x = step_id, y = value, color = pile) ) +
   geom_line() +
   facet_grid(diffusion_rate ~ evaporation_rate)
 ```
@@ -352,9 +352,9 @@ ggplot(dat, aes(x = tick, y = value, color = pile) ) +
 
 
 
-## Explicit definition of parameter sets (fur model)
+## Parameter space mapping
 The following example is using NetLogo Fur model (Wilensky 2003) to show 
-explicit parameter space definition and parameter mapping.
+explicit definition of parameter sets and parameter mapping.
 
 There are 5 parameters in the NetLogo Fur model:
 
@@ -376,7 +376,7 @@ For simplicity lets keep the `gap` between the circles constant:
 
 
 ```r
-# prepare parameter space
+# prepare parameter set in transposed parameter space 
 param_sets <- 
   expand.grid(
     gap = 3, 
@@ -395,7 +395,6 @@ param_sets <-
 mapping <- setNames(gsub("_", "-", names(param_sets)),names(param_sets))
 mapping[c("gap", "radius_diff")] <- c("","")
 
-#knitr::kable(as.data.frame(mapping), caption = "Mapping", format = "markdown")
 cbind(mapping)
 #>                mapping         
 #> gap            ""              
@@ -439,7 +438,7 @@ _Note:_
 Run experiment
 
 ```r
-result <- nl_run(experiment, parallel = TRUE, max_cores = 3) 
+result <- nl_run(experiment, parallel = TRUE, max_cores = 3)  
 ```
 
 Show resulting fur patterns:
@@ -462,94 +461,92 @@ nl_show_views_grid(
 
 
 
-
 ## Explore parameter space with criteria function
-Getting all the observations per iterations steps in the memory may
-exceed the memory capacity. Sometime it is better to store just
-some aggregated values per each run.
+This example uses NetLogo Hoopoes model from Railsback & Grimm (2011).
+Here the approach is the same as in the Thiele, Kurth & Grimm (2014)
+except using the **nlexperiment** framework instead of original R scripts.
+See Factorial design and Latin hypercube sampling chapters in the 
+[article](http://jasss.soc.surrey.ac.uk/17/3/11.html). 
 
-This example uses Hoopoes model taken from Thiele, Kurth & Grimm (2014).
-Here the approach is the same as in the article (chapters *Factorial design*
-and *Latin hypercube sampling*) 
-except using the **nlexperiment** package framework instead of original R scripts.
-[Reading](http://jasss.soc.surrey.ac.uk/17/3/11.html) 
-the article will improve understanding of the following tutorial.
-
-Define an experiment:
+Define an experiment with evaluation criteria  
+*abundance*, *variation* and *vacancy* (see `eval_criteria` element)
+and categorical boolean criteria based on satisfactory ranges (see `eval_mutate`):
 
 
 ```r
 experiment <- nl_experiment( 
   model_file = 
     system.file("netlogo_models/SM2_Hoopoes.nlogo", package = "nlexperiment"),
-
+  
   setup_commands = c("setup", "repeat 24 [go]"), # 2 years of warming-up
   go_command = "repeat 12 [go]",                 # iteration is per year
   iterations = 20,                               # run for 20 years
   repetitions = 10,                              # repeat simulation 10 times
-
-  param_values = list(
+  
+  param_values = list(                           # "full factor design"
     scout_prob = seq(from = 0.00, to = 0.50, by = 0.05),
     survival_prob = seq(from = 0.950, to = 1.000, by = 0.005)
   ),
-  mapping = c(
+  mapping = c(                                   # map NetLogo variables
     scout_prob = "scout-prob", 
     survival_prob = "survival-prob"
   ),
-  step_measures = measures(
-    year = "year",
-    abund = "month-11-count",
-    alpha = "month-11-alpha",
+  
+  step_measures = measures(                      # NetLogo reporters per step
+    abund = "month-11-count",             
+    alpha = "month-11-alpha",                 
     patches_count = "count patches"
   ),
-  criteria_function = function(result) {         # aggregate measures
-    with(result$step, c(
-      abundance = mean(abund),
-      variation = sd(abund),
-      vacancy   = mean(alpha / patches_count)
-    ))
-  }
+
+  eval_criteria = criteria(                      # evaluation per each run
+    abundance = mean(step$abund),
+    variation = sd(step$abund),
+    vacancy = mean(step$alpha / step$patches_count)
+  ),
+  
+  eval_aggregate_fun = mean,                     # mean value (10 repetitions)
+  
+  eval_mutate = criteria(                        # add categorical values
+    c_abundance = abundance > 115 & abundance < 135,
+    c_variation = variation > 10 & variation < 15,
+    c_vacancy = vacancy > 0.15 & vacancy < 0.30
+  )  
 )
 ```
 
 _Note:_ 
 
-* _The iteration step is set to 12 times calling `go` procedure (12 months of simulation)_
-* _In this case we are using all combinations of parameter values_
+* _The iteration is set to 12 times calling `go` procedure (1 iteration step = 12 NetLogo ticks)_
+* _When using list of parameter values, full parameter set is evaluated_
 * _Criteria function receives all the results from model run and returns numerical vector_ 
+* _Results from criteria function are aggregated by parameter sets over 10 repetitions_
+* _Additionally categorical criteria is defined with ranges_
 
 Run experiment:
 
 ```r
-result <- nl_run(experiment, parallel = TRUE)
+result <- nl_run(experiment, parallel = TRUE) 
 # get the data (criteria)
-dat <- nl_get_result(result, type = "criteria")
+dat <- nl_get_result(result, type = "criteria") 
 ```
 
-The result includes the data per each run (10 values per parameter set).
-We have to aggregate it.
-Additionally the categorical criteria is added with boolean expressions
-(see chapter *Preliminaries: Fitting criteria for the example model*):
-
+Returned data frame includes parameter sets with evaluation criteria:
 
 ```r
-prepare_criteria <- function(dat) {
-  # aggregate values for all simulation repetitions
-  dat <- aggregate(
-    formula = cbind(abundance, variation, vacancy) ~ scout_prob + survival_prob, 
-    data = dat, FUN = mean)
-  
-  # categorical criteria
-  dat <- within(dat, {
-     c_abundance = abundance > 115 & abundance < 135
-     c_variation = variation > 10 & variation < 15
-     c_vacancy = vacancy > 0.15 & vacancy < 0.30
-  })
-}
-dat <- prepare_criteria(dat)
+str(dat)
+#> 'data.frame':	121 obs. of  9 variables:
+#>  $ scout_prob   : num  0 0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 ...
+#>  $ survival_prob: num  0.95 0.95 0.95 0.95 0.95 0.95 0.95 0.95 0.95 0.95 ...
+#>  $ param_set_id : int  1 2 3 4 5 6 7 8 9 10 ...
+#>  $ abundance    : num  4.67 4.46 5.08 6.18 5.35 ...
+#>  $ variation    : num  9.15 8.15 9.67 11.12 9.58 ...
+#>  $ vacancy      : num  0.981 0.98 0.98 0.966 0.976 ...
+#>  $ c_abundance  : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+#>  $ c_variation  : logi  FALSE FALSE FALSE TRUE FALSE FALSE ...
+#>  $ c_vacancy    : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
 ```
 
-Plot categorical criteria on parameter space:
+Plot categorical criteria on the model parameter space:
 
 ```r
 library(ggplot2)
@@ -573,35 +570,30 @@ from **tgp** package:
 # use Latin Hypercube sampling to sample 50 parameter sets
 library(tgp)
 param_sets <- lhs(n=50, rect=matrix(c(0.0, 0.95, 0.5, 1.0), 2)) 
+param_sets <- setNames(as.data.frame(param_sets), c("scout_prob", "survival_prob")) 
 ```
 
-To change only parameter sets of experiment object use `nl_set_param_space`:
+To change only parameter sets one can use `nl_set_param_values`
+instead of defining all experiment definitions with `nl_experiment`:
 
 ```r
 # change parameters of existing experiment
-experiment <- nl_set_param_space( experiment,
-  param_values = 
-    setNames(
-      as.data.frame(param_sets), 
-      c("scout_prob", "survival_prob")
-    )
+experiment <- nl_set_param_values( experiment,
+  param_values = param_sets
 )
 ```
 
 Run the model with new parameters:
 
 ```r
-result2 <- nl_run(experiment, parallel = TRUE)
+result2 <- nl_run(experiment, parallel = TRUE) 
 # get the data (criteria)
 dat2 <- nl_get_result(result2, type = "criteria")
 ```
 
-The rest of  data munging and plotting is same as before:
+
 
 ```r
-# aggregate values for all simulation repetitions
-dat2 <- prepare_criteria(dat2)
-
 ggplot(dat2, aes(x = scout_prob, y = survival_prob)) +
   geom_point() +
   geom_point(data = subset(dat2, c_abundance), color = "red", size = 7, shape = 2) +
@@ -621,6 +613,8 @@ ggplot(dat2, aes(x = scout_prob, y = survival_prob)) +
 * Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 * Thiele, J. (2014) R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software 58(2) 1-41. http://www.jstatsoft.org/v58/i02/
+
+* Railsback, S. F., & Grimm, V. (2011). Agent-Based and Individual-Based Modeling: A Practical Introduction. Princeton University Press.
 
 * Thiele, J. C., Kurth, W., & Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11. http://jasss.soc.surrey.ac.uk/17/3/11.html
 

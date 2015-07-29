@@ -97,7 +97,7 @@ _Note:_
 
 Run experiment
 ```{r p7RunModel, cache=TRUE}
-result <- nl_run(experiment, parallel = TRUE, max_cores = 3) 
+result <- nl_run(experiment, parallel = TRUE, max_cores = 3)  
 ```
 
 Show resulting fur patterns:
