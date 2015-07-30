@@ -1,8 +1,8 @@
 Package: nlexperiment
 Type: Package
-Title: NetLogo experiments
-Version: 0.1
-Date: 2015-06-26
+Title: NetLogo Experiments
+Version: 0.1-2
+Date: 2015-07-30
 Author: Darko Bergant
 Maintainer: Darko Bergant <darko.bergant@gmail.com>
 Description: Define and run controlled NetLogo experiments

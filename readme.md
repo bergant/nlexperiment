@@ -5,10 +5,9 @@
 
 ####Define and run NetLogo experiments in R##
 
-The goal of **nlexperiment** is to make
-exploring agent based models in [NetLogo](http://ccl.northwestern.edu/netlogo/) (Wilensky 1999) as simple as possible (like NetLogo 
-[Behavior Space](http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html) tool)
-while keeping complex functionalities available for
+The goal of **nlexperiment** is to 
+explore NetLogo models in R as simple as possible 
+while keeping advanced functionalities available to
 advanced users.
 It uses [RNetLogo](https://cran.r-project.org/web/packages/RNetLogo/)
 package (Thiele 2014) as an interface to NetLogo.
