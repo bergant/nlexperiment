@@ -21,8 +21,8 @@ knitr::opts_chunk$set(
 
 ####Define and run NetLogo experiments in R
 
-The goal of **nlexperiment** is to make 
-exploring NetLogo models with R as simple as possible 
+The goal of **nlexperiment** is to 
+explore NetLogo models in R as simple as possible 
 while keeping advanced functionalities available to
 advanced users.
 It uses [RNetLogo](https://cran.r-project.org/web/packages/RNetLogo/)
