@@ -4,20 +4,23 @@
 #' \item nl_run | nl_run_parallel
 #'   \itemize{
 #'     \item nl_run_init
-#'     \item nl_single_run
+#'     \item nl_get_schedule
+#'     \item nl_run_schedule
 #'     \itemize{
-#'       \item nl_single_run_setup (setting parameters, setup commands)
-#'       \item execute RNetLogo::NLDo*
-#'       \item get run measures
-#'       \item nl_single_agent_report
-#'       \item nl_single_export
-#'       \item calling criteria function
-#'       \item calling external data handler
+#'       \item nl_single_run
+#'         \itemize{
+#'           \item nl_single_run_setup (setting parameters, setup commands)
+#'           \item execute RNetLogo::NLDo*
+#'           \item get run measures
+#'           \item nl_single_agent_report
+#'           \item nl_single_export
+#'           \item calling criteria function
+#'           \item calling external data handler
+#'       \item nl_run_wrap_results
 #'     }
-#'     \item nl_run_wrap_results
 #'     \item nl_run_end
 #'   }
-#' }
+#' }}
 #'
 #' @name run.steps
 #' @keywords internal
@@ -62,25 +65,15 @@ nl_run <- function(experiment, print_progress = FALSE, gui = FALSE,
   if(parallel) {
     return(nl_run_parallel(experiment, nl_path, print_progress, gui, max_cores))
   }
+
   on.exit(nl_run_end())
   nl_run_init(gui = gui, nl_path = nl_path, model_path = experiment$model_file)
 
-  start_time <- Sys.time()
+  # get schedule (simulation plan)
+  run_schedule <- nl_get_schedule(experiment)
+  # run schedule
+  ret <- nl_run_schedule(experiment, run_schedule, print_progress)
 
-  run_schedule <- nl_run_schedule(experiment)
-
-  ret <- lapply(seq_len(nrow(run_schedule)),
-                function(i) {
-                  nl_single_run(
-                    experiment = experiment,
-                    parameter_set_id = run_schedule[i, "param_set_id"],
-                    run_id = run_schedule[i, "run_id"],
-                    print_progress = print_progress
-                  )
-                }
-  )
-
-  ret <- nl_run_wrap_results(experiment, ret, start_time)
 }
 
 
@@ -101,50 +94,61 @@ nl_run_parallel <- function(experiment, nl_path, print_progress = FALSE,
   cl <- parallel::makeCluster(processors)
 
   on.exit({
-    invisible(
-      parallel::parLapply(cl, 1:processors, nl_run_end)
-    )
+    parallel::clusterCall(cl, nl_run_end)
     parallel::stopCluster(cl)
   })
 
-  #   invisible(
-  #     parallel::parLapply(
-  #       cl, 1:processors, nl_run_init,
-  #       gui=gui, nl_path = nl_path, model_path = experiment$model_file)
-  #   )
   parallel::clusterCall(cl, nl_run_init, gui=gui, nl_path = nl_path,
                         model_path = experiment$model_file)
 
+  run_schedule <- nl_get_schedule(experiment)
+
+  nl_run_schedule(experiment, run_schedule, parallel = TRUE, cluster = cl)
+}
+
+
+nl_run_schedule <- function(experiment, run_schedule,
+                            print_progress = FALSE,
+                            parallel = FALSE, cluster = NULL) {
+  # run simulation for every row in a schedule
+  do_one <- function(i) {
+    nl_single_run(
+      experiment = experiment,
+      parameter_set_id = run_schedule[i, "param_set_id"],
+      run_id = run_schedule[i, "run_id"],
+      param_set = run_schedule[i, !names(run_schedule) %in% c("param_set_id","run_id")],
+      print_progress = print_progress
+    )
+  }
+
   start_time <- Sys.time()
 
-  run_schedule <- nl_run_schedule(experiment)
-
-  ret <- parallel::parLapply(cl, seq_len(nrow(run_schedule)),
-                             function(i) {
-                               nl_single_run(
-                                 experiment,
-                                 parameter_set_id = run_schedule[i, "param_set_id"],
-                                 run_id = run_schedule[i, "run_id"],
-                                 print_progress
-                               )
-                             }
-  )
+  if(!parallel) {
+    ret <- lapply(seq_len(nrow(run_schedule)), do_one)
+  } else {
+    ret <- parallel::parLapply(cluster, seq_len(nrow(run_schedule)), do_one)
+  }
 
   ret <- nl_run_wrap_results(experiment, ret, start_time)
 }
 
-nl_run_schedule <- function(experiment) {
+nl_get_schedule <- function(experiment, param_sets = NULL) {
   # get run schedule based on parameter sets and number of iterations
-  if(is.null(experiment$param_sets) || nrow(experiment$param_sets) == 0) {
+  if(missing(param_sets)) {
+    param_sets <- experiment$param_sets
+  }
+  if(is.null(param_sets) || nrow(param_sets) == 0) {
     warning("Parameter sets not defined. Using default parameters", call. = FALSE)
     param_sets_rows <- NA
   } else {
-    param_sets_rows <- seq_len(nrow(experiment$param_sets))
+    param_sets_rows <- seq_len(nrow(param_sets))
   }
 
-  expand.grid(
+  param_sets$param_set_id <- param_sets_rows
+  sch <- expand.grid(
     param_set_id = param_sets_rows,
     run_id = seq_len(experiment$run_options$repetitions))
+  merge(sch, param_sets, by = "param_set_id")
 }
 
 nl_run_wrap_results <- function(experiment, ret, start_time) {
@@ -165,12 +169,11 @@ nl_run_wrap_results <- function(experiment, ret, start_time) {
     }
     # mutate evaluation criteria (eval_mutate)
     if(!is.null(experiment$measures$eval_mutate)) {
-      criteria_df <-
-        cbind(criteria_df,
-              sapply(experiment$measures$eval_mutate[-1],
-                     function(x) with(criteria_df, eval(x))
-              )
-        )
+      c_names <- names(experiment$measures$eval_mutate[-1])
+      c_values <- lapply(experiment$measures$eval_mutate[-1],
+                   function(x) with(criteria_df, eval(x)))
+      c_values <- data.frame(c_values)
+      criteria_df <- cbind(criteria_df, c_values)
     }
     ret1 <- list(step = step_df, run = run_df,
                  export = export_df, criteria = criteria_df)
@@ -217,20 +220,20 @@ nl_run_init <- function(gui, nl_path, model_path) {
   RNetLogo::NLLoadModel(model_path)
 }
 
-nl_run_end <- function(x) {
+nl_run_end <- function() {
   #Close NetLogo
   RNetLogo::NLQuit()
 }
 
-nl_single_run <- function(experiment, parameter_set_id = NULL, run_id = NULL,
-                          print_progress = FALSE, param_set = NULL) {
+nl_single_run <- function(experiment, parameter_set_id, run_id,
+                          param_set, print_progress = FALSE) {
   if(print_progress) {
     cat("Params: ", parameter_set_id, ", Run: ", run_id, "\n", sep = "")
   }
   start_time <- Sys.time()
 
   # set up parameters and setup NetLogo commands
-  nl_single_run_setup(experiment, parameter_set_id, run_id, print_progress, param_set)
+  nl_single_run_setup(experiment, parameter_set_id, run_id, param_set, print_progress)
 
   #agents before
   agents_before <- NULL
@@ -365,7 +368,7 @@ nl_single_run <- function(experiment, parameter_set_id = NULL, run_id = NULL,
 #' @param run_id see nl_single_run
 #' @keywords internal
 nl_single_run_setup <- function(experiment, parameter_set_id = NULL, run_id = NULL,
-                                print_progress = FALSE, param_set = NULL) {
+                                param_set, print_progress = FALSE) {
 
   # set random seed
   if(!is.null(experiment$run_options$random_seed)) {
@@ -373,33 +376,23 @@ nl_single_run_setup <- function(experiment, parameter_set_id = NULL, run_id = NU
     if(length(experiment$run_options$random_seed) > 0) {
       rseed <- rseed[min(run_id,length(rseed))]
     }
-    RNetLogo::NLCommand(sprintf("random-seed %d", rseed))
-  }
-  # explicit param_set or parameter_set_id
-  if(!is.null(param_set) && !missing(param_set)) {
-    parameter_set_id <- 1
-    param_sets <- param_set
-  } else {
-    # set parameters from parameter sets
-    param_sets <- experiment$param_sets
+    RNetLogo::NLCommand("random-seed", rseed)
   }
 
-  if(!missing(parameter_set_id) && !is.null(param_sets)) {
-    # set world size if specified
-    if(!is.null(param_sets[["world_size"]])) {
-      world_size <- param_sets[parameter_set_id, "world_size"]
-      half_size <-  world_size %/% 2
-      RNetLogo::NLCommand(sprintf("resize-world %d %d %d %d",
-                                  -half_size, half_size, -half_size, half_size))
-    }
-    # set other parameters
-    param_names <- setdiff(names(param_sets), nl_special_params)
-    for(parameter in param_names) {
-      nl_param <- nl_map_parameter(experiment, parameter)
-      if(nl_param != "") {
-        param_value <- param_sets[parameter_set_id, parameter]
-        RNetLogo::NLCommand(sprintf("set %s %s", nl_param, param_value))
-      }
+  # set world size if specified
+  if(!is.null(param_set[["world_size"]])) {
+    world_size <- param_set[["world_size"]]
+    half_size <-  world_size %/% 2
+    RNetLogo::NLCommand(sprintf("resize-world %d %d %d %d",
+                                -half_size, half_size, -half_size, half_size))
+  }
+  # set other parameters
+  param_names <- setdiff(names(param_set), nl_special_params)
+  for(parameter in param_names) {
+    nl_param <- nl_map_parameter(experiment, parameter)
+    if(nl_param != "") {
+      param_value <- param_set[[parameter]]
+      RNetLogo::NLCommand(sprintf("set %s %s", nl_param, param_value))
     }
   }
 

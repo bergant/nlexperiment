@@ -5,7 +5,7 @@
 \title{Set up parameters and setup commands before run}
 \usage{
 nl_single_run_setup(experiment, parameter_set_id = NULL, run_id = NULL,
-  print_progress = FALSE, param_set = NULL)
+  param_set, print_progress = FALSE)
 }
 \arguments{
 \item{experiment}{see nl_single_run}

@@ -4,13 +4,17 @@
 \alias{nl_set_param_values}
 \title{Define parameter sets for NetLogo experiment}
 \usage{
-nl_set_param_values(experiment, param_values = NULL)
+nl_set_param_values(experiment, param_values = NULL, mapping = NULL)
 }
 \arguments{
 \item{experiment}{NetLogo experiment object from nl_experiment() function}
 
 \item{param_values}{A data.frame with parameter values or
 a list of values to be expanded to all combinations of values}
+
+\item{mapping}{Mapping between R and NetLogo parameters
+in named character vector.
+For example: c(diffusion_rate = "diffusion-rate", population = "population")}
 }
 \value{
 NetLogo experiment object

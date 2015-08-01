@@ -224,14 +224,11 @@ nl_experiment <- function(model_file,
                           eval_mutate = NULL,
                           data_handler = NULL
                           ) {
-  if(missing(while_condition) && missing(iterations)) {
-    stop("Define number of iterations or while_condition")
-  }
+
   experiment <- list(
     model_file = model_file,
     iterations = iterations,
     while_condition = while_condition,
-    mapping = mapping,
     export_view = export_view,
     export_world = export_world
   )
@@ -258,7 +255,8 @@ nl_experiment <- function(model_file,
 
   # set parameter sets
   experiment <- nl_set_param_values(experiment,
-                                    param_values = param_values)
+                                    param_values = param_values,
+                                    mapping = mapping)
 
   return(experiment)
 }
@@ -485,9 +483,12 @@ nl_set_agent_reports <- function(experiment,
 #' @param experiment NetLogo experiment object from nl_experiment() function
 #' @param param_values A data.frame with parameter values or
 #'   a list of values to be expanded to all combinations of values
+#' @param mapping Mapping between R and NetLogo parameters
+#'   in named character vector.
+#'   For example: c(diffusion_rate = "diffusion-rate", population = "population")
 #' @return NetLogo experiment object
 #' @export
-nl_set_param_values <- function(experiment, param_values = NULL ) {
+nl_set_param_values <- function(experiment, param_values = NULL, mapping = NULL ) {
   if(!inherits(experiment, nl_experiment_class))
     stop("Not a NetLogo experiment object")
 
@@ -501,6 +502,7 @@ nl_set_param_values <- function(experiment, param_values = NULL ) {
     stop("Attribute param_values should be a data frame or a list")
   }
   experiment$param_sets <- param_sets
+  experiment$mapping <- mapping
   experiment
 }
 
@@ -515,38 +517,72 @@ print.nl_experiment <- function(x, ...) {
     stop("Not a NetLogo experiment object")
 
   with(x, {
-    cat("NetLogo experiment object\n")
-    cat("Model:\n ", basename(model_file), "\n  in", dirname(model_file), "\n")
-    cat("Run condition: ", while_condition, "\n")
-    cat("Run options:\n")
-    if(!is.null(run_options$random_seed)) {
-      cat("  Random seed", run_options$random_seed, "\n")
-    }
-    if(run_options$repetitions > 1) {
-      cat("  Repetitions", run_options$repetitions, "\n")
-    }
+    cat("NetLogo experiment object -", basename(model_file),"\n")
     cat("  Setup procedures: ")
-    if(length(run_options$setup_commands) > 1) {
-      cat("\n    ")
-    }
-    cat(run_options$setup_commands, sep = "\n    ")
-    cat("  Go command: ", run_options$go_command, "\n")
-    if(length(names(measures$step))>0) {
-      cat("Step measures: ", names(measures$step), "\n")
-    }
-    if(length(names(measures$run))>0) {
-      cat("Run measures: ", names(measures$run), "\n")
-    }
+    cat(run_options$setup_commands, sep = " ")
+    cat("\n")
+    cat("  Go command:", run_options$go_command, "\n")
+    if(!is.null(while_condition)) cat("  Run condition:", while_condition, "\n")
+    if(!is.null(iterations)) cat("  Iterations:", iterations, "steps\n")
+    if(run_options$repetitions > 1) cat("  Repetitions:", run_options$repetitions, "simulations\n")
+    if(!is.null(run_options$random_seed)) cat("  Random seed", run_options$random_seed, "\n")
+
+
     cat("Parameter sets: ")
     if(!is.null(param_sets) && nrow(param_sets) > 0) {
-      cat("\n  Size: ", nrow(param_sets))
-      cat("\n  Parameters: ", names(param_sets))
+      cat("(", nrow(param_sets), ")\n")
+      cat(
+        paste("   ",capture.output(nl_get_param_range(x, as.data.frame = T))[-1],
+                collapse = "\n" )
+      )
+
     } else {
       cat("No parameters")
     }
     cat("\n")
+
+
+    cat("Measures and criteria:\n")
+    if(length(names(measures$step))>0) {
+      cat("  Step measures: ", paste(names(measures$step), collapse = ", "), "\n")
+    }
+    if(length(names(measures$run))>0) {
+      cat("  Run measures: ", names(measures$run), "\n")
+    }
+    if(!is.null(measures$eval_criteria)) {
+      cnames <- names(measures$eval_criteria[-1])
+      if(!is.null(measures$eval_mutate)) {
+        cnames <- c(cnames, names(measures$eval_mutate[-1]))
+      }
+      cat("  Criteria: ", paste(cnames, collapse = ", "), "\n")
+    }
   })
 }
+
+
+
+#' Get ranges of experiment parameter sets
+#'
+#' Upper and lower value for each parameter in experiment parameter sets
+#'
+#' @param experiment NetLogo experiment object
+#' @param as.data.frame Return in a data frame
+#' @return A list with lower and upper values for all parameters in
+#'   experiment parameter set.
+#'   When as.data.frame is specified
+#'   a data frame with lower and upper columns.
+#' @export
+nl_get_param_range <- function(experiment, as.data.frame = FALSE) {
+  ret <- list(
+    lower = sapply(experiment$param_sets, min),
+    upper = sapply(experiment$param_sets, max)
+  )
+  if(as.data.frame) {
+    ret <- data.frame(ret)
+  }
+  ret
+}
+
 
 
 #' Roadmap

@@ -54,7 +54,7 @@ _Note:_
 
 Run experiment
 ```{r p6RunModel, cache=TRUE}
-result <- nl_run(experiment) 
+result <- nl_run(experiment)
 ```
 
 Show graph by using **igraph** package:

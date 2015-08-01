@@ -61,7 +61,7 @@ that makes the R part of data manipulation rather uncomfortable._
 
 Run experiment
 ```{r p5RunModel, cache=TRUE}
-results <- nl_run(experiment) 
+results <- nl_run(experiment)  
 ```
 
 Show views

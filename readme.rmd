@@ -13,9 +13,13 @@ knitr::opts_chunk$set(
 )
 ```
 
+[![](https://travis-ci.org/bergant/nlexperiment.svg)](https://travis-ci.org/bergant/nlexperiment)
+
+----
+
 ![nlexperiment](img/logo.png)
 
-####Define and run NetLogo experiments in R##
+####Define and run NetLogo experiments in R
 
 The goal of **nlexperiment** is to 
 explore NetLogo models in R as simple as possible 
@@ -23,6 +27,7 @@ while keeping advanced functionalities available to
 advanced users.
 It uses [RNetLogo](https://cran.r-project.org/web/packages/RNetLogo/)
 package (Thiele 2014) as an interface to NetLogo.
+
 
 ## Installation
 
@@ -48,17 +53,24 @@ library(ggplot2)
 ```{r ch3, child="readme_parts/readme3.rmd", cache=FALSE, eval=TRUE}
 ```
 
-```{r ch4, child="readme_parts/readme6.rmd", cache=FALSE, eval=TRUE}
+```{r ch6, child="readme_parts/readme6.rmd", cache=FALSE, eval=TRUE}
 ```
 
 ```{r ch5, child="readme_parts/readme5.rmd", cache=FALSE, eval=TRUE}
 ```
 
-```{r ch6, child="readme_parts/readme7.rmd", cache=FALSE, eval=TRUE}
+```{r ch7, child="readme_parts/readme7.rmd", cache=FALSE, eval=TRUE}
 ```
 
-```{r ch7, child="readme_parts/readme8.rmd", cache=FALSE, eval=TRUE}
+```{r ch8, child="readme_parts/readme8.rmd", cache=FALSE, eval=TRUE}
 ```
+
+```{r ch9, child="readme_parts/readme9.rmd", cache=FALSE, eval=TRUE}
+```
+
+```{r ch10, child="readme_parts/readme10.rmd", cache=FALSE, eval=TRUE}
+```
+
 
 
 

@@ -16,10 +16,10 @@ knitr::opts_chunk$set(
 
 ```{r, echo = FALSE}
 library(nlexperiment)
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0") 
 ```
 
-## Explore parameter space with criteria function
+## Categorical criteria function
 This example uses NetLogo Hoopoes model from Railsback & Grimm (2011).
 Here the approach is the same as in the Thiele, Kurth & Grimm (2014)
 except using the **nlexperiment** framework instead of original R scripts.
@@ -63,7 +63,7 @@ experiment <- nl_experiment(
   
   eval_aggregate_fun = mean,                     # mean value (10 repetitions)
   
-  eval_mutate = criteria(                        # add categorical values
+  eval_mutate = criteria(                        # categorical criteria
     c_abundance = abundance > 115 & abundance < 135,
     c_variation = variation > 10 & variation < 15,
     c_vacancy = vacancy > 0.15 & vacancy < 0.30
@@ -114,8 +114,8 @@ param_sets <- lhs(n=50, rect=matrix(c(0.0, 0.95, 0.5, 1.0), 2))
 param_sets <- setNames(as.data.frame(param_sets), c("scout_prob", "survival_prob")) 
 ```
 
-To change only parameter sets one can use `nl_set_param_values`
-instead of defining all experiment definitions with `nl_experiment`:
+To change only parameter sets use `nl_set_param_values`
+instead of repeating all experiment definitions with `nl_experiment`:
 ```{r p8experiment2}
 # change parameters of existing experiment
 experiment <- nl_set_param_values( experiment,

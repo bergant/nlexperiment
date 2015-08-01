@@ -1,9 +1,13 @@
 
 
 
+[![](https://travis-ci.org/bergant/nlexperiment.svg)](https://travis-ci.org/bergant/nlexperiment)
+
+----
+
 ![nlexperiment](img/logo.png)
 
-####Define and run NetLogo experiments in R##
+####Define and run NetLogo experiments in R
 
 The goal of **nlexperiment** is to 
 explore NetLogo models in R as simple as possible 
@@ -11,6 +15,7 @@ while keeping advanced functionalities available to
 advanced users.
 It uses [RNetLogo](https://cran.r-project.org/web/packages/RNetLogo/)
 package (Thiele 2014) as an interface to NetLogo.
+
 
 ## Installation
 
@@ -51,7 +56,7 @@ experiment <- nl_experiment(
 Run the experiment:
 
 ```r
-result <- nl_run(experiment) 
+result <- nl_run(experiment)  
 ```
 
 Find paths to the exported view image files in `result$export` or just display them by calling `nl_show_views_grid` function:
@@ -227,7 +232,7 @@ _Note:_
 Run experiment
 
 ```r
-result <- nl_run(experiment) 
+result <- nl_run(experiment)
 #> Warning: Parameter sets not defined. Using default parameters
 ```
 
@@ -316,7 +321,7 @@ that makes the R part of data manipulation rather uncomfortable._
 Run experiment
 
 ```r
-results <- nl_run(experiment) 
+results <- nl_run(experiment)  
 ```
 
 Show views
@@ -355,89 +360,68 @@ ggplot(dat, aes(x = step_id, y = value, color = pile) ) +
 The following example is using NetLogo Fur model (Wilensky 2003) to show 
 explicit definition of parameter sets and parameter mapping.
 
-There are 5 parameters in the NetLogo Fur model:
+There are 5 parameters in the NetLogo Fur model: 
 
-* ratio 
-* outer-radius-y
-* inner-radius-y
-* outer-radius-x
-* inner-radius-x
+* `ratio` 
+* `outer-radius-y`
+* `inner-radius-y`
+* `outer-radius-x`
+* `inner-radius-x`
 
 But considering constraints and model symmetry
 we can reduce it only to ratio and ellipse aspect ratio. It is sufficient to
 create parameter sets based on combinations of
 
-* `radius_diff` (the difference between x and y radius) and
 * `ratio` (the inhibitor concentration parameter)
-* `gap` (distance between inner and outer circle)
+* `radius_diff` (the difference between x and y radius) and
+* `gap` (distance between inner and outer ellipse)
 
-For simplicity lets keep the `gap` between the circles constant:
+(for simplicity let's keep the `gap` between the circles constant):
 
-
-```r
-# prepare parameter set in transposed parameter space 
-param_sets <- 
-  expand.grid(
-    gap = 3, 
-    radius_diff = seq(from = 0, to = 2, by = 0.5), 
-    ratio = seq(from = 0.30, to = 0.65, by = 0.05)
-)
-# add NetLogo variables
-param_sets <- 
-  within(param_sets, {
-    inner_radius_x <- 3
-    outer_radius_x <- 3 + gap
-    inner_radius_y <- inner_radius_x + radius_diff
-    outer_radius_y <- inner_radius_y + gap
-  })
-
-mapping <- setNames(gsub("_", "-", names(param_sets)),names(param_sets))
-mapping[c("gap", "radius_diff")] <- c("","")
-
-cbind(mapping)
-#>                mapping         
-#> gap            ""              
-#> radius_diff    ""              
-#> ratio          "ratio"         
-#> outer_radius_y "outer-radius-y"
-#> inner_radius_y "inner-radius-y"
-#> outer_radius_x "outer-radius-x"
-#> inner_radius_x "inner-radius-x"
-```
-
-_Note:_ 
-
-* _Mapping is here done by converting the `_` characters to `-`._ 
-* _Variables `gap` and `radius_diff` should be mapped to empty string._
-
-Define experiment:
 
 
 ```r
 experiment <- nl_experiment( 
   model_file = file.path(nl_netlogo_path(), 
                          "models/Sample Models/Biology/Fur.nlogo"), 
-  iterations = 20,
-  repetitions = 1,
-  param_values = param_sets,
-  mapping = mapping,  
+  iterations = 20,                                     
+
+  param_values = {                                  # Parameter sets:
+    param_sets <- expand.grid(                      #   all combinations of
+        gap = 3,                                    #   gap, ratio and ry- rx
+        radius_diff = seq(0, 2, by = 0.5), 
+        ratio = seq(0.30, 0.65, by = 0.05)
+    )
+    transform(param_sets,                           # Transform to NetLogo
+      inner_radius_x = 3,                           #   variables
+      outer_radius_x = 3 + gap,
+      inner_radius_y = 3 + radius_diff,
+      outer_radius_y = 3 + radius_diff + gap
+    )
+  },
+  mapping = c(
+    gap = "",
+    radius_diff = "",
+    inner_radius_x = "inner-radius-x",
+    outer_radius_x = "outer-radius-x",
+    inner_radius_y = "inner-radius-y",
+    outer_radius_y = "outer-radius-y"
+  ),  
   export_view = TRUE,
-  patches_after = list(
-    fur = patch_set(vars = "pcolor", patches = "patches")
-  ),
   random_seed = 3
 )
 ```
 
 _Note:_ 
 
-* _Element `param_values` is now a data frame with explicit parameter sets_ 
+* _Element `param_values` is set by a data frame with explicit parameter sets_ 
+* _Variables `gap` and `radius_diff` must be mapped to empty string (not NetLogo variables)._
 
 
 Run experiment
 
 ```r
-result <- nl_run(experiment, parallel = TRUE, max_cores = 3)  
+result <- nl_run(experiment, parallel = TRUE, max_cores = 3)   
 ```
 
 Show resulting fur patterns:
@@ -460,7 +444,8 @@ nl_show_views_grid(
 
 
 
-## Explore parameter space with criteria function
+
+## Categorical criteria function
 This example uses NetLogo Hoopoes model from Railsback & Grimm (2011).
 Here the approach is the same as in the Thiele, Kurth & Grimm (2014)
 except using the **nlexperiment** framework instead of original R scripts.
@@ -505,7 +490,7 @@ experiment <- nl_experiment(
   
   eval_aggregate_fun = mean,                     # mean value (10 repetitions)
   
-  eval_mutate = criteria(                        # add categorical values
+  eval_mutate = criteria(                        # categorical criteria
     c_abundance = abundance > 115 & abundance < 135,
     c_variation = variation > 10 & variation < 15,
     c_vacancy = vacancy > 0.15 & vacancy < 0.30
@@ -572,8 +557,8 @@ param_sets <- lhs(n=50, rect=matrix(c(0.0, 0.95, 0.5, 1.0), 2))
 param_sets <- setNames(as.data.frame(param_sets), c("scout_prob", "survival_prob")) 
 ```
 
-To change only parameter sets one can use `nl_set_param_values`
-instead of defining all experiment definitions with `nl_experiment`:
+To change only parameter sets use `nl_set_param_values`
+instead of repeating all experiment definitions with `nl_experiment`:
 
 ```r
 # change parameters of existing experiment
@@ -602,6 +587,218 @@ ggplot(dat2, aes(x = scout_prob, y = survival_prob)) +
 ```
 
 ![](img/README-p8Aggregate2-1.png) 
+
+
+
+
+
+
+
+
+
+
+## Best-fit criteria function
+As in Thiele, Kurth & Grimm (2014) define general cost function which
+is 0 when criteria are met and > 0 outside acceptable ranges:
+
+
+```r
+cond_cost_function <- function(value, minval, maxval) {
+  # squared relative deviation if value outside accepted range
+  ifelse(
+    minval > value  | value > maxval,
+    ret <- ((mean(minval,maxval) - value) / mean(minval,maxval))^2,
+    0
+  )
+}
+```
+
+_Note: the function can use a vector in `value` attribute_
+
+The rest is analogous to the previous example (categorical criteria) except 
+when `eval_mutate` defines different criteria:
+
+
+```r
+experiment <- nl_experiment( 
+  model_file = 
+    system.file("netlogo_models/SM2_Hoopoes.nlogo", package = "nlexperiment"),
+  
+  setup_commands = c("setup", "repeat 24 [go]"), # 2 years of warming-up
+  go_command = "repeat 12 [go]",                 # iteration is per year
+  iterations = 20,                               # run for 20 years
+  repetitions = 10,                              # repeat simulation 10 times
+  
+  param_values = list(                           # "full factor design"
+    scout_prob = seq(from = 0.00, to = 0.50, by = 0.05),
+    survival_prob = seq(from = 0.950, to = 1.000, by = 0.005)
+  ),
+  mapping = c(                                   # map NetLogo variables
+    scout_prob = "scout-prob", 
+    survival_prob = "survival-prob"
+  ),
+  
+  step_measures = measures(                      # NetLogo reporters per step
+    abund = "month-11-count",             
+    alpha = "month-11-alpha",                 
+    patches_count = "count patches"
+  ),
+
+  eval_criteria = criteria(                      # evaluation per each run
+    abundance = mean(step$abund),
+    variation = sd(step$abund),
+    vacancy = mean(step$alpha / step$patches_count)
+  ),
+  
+  eval_aggregate_fun = mean,                     # mean value (10 repetitions)
+  
+  eval_mutate = criteria(                        # add categorical values
+    cost = 
+      cond_cost_function(abundance, 115, 135) +
+      cond_cost_function(variation, 10, 15) +
+      cond_cost_function(vacancy, 0.15, 0.30)
+  )  
+)
+```
+
+
+Run experiment:
+
+```r
+result <- nl_run(experiment, parallel = TRUE) 
+# get the data (criteria)
+dat <- nl_get_result(result, type = "criteria") 
+```
+
+
+Plot evaluation criteria on the model parameter space:
+
+```r
+library(ggplot2)
+ggplot(dat , aes(x = factor(scout_prob), y = factor(survival_prob), fill = pmin(cost, 30))) +
+  geom_tile() + theme_minimal() + labs(x = "scout_prob", y= "survival_prob") +
+  coord_fixed()
+```
+
+![](img/README-p9SplotParameterSpace-1.png) 
+
+
+
+
+
+
+
+
+## Parameter fitting and optimization / L-BFGS-B
+Using experiment definition from 
+[previous chapter: best-fit criteria function](#best-fit criteria function)
+we could search the parameter space to optimize the cost function.
+
+
+
+
+
+
+
+
+
+When using optimization methods we can't pre-define parameter sets because they
+are selected as optimization runs. In this scenario the `nl_eval_run` function should be used instead of `nl_run`. 
+
+There are two differences:
+
+* `nl_run_eval` accepts specific parameter set. 
+* It runs on existing NetLogo instance - user have to take care to initialize NetLogo and load the model before optimization begins and 
+close NetLogo when it ends (with functions `nl_eval_init` and `nl_eval_close`).
+
+Use `nl_eval_run` _parallel_ option when optimizing stochastic models
+with more than a few repetitions needed to evaluate one parameter set. 
+
+There are many many R packages for solving optimization problems 
+(see [CRAN Task View](https://cran.r-project.org/web/views/Optimization.html)).
+This example use **L-BFGS-B method** with standard `stats::optim` function.
+See also Thiele, Kurth & Grimm (2014) chapter 
+[2.28 Gradient and quasi-Newton methods](http://jasss.soc.surrey.ac.uk/17/3/11.html#sectionGQNM).
+
+
+```r
+# parameter range from experiment
+param_range <- nl_get_param_range(experiment)  
+ 
+# initialize evaluation
+cl <- nl_eval_init(experiment, parallel = TRUE)
+#> [1] "Creating sockets..."
+
+# create callback container to spy what the optim function is doing
+trace <- nl_eval_tracer(verbose = FALSE)
+
+#call optimisation function with L-BFGS-B method:
+o_result <- optim(
+  par = c(0.5, 1.0),  
+  nl_eval_run, 
+    experiment = experiment, criteria = "cost", 
+    call_back = trace$add, parallel = TRUE, cluster = cl,
+  method = "L-BFGS-B",
+  lower = param_range$lower, upper = param_range$upper, 
+  control = list(maxit = 200, trace = 1))
+#> final  value 0.261145 
+#> converged
+
+nl_eval_close(parallel = TRUE, cl)
+```
+
+
+```r
+#final result:
+o_result
+#> $par
+#> [1] 0.4901088 0.9809555
+#> 
+#> $value
+#> [1] 0.2611453
+#> 
+#> $counts
+#> function gradient 
+#>       17       17 
+#> 
+#> $convergence
+#> [1] 0
+#> 
+#> $message
+#> [1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
+```
+
+The `trace$add` function colected every iteration of `optim`. 
+
+
+```r
+dat <- trace$get()
+
+library(ggplot2)
+
+ggplot(dat, aes(x=iter_id, y = result)) +
+  geom_step() +
+  labs(x = "Iteration", y = "Evaluation result")
+```
+
+![](img/README-p10plot-1.png) 
+
+Optim iterations on parameter space:
+
+```r
+
+
+ggplot(dat, aes(x = scout_prob, y = survival_prob, color = pmin(20,result))) +
+  #  geom_line(color = "gray", size = 1, ) +
+  geom_point(size = 3) +
+  geom_point(
+    color = "red", 
+    data = data.frame(scout_prob = o_result$par[1], survival_prob = o_result$par[2]),
+    size = 20, shape = 4) +
+  theme_minimal()
+```
+
+![](img/README-unnamed-chunk-24-1.png) 
 
 
 

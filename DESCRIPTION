@@ -1,7 +1,7 @@
 Package: nlexperiment
 Type: Package
 Title: NetLogo Experiments
-Version: 0.1-2
+Version: 0.1.2
 Date: 2015-07-30
 Author: Darko Bergant
 Maintainer: Darko Bergant <darko.bergant@gmail.com>
@@ -16,5 +16,6 @@ Suggests:
     knitr,
     dplyr,
     png,
-    ggplot2
+    ggplot2,
+    testthat
 LazyData: TRUE
