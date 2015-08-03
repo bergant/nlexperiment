@@ -1,3 +1,70 @@
+#' Plot multiple patches result
+#'
+#' Plot patches from simualations result
+#'
+#' @param result NetLogo experiment result object
+#' @param x_param row parameter
+#' @param y_param column parameter
+#' @param fill variable to control the color (default is pcolor)
+#' @param type as type from nl_get_result (default is "patches_after)
+#' @param sub_type as sub_type from nl_get_result (optional - if not the first patches set)
+#' @export
+nl_show_patches <- function(result, x_param, y_param = NULL, fill = "pcolor",
+                            type = "patches_after", sub_type = NULL) {
+  if( !requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("ggplot2 package needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+
+  dat <- nl_get_result(result, type=type, sub_type = sub_type)
+
+  if(missing(y_param)) {
+    y_param <- "run_id"
+    if(missing(x_param)) {
+      x_param <- "run_id"
+      dat[["y_param"]] <- 1L
+      y_param <- "y_param"
+    }
+  }
+
+  if(!x_param %in% names(dat)) {
+    stop("Can't find variable ", x_param, " in data: ",
+      paste(names(dat), collapse = ","))
+  }
+  if(!y_param %in% names(dat)) {
+    stop("Can't find variable ", y_param, " in data: ",
+      paste(names(dat), collapse = ","))
+  }
+  if(!fill %in% names(dat)) {
+    stop("Can't find variable ", fill, " in data: ",
+      paste(names(dat), collapse = ","))
+  }
+
+  dat[[x_param]] <- factor(dat[[x_param]])
+  dat[[y_param]] <- factor(dat[[y_param]])
+  dat[[fill]] <- factor(dat[[fill]])
+
+  width <- max(dat$pxcor) - min(dat$pxcor)
+  height <- max(dat$pycor) - min(dat$pycor)
+
+  g1 <-
+    ggplot2::ggplot(
+      dat, ggplot2::aes_string(x= "pxcor", y = "pycor", fill = "pcolor")) +
+    ggplot2::geom_raster() +
+    ggplot2::coord_fixed(height/width) +
+    ggplot2::facet_grid(facets = paste(y_param, "~", x_param)) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(axis.line = ggplot2::element_blank(),
+          axis.text.x = ggplot2::element_blank(),
+          axis.text.y = ggplot2::element_blank(),
+          axis.ticks = ggplot2::element_blank(),
+          legend.position="none"
+    ) +
+    ggplot2::labs(x = x_param, y = y_param)
+  g1
+}
+
+
 
 #' Show view(s) from a NetLogo result object
 #'
@@ -132,11 +199,20 @@ nl_get_step_result <- function(result, add_parameters = TRUE) {
 #'
 #' @param  result NetLogo result object
 #' @param  add_parameters Add parameter values from parameter space to the results
-#' @param  type Observation type: "run", "step", "criteria" or "export"
+#' @param  type Observation type: "run", "step", "criteria", "agents_after", "patches_after"
+#' @param  sub_type Observation sub-type
 #' @export
-nl_get_result <- function(result, add_parameters = TRUE, type = "run") {
+nl_get_result <- function(result, add_parameters = TRUE, type = "run", sub_type = NULL) {
 
-  res <- result[[type]]
+  if(!missing(sub_type) && !is.null(sub_type)) {
+    res <- result[[type]][[sub_type]]
+  } else {
+    if(type %in% c("patches_after", "patches_before")) {
+      res <- result[[type]][[1]]
+    } else {
+      res <- result[[type]]
+    }
+  }
   if(is.null(res)) {
     warning("No data in $", type, " element", call. = FALSE)
     return(NULL)

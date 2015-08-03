@@ -4,14 +4,17 @@
 \alias{nl_get_result}
 \title{Get step observations joined with parameter space values}
 \usage{
-nl_get_result(result, add_parameters = TRUE, type = "run")
+nl_get_result(result, add_parameters = TRUE, type = "run",
+  sub_type = NULL)
 }
 \arguments{
 \item{result}{NetLogo result object}
 
 \item{add_parameters}{Add parameter values from parameter space to the results}
 
-\item{type}{Observation type: "run", "step", "criteria" or "export"}
+\item{type}{Observation type: "run", "step", "criteria", "agents_after", "patches_after"}
+
+\item{sub_type}{Observation sub-type}
 }
 \description{
 Get step observations joined with parameter space values

@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 [![](https://travis-ci.org/bergant/nlexperiment.svg)](https://travis-ci.org/bergant/nlexperiment)
 
 ----
-
+<a name="nlexperiment"></a>
 ![nlexperiment](img/logo.png)
 
 ####Define and run NetLogo experiments in R

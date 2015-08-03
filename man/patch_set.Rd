@@ -4,7 +4,7 @@
 \alias{patch_set}
 \title{Create a patch set reporter}
 \usage{
-patch_set(vars, patches)
+patch_set(vars = c("pxcor", "pycor", "pcolor"), patches = "patches")
 }
 \arguments{
 \item{vars}{A string or vector/list of strings with the variable names of the agent(s).}

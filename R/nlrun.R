@@ -116,7 +116,8 @@ nl_run_schedule <- function(experiment, run_schedule,
       experiment = experiment,
       parameter_set_id = run_schedule[i, "param_set_id"],
       run_id = run_schedule[i, "run_id"],
-      param_set = run_schedule[i, !names(run_schedule) %in% c("param_set_id","run_id")],
+      param_set = run_schedule[
+        i, !names(run_schedule) %in% c("param_set_id","run_id"), drop = FALSE],
       print_progress = print_progress
     )
   }
@@ -143,12 +144,17 @@ nl_get_schedule <- function(experiment, param_sets = NULL) {
   } else {
     param_sets_rows <- seq_len(nrow(param_sets))
   }
-
-  param_sets$param_set_id <- param_sets_rows
-  sch <- expand.grid(
-    param_set_id = param_sets_rows,
-    run_id = seq_len(experiment$run_options$repetitions))
-  merge(sch, param_sets, by = "param_set_id")
+  if(nrow(param_sets)>0) {
+    param_sets$param_set_id <- param_sets_rows
+    sch <- expand.grid(
+      param_set_id = param_sets_rows,
+      run_id = seq_len(experiment$run_options$repetitions))
+    ret <- merge(sch, param_sets, by = "param_set_id")
+  } else
+  {
+    ret <- data.frame(param_set_id = 1, run_id = seq_len(experiment$run_options$repetitions))
+  }
+  ret
 }
 
 nl_run_wrap_results <- function(experiment, ret, start_time) {

@@ -4,13 +4,13 @@
 [![](https://travis-ci.org/bergant/nlexperiment.svg)](https://travis-ci.org/bergant/nlexperiment)
 
 ----
-
+<a name="nlexperiment"></a>
 ![nlexperiment](img/logo.png)
 
 ####Define and run NetLogo experiments in R
 
-The goal of **nlexperiment** is to 
-explore NetLogo models in R as simple as possible 
+The goal of **nlexperiment** is to make 
+exploring NetLogo models with R as simple as possible 
 while keeping advanced functionalities available to
 advanced users.
 It uses [RNetLogo](https://cran.r-project.org/web/packages/RNetLogo/)
@@ -266,6 +266,36 @@ _Note:_
 * _Use `param_space_id` and/or `run_id` columns to subset individual run or parameter combination_
 
 
+## Reading patches
+Getting patches information is analogous to reading agents' data from NetLogo model:
+
+
+```r
+experiment2 <- nl_experiment( 
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Biology/Fur.nlogo"), 
+  iterations = 20,                                     
+  
+  param_values = list(
+    ratio = c(0.3, 0.35, 0.4, 0.45)
+  ),
+  patches_after = list(
+    patches = patch_set(
+      vars = c("pxcor", "pycor", "pcolor"),
+      patches = "patches"
+    )
+  ),
+  random_seed = 2
+)
+
+result2 <- nl_run(experiment2)
+
+nl_show_patches(result2, x_param = "ratio") +
+  ggplot2::scale_fill_manual(values = c("black","white"))
+```
+
+![](img/README-p6E2-1.png) 
+
 
 
 
@@ -369,8 +399,7 @@ There are 5 parameters in the NetLogo Fur model:
 * `inner-radius-x`
 
 But considering constraints and model symmetry
-we can reduce it only to ratio and ellipse aspect ratio. It is sufficient to
-create parameter sets based on combinations of
+we can reduce the parameters to:
 
 * `ratio` (the inhibitor concentration parameter)
 * `radius_diff` (the difference between x and y radius) and
@@ -406,8 +435,13 @@ experiment <- nl_experiment(
     outer_radius_x = "outer-radius-x",
     inner_radius_y = "inner-radius-y",
     outer_radius_y = "outer-radius-y"
+  ),
+  patches_after = list(
+    patches = patch_set(
+      vars = c("pxcor", "pycor", "pcolor"),
+      patches = "patches"
+    )
   ),  
-  export_view = TRUE,
   random_seed = 3
 )
 ```
@@ -421,17 +455,16 @@ _Note:_
 Run experiment
 
 ```r
-result <- nl_run(experiment, parallel = TRUE, max_cores = 3)   
+result <- nl_run(experiment, parallel = TRUE, max_cores = 3)    
 ```
 
 Show resulting fur patterns:
 
 ```r
 library(ggplot2)
-nl_show_views_grid(
-  result, x_param = "ratio", y_param = "radius_diff", img_gap = 0.01) + 
-  ylab("radius_y - radius_x") +
-  ggtitle("Fur patterns")
+nl_show_patches(result, x_param = "ratio", y_param = "radius_diff") + 
+  scale_fill_manual(values = c("black","white")) +
+  labs(y=expression(radius[y] - radius[x]), title = "Fur patterns (gap = 3)")
 ```
 
 ![](img/README-p7ShowViews-1.png) 
@@ -707,14 +740,14 @@ are selected as optimization runs. In this scenario the `nl_eval_run` function s
 
 There are two differences:
 
-* `nl_run_eval` accepts specific parameter set. 
-* It runs on existing NetLogo instance - user have to take care to initialize NetLogo and load the model before optimization begins and 
-close NetLogo when it ends (with functions `nl_eval_init` and `nl_eval_close`).
+* `nl_run_eval` accepts a parameter set and returns a value 
+* It requires NetLogo instance - user have to take care to initialize NetLogo and load the model before optimization begins and 
+close NetLogo when it is no longer needed (see functions `nl_eval_init` and `nl_eval_close`).
 
 Use `nl_eval_run` _parallel_ option when optimizing stochastic models
 with more than a few repetitions needed to evaluate one parameter set. 
 
-There are many many R packages for solving optimization problems 
+There are many R packages for solving optimization problems 
 (see [CRAN Task View](https://cran.r-project.org/web/views/Optimization.html)).
 This example use **L-BFGS-B method** with standard `stats::optim` function.
 See also Thiele, Kurth & Grimm (2014) chapter 
@@ -723,7 +756,7 @@ See also Thiele, Kurth & Grimm (2014) chapter
 
 ```r
 # parameter range from experiment
-param_range <- nl_get_param_range(experiment)  
+param_range <- nl_get_param_range(experiment)   
  
 # initialize evaluation
 cl <- nl_eval_init(experiment, parallel = TRUE)
@@ -741,7 +774,7 @@ o_result <- optim(
   method = "L-BFGS-B",
   lower = param_range$lower, upper = param_range$upper, 
   control = list(maxit = 200, trace = 1))
-#> final  value 0.261145 
+#> final  value 0.023308 
 #> converged
 
 nl_eval_close(parallel = TRUE, cl)
@@ -752,14 +785,14 @@ nl_eval_close(parallel = TRUE, cl)
 #final result:
 o_result
 #> $par
-#> [1] 0.4901088 0.9809555
+#> [1] 0.266740 0.976674
 #> 
 #> $value
-#> [1] 0.2611453
+#> [1] 0.02330759
 #> 
 #> $counts
 #> function gradient 
-#>       17       17 
+#>       22       22 
 #> 
 #> $convergence
 #> [1] 0

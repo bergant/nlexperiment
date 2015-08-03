@@ -330,7 +330,8 @@ agent_set <- function(vars, agents) {
 #' @param patches A string specifying the patches to be queried.
 #' @export
 #' @keywords internal
-patch_set <- function(vars, patches) {
+patch_set <- function(vars = c("pxcor", "pycor", "pcolor"),
+                      patches = "patches") {
   list(vars = vars, patches = patches)
 }
 
@@ -501,8 +502,12 @@ nl_set_param_values <- function(experiment, param_values = NULL, mapping = NULL 
   } else {
     stop("Attribute param_values should be a data frame or a list")
   }
+
   experiment$param_sets <- param_sets
-  experiment$mapping <- mapping
+
+  if(!missing(mapping)) {
+    experiment$mapping <- mapping
+  }
   experiment
 }
 

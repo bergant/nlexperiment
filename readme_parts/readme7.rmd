@@ -35,8 +35,7 @@ There are 5 parameters in the NetLogo Fur model:
 * `inner-radius-x`
 
 But considering constraints and model symmetry
-we can reduce it only to ratio and ellipse aspect ratio. It is sufficient to
-create parameter sets based on combinations of
+we can reduce the parameters to:
 
 * `ratio` (the inhibitor concentration parameter)
 * `radius_diff` (the difference between x and y radius) and
@@ -71,8 +70,13 @@ experiment <- nl_experiment(
     outer_radius_x = "outer-radius-x",
     inner_radius_y = "inner-radius-y",
     outer_radius_y = "outer-radius-y"
+  ),
+  patches_after = list(
+    patches = patch_set(
+      vars = c("pxcor", "pycor", "pcolor"),
+      patches = "patches"
+    )
   ),  
-  export_view = TRUE,
   random_seed = 3
 )
 ```
@@ -85,16 +89,15 @@ _Note:_
 
 Run experiment
 ```{r p7RunModel, cache=TRUE}
-result <- nl_run(experiment, parallel = TRUE, max_cores = 3)   
+result <- nl_run(experiment, parallel = TRUE, max_cores = 3)    
 ```
 
 Show resulting fur patterns:
 ```{r p7ShowViews}
 library(ggplot2)
-nl_show_views_grid(
-  result, x_param = "ratio", y_param = "radius_diff", img_gap = 0.01) + 
-  ylab("radius_y - radius_x") +
-  ggtitle("Fur patterns")
+nl_show_patches(result, x_param = "ratio", y_param = "radius_diff") + 
+  scale_fill_manual(values = c("black","white")) +
+  labs(y=expression(radius[y] - radius[x]), title = "Fur patterns (gap = 3)")
 ```
 
 

@@ -38,7 +38,7 @@ _Note:_
 Run experiment
 
 ```r
-result <- nl_run(experiment) 
+result <- nl_run(experiment)
 #> Warning: Parameter sets not defined. Using default parameters
 ```
 
@@ -71,6 +71,36 @@ _Note:_
 * _Data frame `result$agents_after$edges` includes variables from all simulation runs._
 * _Use `param_space_id` and/or `run_id` columns to subset individual run or parameter combination_
 
+
+## Reading patches
+Getting patches information is analogous to reading agents' data from NetLogo model:
+
+
+```r
+experiment2 <- nl_experiment( 
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Biology/Fur.nlogo"), 
+  iterations = 20,                                     
+  
+  param_values = list(
+    ratio = c(0.3, 0.35, 0.4, 0.45)
+  ),
+  patches_after = list(
+    patches = patch_set(
+      vars = c("pxcor", "pycor", "pcolor"),
+      patches = "patches"
+    )
+  ),
+  random_seed = 2
+)
+
+result2 <- nl_run(experiment2)
+
+nl_show_patches(result2, x_param = "ratio") +
+  ggplot2::scale_fill_manual(values = c("black","white"))
+```
+
+![](img/README-p6E2-1.png) 
 
 
 

@@ -90,14 +90,14 @@ are selected as optimization runs. In this scenario the `nl_eval_run` function s
 
 There are two differences:
 
-* `nl_run_eval` accepts specific parameter set. 
-* It runs on existing NetLogo instance - user have to take care to initialize NetLogo and load the model before optimization begins and 
-close NetLogo when it ends (with functions `nl_eval_init` and `nl_eval_close`).
+* `nl_run_eval` accepts a parameter set and returns a value 
+* It requires NetLogo instance - user have to take care to initialize NetLogo and load the model before optimization begins and 
+close NetLogo when it is no longer needed (see functions `nl_eval_init` and `nl_eval_close`).
 
 Use `nl_eval_run` _parallel_ option when optimizing stochastic models
 with more than a few repetitions needed to evaluate one parameter set. 
 
-There are many many R packages for solving optimization problems 
+There are many R packages for solving optimization problems 
 (see [CRAN Task View](https://cran.r-project.org/web/views/Optimization.html)).
 This example use **L-BFGS-B method** with standard `stats::optim` function.
 See also Thiele, Kurth & Grimm (2014) chapter 
@@ -105,7 +105,7 @@ See also Thiele, Kurth & Grimm (2014) chapter
 
 ```{r p10optim, cache=TRUE}
 # parameter range from experiment
-param_range <- nl_get_param_range(experiment)  
+param_range <- nl_get_param_range(experiment)   
  
 # initialize evaluation
 cl <- nl_eval_init(experiment, parallel = TRUE)

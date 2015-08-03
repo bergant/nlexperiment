@@ -36,13 +36,10 @@ experiment <- nl_experiment(
 
 _Note:_
 
-* _When parameters are defined as a list of value vecors, parameter space is
+* _When parameters are defined as a list of value vectors, parameter space is
   constructed as combination of all possible parameter sets
-* _It is not required to include all parameters in mapping. Variable `population` 
-is used as is._
-* _NetLogo identifiers may include some ASCII characters `(?=*!<>:#+/%$^'&-)`
-that makes the R part of data manipulation rather uncomfortable._
 * _Element `mapping` maps `difussion_rate` and `evaporation_rate` names to NetLogo variables `diffusion-rate` and `evaporation-rate`._
+* _It is not required to include all parameters in mapping. Variable `population` is used as is._
 
 
 Run experiment
