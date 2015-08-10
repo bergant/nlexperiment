@@ -60,7 +60,7 @@ experiment <- nl_experiment(
 Run experiment
 
 ```{r pFlockRun1, cache=TRUE} 
-result <- nl_run(experiment)      
+result <- nl_run(experiment)       
 ```
 
 Plot results

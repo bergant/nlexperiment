@@ -56,7 +56,7 @@ experiment <- nl_experiment(
 Run the experiment:
 
 ```r
-result <- nl_run(experiment)   
+result <- nl_run(experiment)     
 ```
 
 Find paths to the exported view image files in `result$export` or just display them by calling `nl_show_views_grid` function:
@@ -365,7 +365,7 @@ is used as is._
 Run experiment
 
 ```r
-results <- nl_run(experiment)   
+results <- nl_run(experiment)    
 ```
 
 Show views
@@ -540,7 +540,7 @@ Run experiment
 
 
 ```r
-result <- nl_run(experiment)      
+result <- nl_run(experiment)       
 ```
 
 Plot results
@@ -1006,12 +1006,13 @@ Other than base packages attached:
 knitr::kable(
   do.call(rbind, 
     lapply(sessionInfo()$otherPkgs, function(x) {
-    data.frame(
-      title = paste0(" ", x$Title, " "),
-      ver = x$Version,
-      author = x$Author    
-    )
-  })), format = "html"
+      data.frame(
+        title = paste0(" ", x$Title, " "),
+        ver = x$Version,
+        author = x$Author    
+      )
+  })), 
+  format = "html"
 )
 ```
 
