@@ -88,19 +88,6 @@
 #' }
 NULL
 
-# package options
-nl_options_class <- function() {
-  options <- list()
-  set <- function(key, value) {
-    options[[key]] <<- value
-  }
-  get <- function(key) {
-    options[[key]]
-  }
-  return(list(set = set, get = get))
-}
-nl_options <- nl_options_class()
-
 # package global variables
 nl_experiment_class <- "nl_experiment"
 nl_result_class <- "nl_result"
@@ -571,21 +558,45 @@ print.nl_experiment <- function(x, ...) {
 #' Upper and lower value for each parameter in experiment parameter sets
 #'
 #' @param experiment NetLogo experiment object
+#' @param diff_only Uses only non-constant parameters
 #' @param as.data.frame Return in a data frame
 #' @return A list with lower and upper values for all parameters in
 #'   experiment parameter set.
 #'   When as.data.frame is specified
 #'   a data frame with lower and upper columns.
 #' @export
-nl_get_param_range <- function(experiment, as.data.frame = FALSE) {
+nl_get_param_range <- function(experiment, diff_only = TRUE, as.data.frame = FALSE) {
+  min_values <- sapply(experiment$param_sets, min)
+  max_values <- sapply(experiment$param_sets, max)
+
   ret <- list(
-    lower = sapply(experiment$param_sets, min),
-    upper = sapply(experiment$param_sets, max)
+    lower = min_values[min_values != max_values],
+    upper = max_values[min_values != max_values]
   )
   if(as.data.frame) {
     ret <- data.frame(ret)
   }
   ret
+}
+
+#' Create parameter sets with latin hypercube sampling
+#'
+#' Parameter sets are created with \code{lhs} function from \pkg{tgp} package
+#'
+#' @param n Number of parameter sets
+#' @param ... Named list of parameter ranges (numeric vectors)
+#' @export
+nl_param_lhs <- function(n, ...) {
+
+  if( !requireNamespace("tgp", quietly = TRUE)) {
+    stop("tgp package needed for nl_param_lhs function to work. Please install it.",
+         call. = FALSE)
+  }
+
+  p_list <- list(...)
+  params <- lapply(p_list, range)
+  params <- tgp::lhs(n = n, rect = t(data.frame(params)))
+  setNames(as.data.frame(params), names(p_list))
 }
 
 
@@ -594,10 +605,11 @@ nl_get_param_range <- function(experiment, as.data.frame = FALSE) {
 #'
 #' @details
 #' \itemize{
-#' \item Get agents' data
-#' \item condition changes as a function of parameters?
-#' \item Data handler sample -
-#' \item Parameter space - examples (sampling, calibrating, ...)
+#' \item measure_condition
+#' \item derivative measures
+#' \item Examples: bayes, GA
+#' \item
+#' \item
 #' }
 #' @name nlexperiment.roadmap
 #' @keywords internal

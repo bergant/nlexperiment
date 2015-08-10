@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r, echo = FALSE}
 library(nlexperiment)
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/")
 ```
 
 
@@ -54,23 +55,24 @@ _Note:_
   constructed as combination of all possible parameter value combination_
 * _It is not required to include all parameters in mapping. Variable `population` 
 is used as is._
-* _NetLogo identifiers may include some ASCII characters `(?=*!<>:#+/%$^'&-)`
-that makes the R part of data manipulation rather uncomfortable._
 * _Element `mapping` maps `difussion_rate` and `evaporation_rate` names to NetLogo variables `diffusion-rate` and `evaporation-rate`._
 
 
 Run experiment
 ```{r p5RunModel, cache=TRUE}
-results <- nl_run(experiment)  
+results <- nl_run(experiment)   
 ```
 
 Show views
 ```{r p5ShowViews}
-nl_show_views_grid(results, "evaporation_rate", "diffusion_rate")
+nl_show_views_grid(results, 
+                   x_param = "evaporation_rate", 
+                   y_param = "diffusion_rate")
 ```
 
 Show remaining food by difussion rate and evaporation rate for all food piles
 ```{r p5plot, cache=FALSE}
+
 library(tidyr)
 dat <- nl_get_step_result(results)
 dat <- tidyr::gather(dat, pile, value, pile1, pile2, pile3)
@@ -78,6 +80,7 @@ dat <- tidyr::gather(dat, pile, value, pile1, pile2, pile3)
 library(ggplot2)
 ggplot(dat, aes(x = step_id, y = value, color = pile) ) +
   geom_line() +
-  facet_grid(diffusion_rate ~ evaporation_rate)
+  facet_grid(diffusion_rate ~ evaporation_rate) +
+  theme_minimal()
 ```
 

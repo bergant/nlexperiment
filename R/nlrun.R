@@ -26,7 +26,25 @@
 #' @keywords internal
 NULL
 
+
+# package options
+nl_options_class <- function() {
+  options <- list()
+  set <- function(key, value) {
+    options[[key]] <<- value
+  }
+  get <- function(key) {
+    options[[key]]
+  }
+  return(list(set = set, get = get))
+}
+nl_options <- nl_options_class()
+
+
 #' Run NetLogo experiment
+#'
+#' Runs NetLogo model for defined every parameter and repetitions. Returns
+#'   a list of data frames for each measure defined in experiment.
 #'
 #' @param experiment NetLogo experiment object
 #' @param gui Start NetLogo with GUI (by default NetLogo is run in headless mode)
@@ -35,21 +53,45 @@ NULL
 #'   (requires \link[parallel]{parallel} package)
 #' @param max_cores (optional) only relevant if parallel = TRUE.
 #'   If not defined all available processors will be used
-#' @return Returns a list of values which depend on measures defined for each step
+#' @return Returns an object of class \code{nl_result}.
+#'   It is a list containing the following components:
 #'   and/or for each run, parameter sets, repetitions and export options.
-#'   \itemize{
-#'   \item Element \code{step} is a result of step measures.
-#'   \item Element \code{run} is a result of run measures.
-#'   \item Element \code{export} contains file names of exported views
-#'   and worlds.
-#'   \item Element \code{duration} is a time spent to complete the experiment.
-#'   \item Element \code{experiment} is the NetLogo experiment object used for simulation.
+#'   \item{ step }{a data frame with observations based on temporal (step) measures.
+#'     It includes at least
+#'     param_set_id (id of parameter set),
+#'     run_id (ID of simulation repetition ),
+#'     step_id (ID of simulation step ),
+#'     and columns named after the temporal measures}
+#'   \item{ run }{a data frame with observations based on final run measures.
+#'     It includes at least
+#'     param_set_id (id of parameter set),
+#'     run_id (ID of simulation repetition ),
+#'     and columns named after the temporal measures}
+#'   \item{ agents_after }{a data frame with observations based on agents
+#'     after each simulation run }
+#'   \item{ agents_before }{a data frame with observations based on agents
+#'     before each simulation run}
+#'   \item{ patches_after }{a data frame with observations based on paatches
+#'     after each simulation run }
+#'   \item{ patches_before }{a data frame with observations based on patches
+#'     before each simulation run}
+#'   \item{ criteria }{a data frame with values provided by
+#'   criteria expressions (\code{eval_criteria} in experiment definition
+#'   possibly aggregated by \code{eval_aggregate_fun})  and additional
+#'   criteria defined by \code{eval_mutate} expressions
 #'   }
+#'   \item{ export }{a filename list with reference to
+#'     parameter sets and simulation repetitions}
+#'   \item{ duration }{time spent to complete the experiment (in \code{\link{difftime}})}
+#'   \item{ experiment }{original NetLogo experiment object used}
 #'
 #' @details Model is run for each parameter combination
 #'   defined in parameter sets If \code{repetition} (defined in experiment)
 #'   is greater than \code{1} then
 #'   each run for a parameter set is repeated accordingly.
+#'   Before each run the parameters are set and setup procedure(s) are called.
+#'   After each run criteria function(s) are calculated (if defined)
+#'
 #'
 #'   Use parallel option if there are more than a few runs per processor core.
 #' @seealso See \code{\link{nl_experiment}} for creating NetLogo experiment object.
@@ -169,7 +211,7 @@ nl_run_wrap_results <- function(experiment, ret, start_time) {
     if(!is.null(experiment$measures$eval_aggregate_fun)) {
       value_names <- !names(criteria_df) %in% c("param_set_id", "run_id")
       criteria_df <-
-        aggregate(criteria_df[,value_names],
+        aggregate(criteria_df[,value_names, drop = FALSE],
                   by = list(param_set_id = criteria_df$param_set_id) ,
                   FUN = experiment$measures$eval_aggregate_fun)
     }

@@ -5,9 +5,9 @@
 
 
 
-## Simple parameter space definition
+## Simple parameter sets definition
 The following example is using Ant model (Wilensky 1997) to show 
-simple parameter space definition and parameter mapping.
+simple parameter sets definition and parameter mapping.
 
 
 ```r
@@ -36,22 +36,25 @@ experiment <- nl_experiment(
 
 _Note:_
 
-* _When parameters are defined as a list of value vectors, parameter space is
-  constructed as combination of all possible parameter sets
+* _When parameters are defined as a list of value vecors, parameter sets are
+  constructed as combination of all possible parameter value combination_
+* _It is not required to include all parameters in mapping. Variable `population` 
+is used as is._
 * _Element `mapping` maps `difussion_rate` and `evaporation_rate` names to NetLogo variables `diffusion-rate` and `evaporation-rate`._
-* _It is not required to include all parameters in mapping. Variable `population` is used as is._
 
 
 Run experiment
 
 ```r
-results <- nl_run(experiment) 
+results <- nl_run(experiment)   
 ```
 
 Show views
 
 ```r
-nl_show_views_grid(results, "evaporation_rate", "diffusion_rate")
+nl_show_views_grid(results, 
+                   x_param = "evaporation_rate", 
+                   y_param = "diffusion_rate")
 ```
 
 ![](img/README-p5ShowViews-1.png) 
@@ -59,6 +62,7 @@ nl_show_views_grid(results, "evaporation_rate", "diffusion_rate")
 Show remaining food by difussion rate and evaporation rate for all food piles
 
 ```r
+
 library(tidyr)
 dat <- nl_get_step_result(results)
 dat <- tidyr::gather(dat, pile, value, pile1, pile2, pile3)
@@ -66,7 +70,8 @@ dat <- tidyr::gather(dat, pile, value, pile1, pile2, pile3)
 library(ggplot2)
 ggplot(dat, aes(x = step_id, y = value, color = pile) ) +
   geom_line() +
-  facet_grid(diffusion_rate ~ evaporation_rate)
+  facet_grid(diffusion_rate ~ evaporation_rate) +
+  theme_minimal()
 ```
 
 ![](img/README-p5plot-1.png) 

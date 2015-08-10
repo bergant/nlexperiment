@@ -1,3 +1,72 @@
+#' Plot step measure observations
+#'
+#' Plot observations for each simulation step
+#'
+#' @param result NetLogo experiment result object
+#' @param x "step_id" or measure name (as string) to choose for x axis
+#' @param y measure name as string to plot on y axis
+#' @param color by default it is based on "run_id" (simulation repetition).
+#'   Change to \code{NA} to plot every repetition in black
+#' @param x_param which parameter to use for faceting horizontally
+#' @param y_param which parameter to use for faceting vertically
+#' @param title plot title
+#' @param data_filter optional subset expression (not quoted) using
+#'   parameters, \code{run_id} and \code{step_id}
+#' @param alpha lines opacity
+#' @seealso To get only data and create custom plots see \code{\link{nl_get_result}}
+#' @export
+nl_show_step <- function(
+  result, x = "step_id", y, color = "run_id",
+  x_param = ".", y_param = ".", title = NULL,
+  data_filter = NULL, alpha = 1) {
+
+  if( !requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("ggplot2 package needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  columns <- x_param
+  rows <- y_param
+  if( columns != "." & columns != "run_id" & !columns %in% names(result$experiment$param_sets) ) {
+    stop(columns, " is not a parameter or 'run_id'")
+  }
+  if( rows != "." & rows != "run_id" & !rows %in% names(result$experiment$param_sets) ) {
+    stop(rows, " is not a parameter or 'run_id'")
+  }
+
+  if(missing(y))
+  {
+    y <- names(result$experiment$measures$step)[1]
+  }
+  dat <- nl_get_result(result, type = "step")
+  if(!missing(data_filter)) {
+    e_filter <- substitute(data_filter)
+    r <- eval(e_filter, dat, parent.frame())
+    r <- r & !is.na(r)
+    dat <- dat[r, , drop = FALSE]
+  }
+  dat$run_id <- factor(dat$run_id)
+
+  if(!is.na(color)) {
+    g <- ggplot2::ggplot(dat, ggplot2::aes_string(x = x, y = y, color = color))
+  } else {
+    g <- ggplot2::ggplot(dat, ggplot2::aes_string(x = x, y = y, z = "run_id"))
+  }
+  g <- g +
+    ggplot2::geom_path(alpha = alpha) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(legend.position = "none",
+          panel.grid = ggplot2::element_blank(),
+          panel.border = ggplot2::element_rect(color = "gray", fill = NA))
+  if(rows != "." || columns != "." ) {
+    g <- g + ggplot2::facet_grid(paste(rows, "~", columns), labeller = ggplot2::label_both)
+  }
+
+  if(!is.null(title)) {
+    g <- g + ggplot2::labs(title = title)
+  }
+  g
+}
+
 #' Plot multiple patches result
 #'
 #' Plot patches from simualations result
@@ -65,36 +134,6 @@ nl_show_patches <- function(result, x_param, y_param = NULL, fill = "pcolor",
 }
 
 
-
-#' Show view(s) from a NetLogo result object
-#'
-#' @param result NetLogo result object
-#' @param param_set_id Optional filter on parameter space ID
-#' @param run_id Optional filter on run ID
-#' @export
-nl_show_view <- function(result, param_set_id = NULL, run_id = NULL) {
-
-  row_filter <- rep(TRUE, nrow(result$export))
-  if(!missing(param_set_id)) {
-    row_filter <- row_filter & result$export$param_set_id %in% param_set_id
-  }
-  if(!missing(run_id)) {
-    row_filter <- row_filter & result$export$run_id == run_id
-  }
-
-  img_files <- result$export[row_filter, "view"]
-
-  if( !requireNamespace("png", quietly = TRUE)) {
-    stop("png package needed for this function to work. Please install it.",
-         call. = FALSE)
-  }
-  for(img_file in img_files) {
-    img1 <- png::readPNG(img_file)
-    grid::grid.newpage()
-    grid::grid.raster(img1)
-  }
-  invisible(img_files)
-}
 
 #' Show exported views images in a grid
 #'
@@ -175,34 +214,23 @@ nl_show_views_grid <- function(result,
   g1
 }
 
-#' Get run observations joined with parameter space values
+
+
+#' Get observations joined with parameter values
 #'
-#' @param  result NetLogo result object
-#' @param  add_parameters If parameter values should be appended to the results
-#' @export
-nl_get_run_result <- function(result, add_parameters = TRUE) {
-
-  nl_get_result(result, add_parameters, "run")
-}
-
-#' Get step observations joined with parameter space values
-#'
-#' @param  result NetLogo result object
-#' @param  add_parameters If parameter values should be appended to the results
-#' @export
-nl_get_step_result <- function(result, add_parameters = TRUE) {
-
-  nl_get_result(result, add_parameters, "step")
-}
-
-#' Get step observations joined with parameter space values
+#' Observations are stored in result object only with references to
+#' parameter sets (param_set_id). \code{nl_get_result} joins the data
+#' with actual parameters used for each observation.
 #'
 #' @param  result NetLogo result object
 #' @param  add_parameters Add parameter values from parameter space to the results
 #' @param  type Observation type: "run", "step", "criteria", "agents_after", "patches_after"
-#' @param  sub_type Observation sub-type
+#'   See \code{\link{nl_run}} for simulations result structure.
+#' @param  sub_type Observation sub-type (in case of individual agents measures
+#'   the sub type is a name of the measure)
+#' @param ... expressions to transform resulting data frame
 #' @export
-nl_get_result <- function(result, add_parameters = TRUE, type = "run", sub_type = NULL) {
+nl_get_result <- function(result, add_parameters = TRUE, type = "run", sub_type = NULL, ...) {
 
   if(!missing(sub_type) && !is.null(sub_type)) {
     res <- result[[type]][[sub_type]]
@@ -217,7 +245,7 @@ nl_get_result <- function(result, add_parameters = TRUE, type = "run", sub_type 
     warning("No data in $", type, " element", call. = FALSE)
     return(NULL)
   }
-  if(add_parameters) {
+  if(add_parameters > 0) {
     if(is.null(result$experiment)) {
       stop("No reference to experiment in the result")
     }
@@ -225,13 +253,38 @@ nl_get_result <- function(result, add_parameters = TRUE, type = "run", sub_type 
       stop("No parameter space in referenced experiment")
     }
     param_sets <- result$experiment$param_sets
-    param_sets$param_set_id <- seq_along(param_sets[[1]])
-    if( !requireNamespace("dplyr", quietly = TRUE)) {
-      res <- merge(param_sets, res, by = "param_set_id")
-    } else {
-      res <- dplyr::inner_join(param_sets, res, by = "param_set_id")
+    if(nrow(param_sets) > 0) {
+      param_sets$param_set_id <- seq_along(param_sets[[1]])
+      if( !requireNamespace("dplyr", quietly = TRUE)) {
+        res <- merge(param_sets, res, by = "param_set_id")
+      } else {
+        res <- dplyr::inner_join(param_sets, res, by = "param_set_id")
+      }
     }
   }
-
+  if(!missing(...)) {
+    res <- transform(res, ...)
+  }
   res
+}
+
+#' @rdname nl_get_result
+#' @export
+nl_get_run_result <- function(result, add_parameters = TRUE, ...) {
+
+  nl_get_result(result, add_parameters, "run")
+}
+
+#' @rdname nl_get_result
+#' @export
+nl_get_step_result <- function(result, add_parameters = TRUE, ...) {
+
+  nl_get_result(result, add_parameters, "step", ...)
+}
+
+#' @rdname nl_get_result
+#' @export
+nl_get_criteria_result <- function(result, add_parameters = TRUE, ...) {
+
+  nl_get_result(result, add_parameters, "criteria", ...)
 }

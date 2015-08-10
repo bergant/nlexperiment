@@ -8,10 +8,11 @@ Roadmap
 }
 \details{
 \itemize{
-\item Get agents' data
-\item condition changes as a function of parameters?
-\item Data handler sample -
-\item Parameter space - examples (sampling, calibrating, ...)
+\item measure_condition
+\item derivative measures
+\item Examples: bayes, GA
+\item
+\item
 }
 }
 \keyword{internal}

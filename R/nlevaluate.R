@@ -67,11 +67,17 @@ nl_eval_run <- function(param_set, experiment, criteria = NULL,
       param_set <- as.data.frame(param_set)
     }
   }
+  param_set <- cbind(
+    param_set,
+    experiment$param_sets[1, !names(experiment$param_sets) %in% names(param_set)])
   run_schedule <- nl_get_schedule(experiment, param_set)
   ret <- nl_run_schedule(experiment, run_schedule = run_schedule,
                          print_progress = print_progress,
                          parallel = parallel,
                          cluster = cluster)
+  if(is.null(ret)) {
+    stop("Evaluation returned nothing")
+  }
   if(!missing(criteria)) {
     ret <- ret$criteria[[criteria]]
   } else {

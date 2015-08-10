@@ -17,5 +17,6 @@ Suggests:
     dplyr,
     png,
     ggplot2,
-    testthat
+    testthat,
+    tgp
 LazyData: TRUE

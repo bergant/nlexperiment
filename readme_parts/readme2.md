@@ -5,11 +5,8 @@
 
 
 
-## Observations per each simulation step
-From statistical point of view, the interesting part of experiment is 
-getting some quantitative information. 
-This sample demonstrates how to set measures
-for each simulation step.
+## Temporal measures
+Set measures for each simulation step:
 
 ```r
 experiment <- nl_experiment(
@@ -30,22 +27,37 @@ Run the experiment:
 result <- nl_run(experiment)
 ```
 
-Plot of burned forest as a function of time for different forest densities:
+To analyse the results from observations 
+use `nl_get_step_result`:
+
 
 ```r
 # get the observation data for step measures
-dat <- nl_get_result(result, type = "step") 
-# plot the observations
-library(ggplot2)
-ggplot(dat, mapping = aes(x = step_id, y = percent_burned)) + 
-  geom_step() +
-  facet_grid(. ~ density) +
-  labs(y = "Percent burned", x = "Iteration")
+dat <- nl_get_step_result(result)
+head(dat)
+#>   density param_set_id percent_burned step_id run_id
+#> 1      57            1      0.4030340       1      1
+#> 2      57            1      0.6437348       2      1
+#> 3      57            1      0.8788379       3      1
+#> 4      57            1      1.0859526       4      1
+#> 5      57            1      1.3070615       5      1
+#> 6      57            1      1.5113773       6      1
+```
+
+Or use `nl_show_step` to plot 
+observations based on temporal measures:
+
+
+```r
+# get the observation data for step measures
+nl_show_step(result, x_param = "density")
 ```
 
 ![](img/README-model_step_plot-1.png) 
 
-*Note: values `run_id` and `step_id` are included in the `results$step` by default.
+
+
+*Note: values `run_id` and `step_id` are included in the `result$step` by default.
 Parameter values are included only by reference to `parameter_set_id`. The 
 function `nl_get_result` joins parameter sets to observation data.*
 

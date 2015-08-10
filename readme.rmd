@@ -62,13 +62,8 @@ library(ggplot2)
 ```{r ch7, child="readme_parts/readme7.rmd", cache=FALSE, eval=TRUE}
 ```
 
-```{r ch8, child="readme_parts/readme8.rmd", cache=FALSE, eval=TRUE}
-```
 
-```{r ch9, child="readme_parts/readme9.rmd", cache=FALSE, eval=TRUE}
-```
-
-```{r ch10, child="readme_parts/readme10.rmd", cache=FALSE, eval=TRUE}
+```{r ch10, child="readme_parts/readme_flocking.rmd", cache=FALSE, eval=TRUE}
 ```
 
 
@@ -76,17 +71,24 @@ library(ggplot2)
 
 ## References
 
-* Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 * Thiele, J. (2014) R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software 58(2) 1-41. http://www.jstatsoft.org/v58/i02/
 
 * Railsback, S. F., & Grimm, V. (2011). Agent-Based and Individual-Based Modeling: A Practical Introduction. Princeton University Press.
 
+* Reiczigel, J., Lang, Z., Rózsa, L., & Tóthmérész, B. (2008). Measures of sociality: two different views of group size. Animal Behaviour, 75(2), 715–721.
+
+* Stonedahl, F. J. (2011). Genetic algorithms for the exploration of parameter spaces in agent-based models. http://dl.acm.org/citation.cfm?id=2522136
+
 * Thiele, J. C., Kurth, W., & Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11. http://jasss.soc.surrey.ac.uk/17/3/11.html
+
+* Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 * Wilensky, U. (1997). NetLogo Fire model. http://ccl.northwestern.edu/netlogo/models/Fire. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 * Wilensky, U. (1997). NetLogo Ants model. http://ccl.northwestern.edu/netlogo/models/Ants. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
+* Wilensky, U. (1998). NetLogo Flocking model. http://ccl.northwestern.edu/netlogo/models/Flocking. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 * Wilensky, U. (2003). NetLogo Fur model. http://ccl.northwestern.edu/netlogo/models/Fur. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
@@ -97,23 +99,39 @@ library(ggplot2)
 
 ## Resources
 
-* nlexperiment requires RNetLogo to connect to NetLogo
+* nlexperiment requires __RNetLogo__ to connect to NetLogo
 https://cran.r-project.org/web/packages/RNetLogo/index.html
+
+* Basic ideas and principles of NetLogo experiment definition is taken from
+the NetLogo's **Behavior Space** tool
+http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html and
+**BehaviorSearch** tool http://www.behaviorsearch.org/
 
 * The parallel implementation of `nl_run` function is based on the RNetLogo vignette
 https://cran.r-project.org/web/packages/RNetLogo/vignettes/parallelProcessing.pdf
 
-* Basic ideas and principles of NetLogo experiment definition is taken from
-the NetLogo's Behavior Space tool
-http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html
-
-* This tutorial follows examples and methods from Thiele, Kurth & Grimm (2014)
+* Some tutorials follow examples and methods from Thiele, Kurth & Grimm (2014)
 article and its Supplementary Material
 http://sourceforge.net/projects/calibrationsensitivityanalysis/
 
-* This document was created with knitr package
+* This document was created with __knitr__ package
 https://cran.r-project.org/web/packages/knitr/index.html
 
-* Graphics were created with ggplot2 package
-https://cran.r-project.org/web/packages/ggplot2/index.html
+* Graphics were created with __ggplot2__ package
+https://cran.r-project.org/web/packages/ggplot2/index.html and
+__igraph__ package (http://igraph.org/r/) 
+
+Other than base packages attached:
+```{r results='asis'}
+knitr::kable(
+  do.call(rbind, 
+    lapply(sessionInfo()$otherPkgs, function(x) {
+    data.frame(
+      title = paste0(" ", x$Title, " "),
+      ver = x$Version,
+      author = x$Author    
+    )
+  })), format = "html"
+)
+```
 

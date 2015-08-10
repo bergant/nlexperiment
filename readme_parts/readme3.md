@@ -11,7 +11,7 @@ In this example
 * two measures _per simulation run_ are defined (values are reported at the end 
 of each simulation run),
 * the model will be run repetedly `30` times for every parameter value
-* and the model is running with `parallel` option (to save some time)
+* the model is running with `parallel` option (to save some time)
 
 
 ```r
@@ -32,22 +32,24 @@ experiment <- nl_experiment(
 
 Run the experiment with `parallel` option:
 
-
 ```r
 result <- nl_run(experiment, parallel = TRUE)
-# Join observations with parameter set values:
-dat <- nl_get_run_result(result, add_parameters = TRUE)
+```
+
+Join observations with parameter set values:
+
+```r
+dat <- nl_get_run_result(result)
 ```
 
 Plot the results - percent burned as a function of density:
 
 ```r
-# plot percent burned by density
 library(ggplot2)
 ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) + 
-  geom_violin() +
-  #geom_jitter(position = position_jitter(width = .1), alpha = 0.3) +
-  labs(x = "Forest density", y = "Percent burned")
+  geom_violin(fill = "gray90") +
+  labs(x = "Forest density", y = "Percent burned") + 
+  theme_minimal()
 ```
 
 ![](img/README-p3plot1-1.png) 
@@ -58,8 +60,8 @@ final fire position (left border = 0 and right = 1) as a function of density.
 ```r
 ggplot(dat, mapping = aes(x = factor(density), y = progress/250 + 0.5) ) + 
   geom_jitter(position = position_jitter(width = .1), alpha = 0.3)  +
-  theme_minimal() +
-  labs(x = "Forest density", y = "Fire progress")
+  labs(x = "Forest density", y = "Fire progress") +
+  theme_minimal()
 ```
 
 ![](img/README-p3plot2-1.png) 

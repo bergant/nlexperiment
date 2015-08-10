@@ -4,10 +4,12 @@
 \alias{nl_get_param_range}
 \title{Get ranges of experiment parameter sets}
 \usage{
-nl_get_param_range(experiment, as.data.frame = FALSE)
+nl_get_param_range(experiment, diff_only = TRUE, as.data.frame = FALSE)
 }
 \arguments{
 \item{experiment}{NetLogo experiment object}
+
+\item{diff_only}{Uses only non-constant parameters}
 
 \item{as.data.frame}{Return in a data frame}
 }
