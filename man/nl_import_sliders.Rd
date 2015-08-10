@@ -24,21 +24,4 @@ Imports parameter names and ranges from sliders defined in
     https://github.com/NetLogo/NetLogo/wiki/Model-file-format
     https://github.com/NetLogo/NetLogo/wiki/Widget-Format
 }
-\examples{
-experiment <- nl_experiment(
-  model_file =
-    system.file("netlogo_models/SM2_Hoopoes.nlogo", package = "nlexperiment"),
-  iterations = 20
-)
-
-# import sliders
-sliders <- nl_import_sliders(experiment)
-
-# set experiment parameter sets
-experiment <- nl_set_param_values(
-  experiment,
-  param_values = sliders$param_values,
-  mapping = sliders$mapping
-)
-}
 

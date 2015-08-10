@@ -12,22 +12,6 @@
 #' @param experiment NetLogo experiment object
 #' @param max_values Maximum values per parameter
 #' @return A list with slider data, suggested parameter sets and mapping
-#' @examples
-#' experiment <- nl_experiment(
-#'   model_file =
-#'     system.file("netlogo_models/SM2_Hoopoes.nlogo", package = "nlexperiment"),
-#'   iterations = 20
-#' )
-#'
-#' # import sliders
-#' sliders <- nl_import_sliders(experiment)
-#'
-#' # set experiment parameter sets
-#' experiment <- nl_set_param_values(
-#'   experiment,
-#'   param_values = sliders$param_values,
-#'   mapping = sliders$mapping
-#' )
 #' @export
 nl_import_sliders <- function(experiment, max_values = 20) {
 

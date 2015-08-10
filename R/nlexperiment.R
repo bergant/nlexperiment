@@ -97,7 +97,6 @@ nl_special_params <- c("world_size")
 #' Get and set netlogo path
 #'
 #' @param nl_path An absolute path to your NetLogo installation
-#'   (the folder where the NetLogo.jar is) starting from the root.
 #'   On Windows, for example, something like "C:/Program Files/NetLogo 5.1.0".
 #' @export
 nl_netlogo_path <- function(nl_path = NULL) {

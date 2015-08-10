@@ -8,7 +8,6 @@ nl_netlogo_path(nl_path = NULL)
 }
 \arguments{
 \item{nl_path}{An absolute path to your NetLogo installation
-(the folder where the NetLogo.jar is) starting from the root.
 On Windows, for example, something like "C:/Program Files/NetLogo 5.1.0".}
 }
 \description{

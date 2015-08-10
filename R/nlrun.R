@@ -1,31 +1,3 @@
-#' Run steps (internal doc)
-#'
-#' \itemize{
-#' \item nl_run | nl_run_parallel
-#'   \itemize{
-#'     \item nl_run_init
-#'     \item nl_get_schedule
-#'     \item nl_run_schedule
-#'     \itemize{
-#'       \item nl_single_run
-#'         \itemize{
-#'           \item nl_single_run_setup (setting parameters, setup commands)
-#'           \item execute RNetLogo::NLDo*
-#'           \item get run measures
-#'           \item nl_single_agent_report
-#'           \item nl_single_export
-#'           \item calling criteria function
-#'           \item calling external data handler
-#'       \item nl_run_wrap_results
-#'     }
-#'     \item nl_run_end
-#'   }
-#' }}
-#'
-#' @name run.steps
-#' @keywords internal
-NULL
-
 
 # package options
 nl_options_class <- function() {
