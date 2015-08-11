@@ -30,9 +30,7 @@ package (Thiele 2014) as an interface to NetLogo.
 
 
 ## Installation
-
-`library(devtools)`   
-`install_github("bergant/nlexperiment")`
+`devtools::install_github("bergant/nlexperiment")`
 
 
 ```{r, echo = FALSE}
