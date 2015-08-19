@@ -31,8 +31,7 @@ defined in [Best-fit](flocking_bestfit.rmd) example.
 library(tgp)
 
 experiment <- nl_experiment( 
-  model_file = file.path(nl_netlogo_path(), 
-                         "models/Sample Models/Biology/Flocking.nlogo"),
+  model_file = "models/Sample Models/Biology/Flocking.nlogo",
   setup_commands = c("setup", "repeat 100 [go]"),
   iterations = 5,
 

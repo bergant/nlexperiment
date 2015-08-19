@@ -152,8 +152,7 @@ param_sets &lt;- transform(param_sets,
 <p>We can use is this data frame with explicit parameter sets to define <code>param_values</code> instead of list of parameter values:</p>
 <p><lside> Define the experiment </lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment(
-  model_file = file.path(nl_netlogo_path(),
-  &quot;models/Sample Models/Biology/Fur.nlogo&quot;),
+  model_file = &quot;models/Sample Models/Biology/Fur.nlogo&quot;,
   iterations = 20,
   
   param_values = param_sets,      # here param_sets is a data frame

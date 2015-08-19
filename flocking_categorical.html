@@ -132,8 +132,7 @@ See <a href="flocking.html">Flocking</a> example for formal definitions of the m
 </ul>
 <p><lside> Define the experiment </lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment( 
-  model_file = 
-    file.path(nl_netlogo_path(), &quot;models/Sample Models/Biology/Flocking.nlogo&quot;),
+  model_file = &quot;models/Sample Models/Biology/Flocking.nlogo&quot;,
   setup_commands = c(&quot;setup&quot;, &quot;repeat 100 [go]&quot;),
   iterations = 5,
 

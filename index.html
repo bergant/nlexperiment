@@ -131,8 +131,7 @@ Set path to your NetLogo installation. You have to do this only once per R sessi
 </aside>
 <p><lside> Define the experiment </lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment(
-  model_file = file.path(nl_netlogo_path(), 
-                         &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;), 
+  model_file = &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;, 
   while_condition = &quot;any? turtles&quot;,
   param_values = list(density = c(57, 59, 61)),
   random_seed = 1,

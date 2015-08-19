@@ -50,8 +50,7 @@ Thiele, J. C., Kurth, W., & Grimm, V. (2014). Facilitating Parameter Estimation 
 
 ```{r flockBfgsModel, title = "Define the experiment"}
 experiment <- nl_experiment( 
-  model_file = file.path(nl_netlogo_path(), 
-                         "models/Sample Models/Biology/Flocking.nlogo"),
+  model_file = "models/Sample Models/Biology/Flocking.nlogo",
 
   setup_commands = c("setup", "repeat 100 [go]"),
   iterations = 5,

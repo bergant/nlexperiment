@@ -72,8 +72,7 @@ to define `param_values` instead of list of parameter values:
 
 ```{r furModel, title = "Define the experiment"}
 experiment <- nl_experiment(
-  model_file = file.path(nl_netlogo_path(),
-  "models/Sample Models/Biology/Fur.nlogo"),
+  model_file = "models/Sample Models/Biology/Fur.nlogo",
   iterations = 20,
   
   param_values = param_sets,      # here param_sets is a data frame

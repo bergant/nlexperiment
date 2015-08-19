@@ -118,8 +118,7 @@ Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flockin
 <pre class="r"><code>library(tgp)
 
 experiment &lt;- nl_experiment( 
-  model_file = 
-    file.path(nl_netlogo_path(), &quot;models/Sample Models/Biology/Flocking.nlogo&quot;),
+  model_file = &quot;models/Sample Models/Biology/Flocking.nlogo&quot;,
   setup_commands = c(&quot;setup&quot;, &quot;repeat 100 [go]&quot;),
   iterations = 5,
 
