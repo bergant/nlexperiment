@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Flocking Example</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/default.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header navbar-left">
+      <!--a class="navbar-brand" href="index.html">nlexperiment</a-->
+      <a class="navbar-brand" href="index.html">
+        <!--img class="img-responsive" src="img/logo.png"-->
+        <strong><nl>nl</nl><experiment>experiment</experiment></strong>
+      </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="tutorial.html">Overview</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Getting started</li>
+             <li><a href="fire.html">Fire Experiment</a></li>
+             <li><a href="agents.html">Agents and Patches</a></li>
+             <li><a href="ants.html">Ants</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Parameter Sets</li>
+             <li><a href="fur.html">Fur Patterns</a></li>
+             <li><a href="flocking.html">Flocking</a></li>
+             <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
+             <li><a href="flocking_sampling.html">Latin Hypercube Sampling</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Optimization</li>
+             <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
+             <li><a href="flocking_random_search.html">Random Search</a></li>
+             <li><a href="flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+          </ul>
+        </li>
+        <li><a href="help/index.html">Package documentation</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Flocking Example</h1>
+</div>
+
+
+<p>This example is using NetLogo Flocking model (Wilensky, 1998) to show simple measure definition and observation in parameter space. It is the first in a series of parameter space exploration of the Flocking model.</p>
+<div id="two-measures" class="section level2">
+<h2>Two Measures</h2>
+<aside>
+Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flocking">NetLogo Flocking model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+</aside>
+<p>Two measures of self-organization will be defined:</p>
+<ul>
+<li><strong>converergence</strong> is based on variance of birds’ orientations (Stonedahl, 2011)</li>
+</ul>
+<p><span class="math">\[ converged = 1 - stdev(\{ v_x(b) | b \in B \}) - stdev(\{ v_y(b) | b \in B \}) \]</span></p>
+<aside>
+Stonedahl, F. J. (2011). Genetic algorithms for the exploration of parameter spaces in agent-based models. PhD Thesis, Northwestern University of Illinois
+</aside>
+<ul>
+<li><strong>mean crowding</strong> is average group size as experienced by individual (Reiczigel et al., 2008)</li>
+</ul>
+<p><span class="math">\[ mean\_crowding = \frac{\sum_{b \in B} (|flockmates_b| + 1)}{ |B| }  \]</span></p>
+<aside>
+Reiczigel, J., Lang, Z., RĂłzsa, L., &amp; TĂłthmĂ©rĂ©sz, B. (2008). Measures of sociality: two different views of group size. Animal Behaviour, 75(2), 715â€“721.
+</aside>
+<p>where <span class="math">\(v_x(b)\)</span> and <span class="math">\(v_y(b)\)</span> are the horizontal and vertical components of the velocity of bird b, <span class="math">\(flockmates_b\)</span> are flockmates of bird <span class="math">\(b\)</span> and <span class="math">\(B\)</span> is the set of all birds.</p>
+<p><lside> Define the experiment </lside></p>
+<pre class="r"><code>experiment &lt;- nl_experiment( 
+  model_file = 
+    file.path(nl_netlogo_path(), 
+              &quot;models/Sample Models/Biology/Flocking.nlogo&quot;),
+  setup_commands = c(&quot;setup&quot;, &quot;repeat 10 [go]&quot;),
+  iterations = 100,
+
+  param_values = list(
+    world_size = 50,
+    population = 100,
+    vision = c(2,6)
+  ),
+
+  step_measures = measures(
+    converged = &quot;1 - 
+      (standard-deviation [dx] of turtles + 
+       standard-deviation [dy] of turtles) / 2&quot;,
+    mean_crowding = 
+      &quot;mean [count flockmates + 1] of turtles&quot;
+  ),
+  repetitions = 2,
+  random_seed = c(1, 4),
+  export_view = TRUE
+)</code></pre>
+<aside>
+Note that parameter <code>world_size</code> is special. It changes model world size instead of setting NetLogo variable.
+</aside>
+<p><lside> Run the experiment </lside></p>
+<pre class="r"><code>result &lt;- nl_run(experiment)       </code></pre>
+<p><lside> Plot the results </lside></p>
+<pre class="r"><code>library(ggplot2) 
+nl_show_views_grid(result, x_param = &quot;vision&quot;, y_param = &quot;run_id&quot;, 
+                   img_gap = 0.01) + labs(title = &quot;Simulation views&quot;)</code></pre>
+<p>
+<img src="img/pages-flockPlotGrid-1.png">
+<aside>
+<p class="caption">
+Birds after 100 iterations. Results for two simulation runs for two different vision parameter value
+</p>
+</aside>
+</p>
+<p><lside> Plot the results </lside></p>
+<pre class="r"><code>nl_show_step(result, x = &quot;step_id&quot;, y =  &quot;converged&quot;, 
+             x_param = &quot;vision&quot;,  title = &quot;Convergence&quot;)</code></pre>
+<p>
+<img src="img/pages-flockPlotMeasures1-1.png">
+<aside>
+<p class="caption">
+Convergence in time with different values of <em>vision</em> parameter and two simulation runs
+</p>
+</aside>
+</p>
+<p><lside> Plot the results </lside></p>
+<pre class="r"><code>nl_show_step(result, x = &quot;step_id&quot;, y =  &quot;mean_crowding&quot;, 
+             x_param = &quot;vision&quot;, title = &quot;Mean crowding&quot;)</code></pre>
+<p>
+<img src="img/pages-flockPlotMeasures2-1.png">
+<aside>
+<p class="caption">
+Crowding in time with different <em>vision</em> parameter values
+</p>
+</aside>
+</p>
+</div>
+<div id="explore-temporal-measures" class="section level2">
+<h2>Explore Temporal Measures</h2>
+<p>Initial (random) positions influence the resulting measures. To see the connection between measures and parameter values we have to run the simulation several times for each parameter set.</p>
+<p>The example below explore the influence of <em>min_separation</em> and <em>max_align_turn</em> parameters on the convergence measure by running each parameter set 30 times and simply plotting all observations for different parameter values.</p>
+<p><lside> Define the experiment </lside></p>
+<pre class="r"><code>experiment &lt;- nl_experiment( 
+  model_file = 
+    file.path(nl_netlogo_path(), 
+              &quot;models/Sample Models/Biology/Flocking.nlogo&quot;),
+  setup_commands = c(&quot;setup&quot;, &quot;repeat 10 [go]&quot;),
+  #go_command = c(&quot;repeat 5 [go]&quot;),
+  iterations = 50,
+
+  param_values = list(
+    world_size = 50,
+    population = 100,
+    min_separation = seq(from = 0, to = 3, by = 1),
+    max_align_turn = c(10, 15, 20)
+  ),
+  mapping = c(
+    min_separation = &quot;minimum-separation&quot;,
+    max_align_turn = &quot;max-align-turn&quot;),
+
+  step_measures = measures(
+    converged = &quot;1 - 
+      (standard-deviation [dx] of turtles + 
+       standard-deviation [dy] of turtles) / 2&quot;,
+    mean_crowding = 
+      &quot;mean [count flockmates + 1] of turtles&quot;
+  ),
+  repetitions = 30, 
+  random_seed = 1:30
+)</code></pre>
+<p><lside> Run the experiment </lside></p>
+<pre class="r"><code>result2 &lt;- nl_run(experiment, parallel = TRUE)    </code></pre>
+<p>Plot temporal measure with 2 varying parameters:</p>
+<p><lside> Plot convergence </lside></p>
+<pre class="r"><code>library(ggplot2)
+nl_show_step(result2, x = &quot;step_id&quot;, y = &quot;converged&quot;,
+             y_param = &quot;max_align_turn&quot;, x_param = &quot;min_separation&quot;,
+             color = NA,  alpha = 0.3)</code></pre>
+<p>
+<img src="img/pages-flockPlot2-1.png">
+<aside>
+<p class="caption">
+Convergence: 30 simulation runs for every parameter set
+</p>
+</aside>
+</p>
+<p><lside> Plot crowding </lside></p>
+<pre class="r"><code>library(ggplot2)
+nl_show_step(result2, x = &quot;step_id&quot;, y = &quot;mean_crowding&quot;,
+             y_param = &quot;max_align_turn&quot;, x_param = &quot;min_separation&quot;,
+             color = NA,  alpha = 0.3)</code></pre>
+<p>
+<img src="img/pages-flockPlot3-1.png">
+<aside>
+<p class="caption">
+Mean crowding: 30 simulation runs for every parameter set
+</p>
+</aside>
+</p>
+</div>
+
+
+<footer>
+  <a href="About.html">About</a> |
+  View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
+  Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
+</footer>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>L-BFGS-B Optimization</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/default.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header navbar-left">
+      <!--a class="navbar-brand" href="index.html">nlexperiment</a-->
+      <a class="navbar-brand" href="index.html">
+        <!--img class="img-responsive" src="img/logo.png"-->
+        <strong><nl>nl</nl><experiment>experiment</experiment></strong>
+      </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="tutorial.html">Overview</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Getting started</li>
+             <li><a href="fire.html">Fire Experiment</a></li>
+             <li><a href="agents.html">Agents and Patches</a></li>
+             <li><a href="ants.html">Ants</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Parameter Sets</li>
+             <li><a href="fur.html">Fur Patterns</a></li>
+             <li><a href="flocking.html">Flocking</a></li>
+             <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
+             <li><a href="flocking_sampling.html">Latin Hypercube Sampling</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Optimization</li>
+             <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
+             <li><a href="flocking_random_search.html">Random Search</a></li>
+             <li><a href="flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+          </ul>
+        </li>
+        <li><a href="help/index.html">Package documentation</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">L-BFGS-B Optimization</h1>
+</div>
+
+
+<p>This example is using NetLogo Flocking model (Wilensky, 1998) to demonstrate model fitting with L-BFGS-B optimization method.</p>
+<aside>
+Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flocking">NetLogo Flocking model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+</aside>
+<p>In this example the <code>nl_eval_run</code> function is used instead of <code>nl_run</code>.</p>
+<p>While <code>nl_run</code> expects predefined parameter sets, <code>nl_run_eval</code> accepts a single parameter set and returns a numeric value. That makes it compatible with optimization functions from different R packages where next parameter combination depends on the result of previous simulation.</p>
+<p>But note that <code>nl_eval_run</code> requires started NetLogo instance. User have to take care to initialize NetLogo and load the model before optimization begins and close NetLogo when it is no longer needed (see <code>nl_eval_init</code> and <code>nl_eval_close</code> in package documentation).</p>
+<p>Use <code>nl_eval_run</code> <em>parallel</em> option when optimizing stochastic models with more than a few repetitions needed to evaluate one parameter set.</p>
+<p>There are many R packages for solving optimization problems (see <a href="https://cran.r-project.org/web/views/Optimization.html">CRAN Task View</a>). This example use <strong>L-BFGS-B method</strong> with standard <code>stats::optim</code> function. See also Thiele, Kurth &amp; Grimm (2014) chapter <a href="http://jasss.soc.surrey.ac.uk/17/3/11.html#sectionGQNM">2.28 Gradient and quasi-Newton methods</a>.</p>
+<aside>
+Thiele, J. C., Kurth, W., &amp; Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11. <a href="http://jasss.soc.surrey.ac.uk/17/3/11.html" class="uri">http://jasss.soc.surrey.ac.uk/17/3/11.html</a>
+</aside>
+<p><lside> Define the experiment </lside></p>
+<pre class="r"><code>experiment &lt;- nl_experiment( 
+  model_file = file.path(nl_netlogo_path(), 
+                         &quot;models/Sample Models/Biology/Flocking.nlogo&quot;),
+
+  setup_commands = c(&quot;setup&quot;, &quot;repeat 100 [go]&quot;),
+  iterations = 5,
+
+  param_values = list(
+    world_size = 50,
+    population = 80,
+    vision = 6,
+    min_separation = seq(from = 0, to = 4, by = 0.5),
+    max_align_turn = seq(from = 0, to = 20, by = 2.5)
+  ),
+  mapping = c(
+    min_separation = &quot;minimum-separation&quot;,
+    max_align_turn = &quot;max-align-turn&quot;),
+
+  step_measures = measures(
+    converged = &quot;1 - 
+      (standard-deviation [dx] of turtles + 
+       standard-deviation [dy] of turtles) / 2&quot;,
+    mean_crowding = 
+      &quot;mean [count flockmates + 1] of turtles&quot;
+  ),
+  eval_criteria = criteria(
+    c_converged = mean(step$converged),
+    c_mcrowding = mean(step$mean_crowding)
+  ),
+
+  repetitions = 10,                 # repeat simulations 10 times
+
+  eval_aggregate_fun = mean,        # aggregate over repetitions
+
+  eval_mutate = criteria(           # evaluation criterium
+    eval_value = 
+      sqrt((c_mcrowding - 8)^2 + 400*(c_converged - 1)^2)
+  )
+)</code></pre>
+<p><lside> Call optim function </lside></p>
+<pre class="r"><code>cl &lt;- nl_eval_init(experiment, parallel = TRUE)
+#&gt; [1] &quot;Creating sockets...&quot;
+trace &lt;- nl_eval_tracer(verbose = FALSE)
+param_range &lt;- nl_get_param_range(experiment)   
+set.seed(1) 
+
+o_result &lt;- optim(
+  #par = param_range$upper,  
+  par = (param_range$upper + param_range$lower)/2,
+  nl_eval_run, 
+    experiment = experiment, criteria = &quot;eval_value&quot;, 
+    call_back = trace$add, parallel = TRUE, cluster = cl,
+  method = &quot;L-BFGS-B&quot;,
+  lower = param_range$lower, upper = param_range$upper, 
+  control = list(maxit = 200, trace = 1))
+#&gt; final  value 4.578245 
+#&gt; converged
+
+nl_eval_close(parallel = TRUE, cl)</code></pre>
+<aside>
+<p>Function <code>nl_eval_init</code> starts processes with NetLogo instance</p>
+Function <code>nl_get_param_range</code> returns parameters’ lower and upper values as they are defined in experiment object. This range will be used as optimization constraints in L-BFGS-B method.
+</aside>
+<p><lside> Optim results </lside></p>
+<pre class="r"><code>o_result
+#&gt; $par
+#&gt; min_separation max_align_turn 
+#&gt;       1.891199      10.544003 
+#&gt; 
+#&gt; $value
+#&gt; [1] 4.578245
+#&gt; 
+#&gt; $counts
+#&gt; function gradient 
+#&gt;       17       17 
+#&gt; 
+#&gt; $convergence
+#&gt; [1] 0
+#&gt; 
+#&gt; $message
+#&gt; [1] &quot;CONVERGENCE: REL_REDUCTION_OF_F &lt;= FACTR*EPSMCH&quot;</code></pre>
+<p>The <code>trace$add</code> function colected every iteration of <code>optim</code>.</p>
+<p><lside> Plot tracing data </lside></p>
+<pre class="r"><code>tr &lt;- trace$get()
+
+library(ggplot2)
+ggplot(tr, aes(x = iter_id,  y = result)) +
+  geom_line() +
+  theme_minimal()</code></pre>
+<p>
+<img src="img/pages-pFlockOptimPlot-1.png">
+<aside>
+</aside>
+</p>
+<p><lside> Plot tracing data </lside></p>
+<pre class="r"><code>library(ggplot2)
+ggplot(tr, aes(x = min_separation,  y = max_align_turn)) +
+  geom_path(alpha = 0.1)+
+  geom_point(shape = 4, size = 5, alpha = 0.3) +
+  scale_x_continuous(limits = c(0, 4)) +
+  scale_y_continuous(limits = c(0, 20)) +
+  theme_minimal()</code></pre>
+<p>
+<img src="img/pages-pFlockOptimPlot2-1.png">
+<aside>
+<p class="caption">
+Where did <code>optim</code> look for best value?
+</p>
+</aside>
+</p>
+
+
+<footer>
+  <a href="About.html">About</a> |
+  View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
+  Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
+</footer>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Best-fit Criterion</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/default.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header navbar-left">
+      <!--a class="navbar-brand" href="index.html">nlexperiment</a-->
+      <a class="navbar-brand" href="index.html">
+        <!--img class="img-responsive" src="img/logo.png"-->
+        <strong><nl>nl</nl><experiment>experiment</experiment></strong>
+      </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="tutorial.html">Overview</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Getting started</li>
+             <li><a href="fire.html">Fire Experiment</a></li>
+             <li><a href="agents.html">Agents and Patches</a></li>
+             <li><a href="ants.html">Ants</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Parameter Sets</li>
+             <li><a href="fur.html">Fur Patterns</a></li>
+             <li><a href="flocking.html">Flocking</a></li>
+             <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
+             <li><a href="flocking_sampling.html">Latin Hypercube Sampling</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Optimization</li>
+             <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
+             <li><a href="flocking_random_search.html">Random Search</a></li>
+             <li><a href="flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+          </ul>
+        </li>
+        <li><a href="help/index.html">Package documentation</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Best-fit Criterion</h1>
+</div>
+
+
+<p>This example is using NetLogo Flocking model (Wilensky, 1998) to demonstrate single best-fit criterion evaluation.</p>
+<p>Use full factor design experiment as in <a href="flocking_categorical.html">Categorical Criteria Example</a>:</p>
+<aside>
+<p>Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flocking">NetLogo Flocking model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.</p>
+See <a href="flocking.html">Flocking</a> example for measures definitions and <a href="flocking_categorical.html">Categorical Criteria</a> example for aggregated evaluation criteria definition.
+</aside>
+<p><lside> Define the experiment </lside></p>
+<pre class="r"><code>experiment &lt;- nl_experiment( 
+  model_file = file.path(nl_netlogo_path(), 
+                         &quot;models/Sample Models/Biology/Flocking.nlogo&quot;),
+  setup_commands = c(&quot;setup&quot;, &quot;repeat 100 [go]&quot;),
+  iterations = 5,
+
+  param_values = list(
+    world_size = 50,
+    population = 80,
+    vision = 6,
+    min_separation = seq(from = 0, to = 4, by = 0.25),
+    max_align_turn = seq(from = 0, to = 20, by = 1.25)
+  ),
+  mapping = c(
+    min_separation = &quot;minimum-separation&quot;,
+    max_align_turn = &quot;max-align-turn&quot;),
+
+  step_measures = measures(
+    converged = &quot;1 - 
+      (standard-deviation [dx] of turtles + 
+       standard-deviation [dy] of turtles) / 2&quot;,
+    mean_crowding = 
+      &quot;mean [count flockmates + 1] of turtles&quot;
+  ),
+  eval_criteria = criteria(
+    c_converged = mean(step$converged),
+    c_mcrowding = mean(step$mean_crowding)
+  ),
+
+  repetitions = 10,                        # repeat simulations 10 times
+  random_seed = 1:10,
+  
+  eval_aggregate_fun = mean                # aggregate over repetitions
+)</code></pre>
+<p><lside> Run the experiment </lside></p>
+<pre class="r"><code>result &lt;- nl_run(experiment, parallel = TRUE)</code></pre>
+<div id="best-fit-criterion-function" class="section level2">
+<h2>Best-fit Criterion Function</h2>
+<p>If our ideal <strong>mean crowding is around 8</strong> and <strong>convergence is near 1</strong> we can construct a function like this:</p>
+<p><span class="math">\[ value = \sqrt{(crowding - 8)^2 + 100 \times (converged - 1)^2} \]</span></p>
+<p><lside> Define criterium </lside></p>
+<pre class="r"><code>dat &lt;- nl_get_criteria_result( 
+  result,
+  eval_value = sqrt((c_mcrowding - 8)^2 + 400*(c_converged - 1)^2)
+)</code></pre>
+<p><lside> Plot heatmap </lside></p>
+<pre class="r"><code>library(ggplot2)
+ggplot(dat,
+       aes( x = min_separation, y = max_align_turn, fill = eval_value)) +
+  geom_tile() + 
+  coord_fixed(4/20) + 
+  theme_minimal() +
+  theme(legend.position=&quot;none&quot;)</code></pre>
+<aside style="margin-top:-13em">
+<img src="img/pages-flockBestFitPlot1-1.png">
+<p class="caption">
+Heat map reveals a promissing area in the middle of parameter space.
+</p>
+</aside>
+<p><lside> Plot contour </lside></p>
+<pre class="r"><code>library(ggplot2)
+ggplot( dat, aes(x = min_separation, y = max_align_turn, z = eval_value) ) +
+  stat_contour(bins = 11, aes(color = ..level..)) +
+  coord_fixed(4/20) + theme_minimal() + theme(legend.position=&quot;none&quot;)</code></pre>
+<p>
+<img src="img/pages-flockBestFitPlot2-1.png">
+<aside>
+</aside>
+</p>
+</div>
+
+
+<footer>
+  <a href="About.html">About</a> |
+  View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
+  Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
+</footer>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

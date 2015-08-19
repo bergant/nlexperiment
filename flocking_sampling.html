@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Latin Hypercube Sampling</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/default.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header navbar-left">
+      <!--a class="navbar-brand" href="index.html">nlexperiment</a-->
+      <a class="navbar-brand" href="index.html">
+        <!--img class="img-responsive" src="img/logo.png"-->
+        <strong><nl>nl</nl><experiment>experiment</experiment></strong>
+      </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="tutorial.html">Overview</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Getting started</li>
+             <li><a href="fire.html">Fire Experiment</a></li>
+             <li><a href="agents.html">Agents and Patches</a></li>
+             <li><a href="ants.html">Ants</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Parameter Sets</li>
+             <li><a href="fur.html">Fur Patterns</a></li>
+             <li><a href="flocking.html">Flocking</a></li>
+             <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
+             <li><a href="flocking_sampling.html">Latin Hypercube Sampling</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Optimization</li>
+             <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
+             <li><a href="flocking_random_search.html">Random Search</a></li>
+             <li><a href="flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+          </ul>
+        </li>
+        <li><a href="help/index.html">Package documentation</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Latin Hypercube Sampling</h1>
+</div>
+
+
+<p>This example is using NetLogo Flocking model (Wilensky, 1998) to demonstrate exploring parameter space with categorical evaluation and Latin hypercube sampling (LHS).</p>
+<aside>
+Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flocking">NetLogo Flocking model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+</aside>
+<p>Like in <a href="flocking_categorical.html">previous example</a> we are using categorical evaluation criteria but instead of exploring parameter space with (full) factorial design we use Latin hypercube sampling method from <strong>tgp</strong> package.</p>
+<p><lside> Define the experiment </lside></p>
+<pre class="r"><code>library(tgp)
+
+experiment &lt;- nl_experiment( 
+  model_file = 
+    file.path(nl_netlogo_path(), &quot;models/Sample Models/Biology/Flocking.nlogo&quot;),
+  setup_commands = c(&quot;setup&quot;, &quot;repeat 100 [go]&quot;),
+  iterations = 5,
+
+  param_values = nl_param_lhs(
+    n = 100, 
+    world_size = 50,
+    population = 80,
+    vision = 6,
+    min_separation = c(0, 4),
+    max_align_turn = c(0, 20)
+  ),
+  mapping = c(
+    min_separation = &quot;minimum-separation&quot;,
+    max_align_turn = &quot;max-align-turn&quot;),
+
+  step_measures = measures(
+    converged = &quot;1 - 
+      (standard-deviation [dx] of turtles + 
+       standard-deviation [dy] of turtles) / 2&quot;,
+    mean_crowding = 
+      &quot;mean [count flockmates + 1] of turtles&quot;
+  ),
+  eval_criteria = criteria(
+    c_converged = mean(step$converged),
+    c_mcrowding = mean(step$mean_crowding)
+  ),
+
+  repetitions = 10,                        # repeat simulations 10 times
+  random_seed = 1:10,
+  
+  eval_aggregate_fun = mean                # aggregate over repetitions
+)  </code></pre>
+<aside>
+<p>Function <code>nl_param_lhs</code> is using <code>lhs</code> function from <strong>tgp</strong> package to create random parameter sets. Argument <code>n</code> defines the size of the LH sample.</p>
+Instead of using <code>nl_param_lhs</code> one can put any data frame in param_values. The columns of a data frame are interpreted as parameter names and rows should represent parameter sets.
+</aside>
+<pre class="r"><code>result4 &lt;- nl_run(experiment, parallel = TRUE)</code></pre>
+<p><lside> Add categorical criteria </lside></p>
+<pre class="r"><code>dat &lt;- nl_get_criteria_result( 
+  result4,
+  are_grouped = c_mcrowding &gt;= 5 &amp; c_mcrowding &lt; 11,
+  are_aligned = c_converged &gt; 0.7
+)</code></pre>
+<aside>
+See <a href="flocking_categorical.html">previous example</a> for categorical criteria definition.
+</aside>
+<p><lside> Plot the results </lside></p>
+<pre class="r"><code>library(ggplot2)
+ggplot( dat, aes(x = min_separation, y = max_align_turn) ) +
+  geom_point() +
+  geom_point(data=subset(dat,are_aligned), color=&quot;red&quot;,size=5,shape=2) +
+  geom_point(data=subset(dat,are_grouped), color=&quot;blue&quot;,size=5,shape=3) +
+  coord_equal(ratio = 1/5) +
+  theme_minimal()</code></pre>
+<p>
+<img src="img/pages-flockSampPlot-1.png">
+<aside>
+<p class="caption">
+Categorical criteria “aligned” (red triangle) and “grouped” (blue cross). Black dots are parameter sets
+</p>
+</aside>
+</p>
+
+
+<footer>
+  <a href="About.html">About</a> |
+  View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
+  Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
+</footer>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

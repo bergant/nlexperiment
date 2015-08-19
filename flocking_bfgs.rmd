@@ -1,0 +1,150 @@
+
+---
+title: "L-BFGS-B Optimization"
+---
+
+```{r ch_opt, child="include/chunk_options.rmd", cache=FALSE}
+```
+
+```{r, echo = FALSE}
+library(nlexperiment)
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0") 
+```
+
+This example is using NetLogo Flocking model (Wilensky, 1998) to
+demonstrate model fitting with L-BFGS-B optimization method.
+
+<aside>
+Wilensky, U. (1998). 
+[NetLogo Flocking model](http://ccl.northwestern.edu/netlogo/models/Flocking). 
+Center for Connected Learning and Computer-Based Modeling, 
+Northwestern University, Evanston, IL.
+</aside>
+
+In this example the `nl_eval_run` function is used instead of `nl_run`. 
+
+While `nl_run` expects predefined parameter sets, `nl_run_eval` accepts a single parameter set and returns a numeric value. That makes it compatible with optimization
+functions from different R packages where next parameter combination depends on 
+the result of previous simulation.
+
+But note that `nl_eval_run` requires started NetLogo instance. 
+User have to take care to 
+initialize NetLogo and load the model before optimization begins and 
+close NetLogo when it is no longer needed 
+(see `nl_eval_init` and `nl_eval_close` in package documentation).
+
+Use `nl_eval_run` _parallel_ option when optimizing stochastic models
+with more than a few repetitions needed to evaluate one parameter set. 
+
+
+There are many R packages for solving optimization problems 
+(see [CRAN Task View](https://cran.r-project.org/web/views/Optimization.html)).
+This example use **L-BFGS-B method** with standard `stats::optim` function.
+See also Thiele, Kurth & Grimm (2014) chapter 
+[2.28 Gradient and quasi-Newton methods](http://jasss.soc.surrey.ac.uk/17/3/11.html#sectionGQNM).
+
+<aside>
+Thiele, J. C., Kurth, W., & Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11. http://jasss.soc.surrey.ac.uk/17/3/11.html
+</aside>
+
+
+```{r flockBfgsModel, title = "Define the experiment"}
+experiment <- nl_experiment( 
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Biology/Flocking.nlogo"),
+
+  setup_commands = c("setup", "repeat 100 [go]"),
+  iterations = 5,
+
+  param_values = list(
+    world_size = 50,
+    population = 80,
+    vision = 6,
+    min_separation = seq(from = 0, to = 4, by = 0.5),
+    max_align_turn = seq(from = 0, to = 20, by = 2.5)
+  ),
+  mapping = c(
+    min_separation = "minimum-separation",
+    max_align_turn = "max-align-turn"),
+
+  step_measures = measures(
+    converged = "1 - 
+      (standard-deviation [dx] of turtles + 
+       standard-deviation [dy] of turtles) / 2",
+    mean_crowding = 
+      "mean [count flockmates + 1] of turtles"
+  ),
+  eval_criteria = criteria(
+    c_converged = mean(step$converged),
+    c_mcrowding = mean(step$mean_crowding)
+  ),
+
+  repetitions = 10,                 # repeat simulations 10 times
+
+  eval_aggregate_fun = mean,        # aggregate over repetitions
+
+  eval_mutate = criteria(           # evaluation criterium
+    eval_value = 
+      sqrt((c_mcrowding - 8)^2 + 400*(c_converged - 1)^2)
+  )
+)
+```
+
+
+```{r flockBfgsOptimRun, title = "Call optim function", cache=TRUE}
+cl <- nl_eval_init(experiment, parallel = TRUE)
+trace <- nl_eval_tracer(verbose = FALSE)
+param_range <- nl_get_param_range(experiment)   
+set.seed(1) 
+
+o_result <- optim(
+  #par = param_range$upper,  
+  par = (param_range$upper + param_range$lower)/2,
+  nl_eval_run, 
+    experiment = experiment, criteria = "eval_value", 
+    call_back = trace$add, parallel = TRUE, cluster = cl,
+  method = "L-BFGS-B",
+  lower = param_range$lower, upper = param_range$upper, 
+  control = list(maxit = 200, trace = 1))
+
+nl_eval_close(parallel = TRUE, cl)
+```
+<aside>
+Function `nl_eval_init` starts processes with NetLogo instance
+
+Function `nl_get_param_range` returns parameters' lower and upper values
+as they are defined in experiment object.
+This range will be used as optimization constraints in L-BFGS-B method.
+</aside>
+
+
+```{r flockBfgsGetData, title = "Optim results"}
+o_result
+```
+
+
+The `trace$add` function colected every iteration of `optim`. 
+
+```{r pFlockOptimPlot, title = "Plot tracing data"}
+tr <- trace$get()
+
+library(ggplot2)
+ggplot(tr, aes(x = iter_id,  y = result)) +
+  geom_line() +
+  theme_minimal()
+```
+
+
+
+
+```{r pFlockOptimPlot2, title = "Plot tracing data", fig.cap="Where did `optim` look for best value?"}
+library(ggplot2)
+ggplot(tr, aes(x = min_separation,  y = max_align_turn)) +
+  geom_path(alpha = 0.1)+
+  geom_point(shape = 4, size = 5, alpha = 0.3) +
+  scale_x_continuous(limits = c(0, 4)) +
+  scale_y_continuous(limits = c(0, 20)) +
+  theme_minimal()
+
+```
+

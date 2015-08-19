@@ -1,0 +1,22 @@
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = paste0("img/pages-"),
+  fig.height = 5,
+  fig.width = 8
+)
+
+# change knitr cache folder
+cache_path <- knitr::opts_chunk$get("cache.path")
+cache_path <- paste0("cache/", cache_path)
+cache_path <- gsub("html/$", "", cache_path )
+knitr::opts_chunk$set(cache.path = cache_path)
+
+# new chunk property (title) as left side html note (CSS handles lside position)
+knitr::knit_hooks$set(title = function(before, options, envir) {
+    if (before) return(paste("<lside>", options$title, "</lside>"))  # smaller margin on top and right
+})
+
+```

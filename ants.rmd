@@ -1,0 +1,112 @@
+---
+title: "Ants"
+---
+
+```{r ch_opt, child="include/chunk_options.rmd", cache=FALSE}
+```
+
+
+```{r, echo = FALSE}
+library(nlexperiment)
+# Set the path to your NetLogo instalation
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
+```
+
+
+The following example is using Ants model (Wilensky 1997) to show 
+simple parameter sets definition and parameter mapping.
+
+<aside>
+Wilensky, U. (1997).
+[NetLogo Ants model](http://ccl.northwestern.edu/netlogo/models/Ants). 
+Center for Connected Learning and Computer-Based Modeling, 
+Northwestern University, Evanston, IL.
+</aside>
+
+When parameters (`param_values`) are defined as a list of value vecors, parameter sets are
+constructed as combination of all possible parameter value combination 
+what is called "full factorial design". 
+In practice it is feasible with few parameters and small number of factors
+for each parameter.
+See [sampling methods](sampling.html) for advanced usage of `param_values`.
+
+The `mapping` element takes care of mapping between R names and
+NetLogo variables. 
+NetLogo identifiers may contain any Unicode letter or digit and the 
+following ASCII characters: 
+
+`.?=*!<>:#+/%$_^'&-`
+
+It is not impossible to define such variables and column names in R
+but using them is somehow inelegant.
+
+<aside>
+See *syntax/identifiers* section in 
+[NetLogo programming guide](http://ccl.northwestern.edu/netlogo/5.0/docs/programming.html#syntax) and 
+R FAQ about [valid names](http://cran.r-project.org/doc/FAQ/R-FAQ.html#What-are-valid-names_003f).
+</aside>
+
+```{r antsModel, title = "Define the experiment"}
+experiment <- nl_experiment(
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Biology/Ants.nlogo"), 
+  iterations = 150,
+  step_measures = measures(
+    pile1 = "sum [food] of patches with [pcolor = cyan]",  
+    pile2 = "sum [food] of patches with [pcolor = sky]",  
+    pile3 = "sum [food] of patches with [pcolor = blue]"  
+  ),
+  param_values = list(
+    population = 125,
+    diffusion_rate = c(50, 70),
+    evaporation_rate = c(5, 10, 15)
+  ),
+  mapping = c(
+    diffusion_rate = "diffusion-rate",
+    evaporation_rate = "evaporation-rate"
+    ),
+  random_seed = 2,
+  export_view = TRUE
+)
+
+```
+<aside>
+It is not required to include all parameters in mapping. Variable `population` 
+is used as is.
+
+Element `mapping` maps `difussion_rate` and `evaporation_rate` to 
+NetLogo variables `diffusion-rate` and `evaporation-rate`.
+</aside>
+
+
+Run experiment
+```{r antsRun, cache=TRUE}
+results <- nl_run(experiment)    
+```
+
+
+```{r antsPlotViews, title = "Show views"}
+nl_show_views_grid(results, 
+                   x_param = "evaporation_rate", 
+                   y_param = "diffusion_rate")
+```
+
+
+```{r antsGetData, title = "Prepare data"}
+library(tidyr)
+dat <- nl_get_step_result(results)
+dat <- tidyr::gather(dat, pile, value, pile1, pile2, pile3)
+```
+<aside>
+Gathering columns from 3 measures to key-value pairs to use it in ggplot 
+</aside>
+
+```{r antsPlotStep, title = "Plot the results", cache=FALSE, fig.cap="Remaining food by difussion and evaporation rate for three food piles"}
+library(ggplot2)
+ggplot(dat, aes(x = step_id, y = value, color = pile) ) +
+  geom_line() +
+  facet_grid(diffusion_rate ~ evaporation_rate) +
+  theme_minimal()
+```
+
+

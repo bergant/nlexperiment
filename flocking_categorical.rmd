@@ -1,0 +1,147 @@
+
+---
+title: "Categorical Criteria"
+---
+
+```{r ch_opt, child="include/chunk_options.rmd", cache=FALSE}
+```
+
+```{r, echo = FALSE}
+library(nlexperiment)
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0") 
+```
+
+This example is using NetLogo Flocking model (Wilensky, 1998) to
+demonstrate exploring parameter space with categorical evaluation.
+
+<aside>
+Wilensky, U. (1998). 
+[NetLogo Flocking model](http://ccl.northwestern.edu/netlogo/models/Flocking). 
+Center for Connected Learning and Computer-Based Modeling, 
+Northwestern University, Evanston, IL.
+
+Thiele, J. C., Kurth, W., & Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11. http://jasss.soc.surrey.ac.uk/17/3/11.html
+</aside>
+
+
+See also Thiele, Kurth & Grimm (2014) for categorical criteria example.
+
+
+
+
+
+
+## Measures and Evaluation Criteria
+
+As in [previous example](flocking.html) two measures of self-organization were defined:
+
+* __converergence__ is based on variance of birds' orientations and
+* __mean crowding__ is average group size as experienced by individual.
+
+<aside>
+See [Flocking](flocking.html) example for formal definitions of the measures.
+</aside>
+
+Additionaly
+
+* _criteria evaluation expressions_ are aggregating those measures over time 
+  (note the `eval_criteria` element) and
+* _evaluation aggregation function_ is aggregating these criteria values 
+  over several simulation repetitions.
+
+
+```{r flockCatModel, title = "Define the experiment"}
+experiment <- nl_experiment( 
+  model_file = 
+    file.path(nl_netlogo_path(), "models/Sample Models/Biology/Flocking.nlogo"),
+  setup_commands = c("setup", "repeat 100 [go]"),
+  iterations = 5,
+
+  param_values = list(
+    world_size = 50,
+    population = 80,
+    vision = c(3,6),
+    min_separation = seq(from = 0, to = 4, by = 0.5),
+    max_align_turn = seq(from = 0, to = 20, by = 2.5)
+  ),
+  mapping = c(
+    min_separation = "minimum-separation",
+    max_align_turn = "max-align-turn"),
+
+  step_measures = measures(
+    converged = "1 - 
+      (standard-deviation [dx] of turtles + 
+       standard-deviation [dy] of turtles) / 2",
+    mean_crowding = 
+      "mean [count flockmates + 1] of turtles"
+  ),
+  eval_criteria = criteria(
+    c_converged = mean(step$converged),
+    c_mcrowding = mean(step$mean_crowding)
+  ),
+
+  repetitions = 10,                        # repeat simulations 10 times
+  random_seed = 1:10,
+  
+  eval_aggregate_fun = mean                # aggregate over repetitions
+)
+
+```
+
+<aside>
+Criteria expressions (in `eval_criteria` element)
+use the result from step measures (`step$` prefix)
+
+Aggregate function (`eval_aggregate_fun`) specifies that the results
+   from criteria function should be aggregated 
+   (over all 10 repetitions for each parameter set)
+</aside>
+
+
+```{r pFlockCatRun, title = "Run the experiment", cache=TRUE}
+result3 <- nl_run(experiment, parallel = TRUE) 
+```
+
+## Add Categorical Criteria
+
+If we were interested in parameters where the model will produce
+__medium sized flocks__ 
+which __fly in same direction__
+we could define criteria based on crowding and direction convergence
+like this:
+
+Crowding criteria: 
+
+$$ 5 <= crowding < 11 $$
+
+Alignment criteria:
+
+$$ converged > 0.7 $$
+
+
+```{r flockCatData, title = "Prepare data"}
+dat <- nl_get_criteria_result( 
+  result3,
+  are_grouped = c_mcrowding >= 5 & c_mcrowding < 11,
+  are_aligned = c_converged > 0.7
+)
+```
+
+<aside>
+Note that changing categorical criteria from base evaluation criteria
+does not require additional model run.
+</aside>
+
+```{r pFlockCatPlot, title = "Plot the results", fig.cap='Categorical criteria "aligned" (red triangle) and "grouped" (blue cross). Black dots are parameter sets'}
+library(ggplot2)
+ggplot( dat, aes(x = min_separation, y = max_align_turn) ) +
+  geom_point() +
+  geom_point(data=subset(dat,are_aligned),color="red",size=5,shape=2) +
+  geom_point(data=subset(dat,are_grouped),color="blue",size=5,shape=3) +
+  coord_equal(ratio = 1/5) +
+  facet_grid(. ~ vision, labeller = label_both) +
+  theme_minimal() +
+  theme(panel.margin = grid::unit(0.07,"npc"))
+
+```
+

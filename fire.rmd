@@ -1,0 +1,207 @@
+---
+title: "Fire Experiment"
+---
+
+```{r ch_opt, child="include/chunk_options.rmd", cache=FALSE}
+```
+
+<nl_summary>
+This example uses NetLogo Fire model (Wilensky 1997) to demonstrate
+how to define and run experiments,
+export view images and
+get observations based on measures. 
+
+<aside_bib>
+Wilensky, U. (1997). NetLogo Fire model. 
+http://ccl.northwestern.edu/netlogo/models/Fire. 
+Center for Connected Learning and Computer-Based Modeling, 
+Northwestern University, Evanston, IL.
+</aside_bib>
+</nl_summary>
+
+
+```{r Initialize, title = "Setup"}
+library(nlexperiment)
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
+```
+<aside>You have to do this only once per R session.</aside>
+
+
+## Run model and export view image
+To run a NetLogo model simulation we have to create an experiment object
+with `nl_experiment` function.
+Experiment definition includes a NetLogo model file, 
+declares how to run the model,
+defines parameter values 
+and
+what outputs are expected from simulation runs.
+
+For example:
+
+```{r fireModel, title = "Define the experiment"}
+experiment <- nl_experiment(
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Earth Science/Fire.nlogo"), 
+  param_values = list(density = c(57, 59, 61)),
+  while_condition = "any? turtles",
+  random_seed = 1,
+  export_view = TRUE
+)
+```
+<aside>
+The model will run for three parameter values. Each simulation will run as long as there are any turtles.
+
+The `export_view` option enables exporting view after each simulation.
+</aside>
+
+```{r fireRun, title = "Run the experiment", cache=TRUE}  
+result <- nl_run(experiment)     
+```
+
+Find paths to the exported view image files in `result$export` 
+or just display them by calling `nl_show_views_grid` function:
+
+
+```{r fireView, title = "Show exported images", fig.height=3, fig.cap="Images taken at the end of each simulation"}
+library(ggplot2)
+nl_show_views_grid(result, x_param = "density")
+```
+
+
+## Temporal Measures
+Temporal measures quantify temporal behavior of agent based model.
+Example below shows how to measure _percent of burned trees_ on each simulation step:
+
+$$ percent_{burned}(t) = \frac{trees_{burned}(t)}{trees_{initial}} \times 100 $$
+
+To define a temporal measure use `step_measures` element.
+Measures have to be accurate NetLogo reporters. 
+
+
+```{r fireStepModel, title = "Define the experiment"}
+experiment <- nl_experiment( 
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Earth Science/Fire.nlogo"), 
+  while_condition = "any? turtles",
+  param_values = list(density = c(57, 59, 61)),
+  random_seed = 1,
+  step_measures = measures(
+    percent_burned = "(burned-trees / initial-trees) * 100"
+  )
+)
+```
+<aside>
+Note that `burned-trees` and `initial-trees` are global variables in NetLogo 
+[Fire model](https://github.com/NetLogo/models/blob/master/Sample Models/Earth Science/Fire.nlogo).
+</aside>
+
+
+```{r fireStepRun, title = "Run the experiment", cache=TRUE}
+result <- nl_run(experiment) 
+```
+
+To get the observations from the result object
+use `nl_get_step_result`:
+
+
+```{r fireStepResult, title = "Get observations", fig.height=4}
+dat <- nl_get_step_result(result)
+```
+<aside>
+Values `run_id` and `step_id` are included in the `result$step` by default.
+
+Parameter values are included only by reference to `parameter_set_id`. The 
+function `nl_get_result` joins parameter sets with observation data.
+</aside>
+
+```{r fireShowTable}
+htmlTable::htmlTable(head(dat))
+```
+<aside>
+Table: first 6 observations. 
+</aside>
+&nbsp;
+
+
+
+```{r fireStepPlot, title = "Plot observations", fig.height=4, fig.cap="Percent of burned trees as a function of time"}
+nl_show_step(result, x_param = "density")
+```
+
+
+## Observations per each simulation run
+Stochastic models are usually run several times repeteadly for each
+parameter set and measured at the end of each run.
+
+In this example we observe percent of burned trees and fire progress
+for different `density` parameter. The model will run repetedly `30` times
+for every parameter value.
+
+
+```{r fireRunModel, title = "Define the experiment"}
+experiment <- nl_experiment(
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Earth Science/Fire.nlogo"), 
+  while_condition = "any? turtles",
+  run_measures = measures(
+    percent_burned = "(burned-trees / initial-trees) * 100",
+    progress = "max [pxcor] of patches with [pcolor > 0 and pcolor < 55]"
+  ),
+  repetitions = 30,
+  param_values = list(
+    density = seq(from = 55, to = 62, by = 1)
+  )
+)
+```
+<aside>
+Use `repetitions` parameter to set the number of simulation
+runs for each parameter set
+
+Note that one could define `run_measures` and `step_measures` in the same
+experiment.
+</aside>
+
+When running experiments with several repetitions we can save some time
+with `parallel` option.
+
+
+```{r fireRunRun, title = "Run the experiment", cache=TRUE}
+result <- nl_run(experiment, parallel = TRUE) 
+```
+<aside>To run experiment on several processor cores, run with `parallel = TRUE` option.</aside>
+
+
+```{r fireRunResult, title = "Get data"}
+dat <- nl_get_run_result(result)
+```
+
+One way to show the percent burned as a function of density is to use
+violin plot:
+
+```{r fireRunPlot, title = "Plot the results", fig.height=5, fig.width=8, fig.cap="Distribution of final percent of burned trees at different values of forest density."}
+library(ggplot2)
+ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) + 
+  geom_violin(fill = "gray90") +
+  labs(x = "Forest density", y = "Percent burned") + 
+  theme_minimal()
+```
+
+Fire advances from left to right. It is interesting to observe
+final fire position (left border = 0 and right = 1) as a function of density.
+
+
+```{r fireRunPlot2, div=200, title = "Plot the results", fig.cap="Distribution of final fire position at different values of forest densities"}
+ggplot(dat, mapping = aes(x = factor(density), y = progress/250 + 0.5) ) + 
+  geom_boxplot()  +
+  #geom_jitter(position = position_jitter(width = .1), alpha = 0.3)  +
+  labs(x = "Forest density", y = "Fire progress") +
+  theme_minimal()
+```
+
+
+## More
+Try other examples:
+
+* [Agents and Patches](agents.html) to see how to observe agents and patches
+* [Ants](ants.html) to see how to define simple parameter sets and mapping
+

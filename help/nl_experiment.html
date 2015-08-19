@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Ants</title>
+
+<script src="../libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="../libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
+<script src="../libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="../libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="../libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="../libs/highlight/default.css"
+      type="text/css" />
+<script src="../libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="../tufterhandout2.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header navbar-left">
+      <!--a class="navbar-brand" href="../index.html">nlexperiment</a-->
+      <a class="navbar-brand" href="../index.html">
+        <!--img class="img-responsive" src="img/logo.png"-->
+        <strong><nl>nl</nl><experiment>experiment</experiment></strong>
+      </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="../tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="../tutorial.html">Overview</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Getting started</li>
+             <li><a href="../fire.html">Fire Experiment</a></li>
+             <li><a href="../agents.html">Agents and Patches</a></li>
+             <li><a href="../ants.html">Ants</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Parameter Sets</li>
+             <li><a href="../fur.html">Fur Patterns</a></li>
+             <li><a href="../flocking.html">Flocking</a></li>
+             <li><a href="../flocking_categorical.html">Categorical Criteria</a></li>
+             <li><a href="../flocking_sampling.html">Latin Hypercube Sampling</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Optimization</li>
+             <li><a href="../flocking_bestfit.html">Best-fit Criterion</a></li>
+             <li><a href="../flocking_random_search.html">Random Search</a></li>
+             <li><a href="../flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+          </ul>
+        </li>
+        <li><a href="../help/index.html">Package documentation</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+  <table width="100%" summary="page for nl_experiment">
+    <tr>
+      <td>nl_experiment</td>
+      <td style="text-align: right;">R Documentation</td>
+    </tr>
+  </table>
+  <h2>Create NetLogo experiment object</h2>
+  <h3>Description</h3>
+  <p>Use this function to create NetLogo experiment object.
+</p>
+  <h3>Usage</h3>
+  <pre>
+nl_experiment(model_file, iterations = NULL, while_condition = NULL,
+  repetitions = 1, random_seed = NULL, step_measures = NULL,
+  run_measures = NULL, mapping = NULL, param_values = NULL,
+  agents_after = NULL, patches_after = NULL, export_view = FALSE,
+  export_world = FALSE, setup_commands = "setup", go_command = "go",
+  eval_criteria = NULL, eval_aggregate_fun = NULL, eval_mutate = NULL,
+  data_handler = NULL)
+</pre>
+  <h3>Arguments</h3>
+  <table summary="R argblock">
+    <tr valign="top">
+      <td>
+        <code>model_file</code>
+      </td>
+      <td>
+        <p>An absolute path to your NetLogo model file (.nlogo)</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>iterations</code>
+      </td>
+      <td>
+        <p>Number of iterations to run.
+Alternatively define while_condition to stop simulation.</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>while_condition</code>
+      </td>
+      <td>
+        <p>A string with a NetLogo conditional reporter.
+(for example: "ticks &lt; 100")</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>repetitions</code>
+      </td>
+      <td>
+        <p>How many times to run the model with the same parameters.
+It is set to 1 by default. Result data sets will include run_id as
+additional variable to identify the specific runs. To change repetitions
+of existing experiment object use <code>nl_set_run_options</code></p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>random_seed</code>
+      </td>
+      <td>
+        <p>If defined, random seed will be set for each run.
+Note: using random seed and repetitions &gt; 1 does not make sense.</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>step_measures</code>
+      </td>
+      <td>
+        <p>Measures per each simulation step in a named character
+vector. Use measures() function to construct measures in right format.
+To change step measures
+of existing experiment object use <code>nl_set_measures</code></p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>run_measures</code>
+      </td>
+      <td>
+        <p>Measures per each simulation run in a named character
+vector. Use measures() function to construct measures in right format.
+To change run measures
+of existing experiment object use <code>nl_set_measures</code></p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>mapping</code>
+      </td>
+      <td>
+        <p>Mapping between R and NetLogo parameters
+in named character vector.
+For example: c(diffusion_rate = "diffusion-rate", population = "population")</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>param_values</code>
+      </td>
+      <td>
+        <p>A data.frame with parameter values or
+a list of values to be expanded to all combinations of values</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>agents_after</code>
+      </td>
+      <td>
+        <p>Agents reporters see <code>nl_set_agent_reports</code></p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>patches_after</code>
+      </td>
+      <td>
+        <p>Patches reporters see <code>nl_set_agent_reports</code></p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>export_view</code>
+      </td>
+      <td>
+        <p>If set to TRUE, the views will be exported to
+a png image files for each run (when running the experiment)</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>export_world</code>
+      </td>
+      <td>
+        <p>If set to TRUE, the world will be exported to
+a csv file for each run</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>setup_commands</code>
+      </td>
+      <td>
+        <p>NetLogo command strings to execute to setup the model</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>go_command</code>
+      </td>
+      <td>
+        <p>NetLogo command string to execute the step in the model</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>eval_criteria</code>
+      </td>
+      <td>
+        <p>A criteria calculation expressions.
+May use <code>step</code> or <code>run</code> data frames to calculate criteria.
+Elements from <code>step</code> should be aggregated.
+Must return named numeric vector.</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>eval_aggregate_fun</code>
+      </td>
+      <td>
+        <p>Aggregation function
+(used to aggregate criteria values when repetitions &gt; 1)</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>eval_mutate</code>
+      </td>
+      <td>
+        <p>Add criteria based on aggregated values</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>data_handler</code>
+      </td>
+      <td>
+        <p>Function to handle observations. If handler is defined
+the observations will not be stored in result elements when running
+the experiment with 'nl_run' function.</p>
+      </td>
+    </tr>
+  </table>
+  <h3>Value</h3>
+  <p>NetLogo experiment object
+</p>
+  <h3>See Also</h3>
+  <p>To run experiment use <code>nl_run</code>.
+To change existing
+experiment object see <code>nl_set_measures</code>,
+<code>nl_set_run_options</code> and
+<code>nl_set_param_values</code>.
+</p>
+  <h3>Examples</h3>
+  <pre>
+experiment &lt;- nl_experiment(
+  model_file = "my_model.nlogo",
+  while_condition = "any? turtles",
+  repetitions = 20,
+  run_measures = measures(
+    percent_burned = "(burned-trees / initial-trees) * 100",
+    progress = "max [pxcor] of patches with [pcolor &gt; 0 and pcolor &lt; 55]"
+  ),
+  param_values = list(
+    density = seq(from = 55, to = 62, by = 1)
+  )
+)
+</pre>
+</body>
+<footer>
+  <a href="../About.html">About</a> |
+  View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
+  Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
+</footer>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

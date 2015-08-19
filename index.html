@@ -1,78 +1,212 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>nlexperiment by bergant</title>
+<!DOCTYPE html>
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>nlexperiment</h1>
-        <p>Define and run NetLogo experiments in R</p>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
-        <p class="view"><a href="https://github.com/bergant/nlexperiment">View the Project on GitHub <small>bergant/nlexperiment</small></a></p>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
 
 
-        <ul>
-          <li><a href="https://github.com/bergant/nlexperiment/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/bergant/nlexperiment/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/bergant/nlexperiment">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h2>
-<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<p><code>library(devtools)</code><br>
-<code>install_github("bergant/nlexperiment")</code></p>
+<title>nlexperiment</title>
 
-<h2>
-<a id="temporal-measures" class="anchor" href="#temporal-measures" aria-hidden="true"><span class="octicon octicon-link"></span></a>Temporal measures</h2>
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
 
-<p>Define experiment with step measures:</p>
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/default.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
 
-<div class="highlight highlight-r"><pre><span class="pl-smi">experiment</span> <span class="pl-k">&lt;-</span> nl_experiment(
-  <span class="pl-v">model_file</span> <span class="pl-k">=</span> file.path(nl_netlogo_path(), 
-                         <span class="pl-s"><span class="pl-pds">"</span>models/Sample Models/Earth Science/Fire.nlogo<span class="pl-pds">"</span></span>), 
-  <span class="pl-v">while_condition</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>any? turtles<span class="pl-pds">"</span></span>,
-  <span class="pl-v">param_values</span> <span class="pl-k">=</span> <span class="pl-k">list</span>(<span class="pl-v">density</span> <span class="pl-k">=</span> c(<span class="pl-c1">57</span>, <span class="pl-c1">59</span>, <span class="pl-c1">61</span>)),
-  <span class="pl-v">random_seed</span> <span class="pl-k">=</span> <span class="pl-c1">1</span>,
-  <span class="pl-v">step_measures</span> <span class="pl-k">=</span> measures(
-    <span class="pl-v">percent_burned</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>(burned-trees / initial-trees) * 100<span class="pl-pds">"</span></span>
-  )
-)</pre></div>
 
-<p>Run the experiment:</p>
+<link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
 
-<div class="highlight highlight-r"><pre><span class="pl-smi">result</span> <span class="pl-k">&lt;-</span> nl_run(<span class="pl-smi">experiment</span>)</pre></div>
+</head>
 
-<p>Plot of burned forest as a function of time for different forest densities:</p>
+<body>
 
-<div class="highlight highlight-r"><pre><span class="pl-c"># get the observation data for step measures</span>
-<span class="pl-smi">dat</span> <span class="pl-k">&lt;-</span> nl_get_result(<span class="pl-smi">result</span>, <span class="pl-v">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>step<span class="pl-pds">"</span></span>) 
-<span class="pl-c"># plot the observations</span>
-library(<span class="pl-smi">ggplot2</span>)
-ggplot(<span class="pl-smi">dat</span>, <span class="pl-v">mapping</span> <span class="pl-k">=</span> aes(<span class="pl-v">x</span> <span class="pl-k">=</span> <span class="pl-smi">step_id</span>, <span class="pl-v">y</span> <span class="pl-k">=</span> <span class="pl-smi">percent_burned</span>)) <span class="pl-k">+</span> 
-  geom_step() <span class="pl-k">+</span>
-  facet_grid(. <span class="pl-k">~</span> <span class="pl-smi">density</span>) <span class="pl-k">+</span>
-  labs(<span class="pl-v">y</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>Percent burned<span class="pl-pds">"</span></span>, <span class="pl-v">x</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>Iteration<span class="pl-pds">"</span></span>)</pre></div>
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
 
-<p><img src="img/README-model_step_plot-1.png" alt=""> </p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/bergant">bergant</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header navbar-left">
+      <!--a class="navbar-brand" href="index.html">nlexperiment</a-->
+      <a class="navbar-brand" href="index.html">
+        <!--img class="img-responsive" src="img/logo.png"-->
+        <strong><nl>nl</nl><experiment>experiment</experiment></strong>
+      </a>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
-  </body>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="tutorial.html">Overview</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Getting started</li>
+             <li><a href="fire.html">Fire Experiment</a></li>
+             <li><a href="agents.html">Agents and Patches</a></li>
+             <li><a href="ants.html">Ants</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Parameter Sets</li>
+             <li><a href="fur.html">Fur Patterns</a></li>
+             <li><a href="flocking.html">Flocking</a></li>
+             <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
+             <li><a href="flocking_sampling.html">Latin Hypercube Sampling</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Optimization</li>
+             <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
+             <li><a href="flocking_random_search.html">Random Search</a></li>
+             <li><a href="flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+          </ul>
+        </li>
+        <li><a href="help/index.html">Package documentation</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title"><strong><nl>nl</nl><experiment>experiment</experiment></strong></h1>
+</div>
+
+
+<p>R package for <strong>exploration</strong> of <strong>NetLogo</strong><sup>1</sup> agent based models. <asideclose> <sup>1</sup> Wilensky, U. (1999). NetLogo. <a href="http://ccl.northwestern.edu/netlogo/" class="uri">http://ccl.northwestern.edu/netlogo/</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL. </asideclose></p>
+<p>It provides functions to define a complete <strong>experiment</strong> with parameter sets, measures and run options in <strong>concise</strong> structure. The cycle of experiment definition, data analysis, visualisations and parameter fitting can be easily turned into <strong>readable</strong> and <strong>reproducible</strong> documents.</p>
+<p><strong>RNetLogo</strong> package<sup>2</sup> is used as an interface to NetLogo environment. <asideclose> <sup>2</sup> Jan C. Thiele (2014). R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software, 58(2), 1-41. URL <a href="http://www.jstatsoft.org/v58/i02/" class="uri">http://www.jstatsoft.org/v58/i02/</a>. </asideclose></p>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<pre class="r"><code>install.packages(&quot;RNetLogo&quot;)
+devtools::install_github(&quot;bergant/nlexperiment&quot;)</code></pre>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>Experiment with NetLogo Fire model<sup>3</sup>.</p>
+<aside>
+<sup>3</sup> Wilensky, U. (1997). <a href="http://ccl.northwestern.edu/netlogo/models/Fire">NetLogo Fire model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+</aside>
+<p><lside> Setup </lside></p>
+<pre class="r"><code>library(nlexperiment)
+nl_netlogo_path(&quot;c:/Program Files (x86)/NetLogo 5.2.0/&quot;) </code></pre>
+<aside>
+Set path to your NetLogo installation. You have to do this only once per R session.
+</aside>
+<p><lside> Define the experiment </lside></p>
+<pre class="r"><code>experiment &lt;- nl_experiment(
+  model_file = file.path(nl_netlogo_path(), 
+                         &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;), 
+  while_condition = &quot;any? turtles&quot;,
+  param_values = list(density = c(57, 59, 61)),
+  random_seed = 1,
+  step_measures = measures(
+    percent_burned = &quot;(burned-trees / initial-trees) * 100&quot;
+  )
+)</code></pre>
+<aside>
+Note that <code>burned-trees</code> and <code>initial-trees</code> are global variables in NetLogo <a href="https://github.com/NetLogo/models/blob/master/Sample%20Models/Earth%20Science/Fire.nlogo">Fire model</a>.
+</aside>
+<p><lside> Run the experiment </lside></p>
+<pre class="r"><code>result &lt;- nl_run(experiment)</code></pre>
+<p><lside> Plot observations </lside></p>
+<pre class="r"><code>nl_show_step(result, x = &quot;step_id&quot;, y = &quot;percent_burned&quot;, 
+             x_param = &quot;density&quot;)</code></pre>
+<aside style="margin-top:-6em">
+<img src="img/pages-fireStepPlotI-1.png">
+<p class="caption">
+Percent of burned trees as a function of time
+</p>
+</aside>
+</div>
+<div id="learning" class="section level2">
+<h2>Learning</h2>
+<p>Start with examples in the <a href="tutorial.html">tutorial</a>.</p>
+<p>For reference use R help by typing <code>?nlexperiment</code> or see package <a href="help/index.html">documentation online</a>.</p>
+<p>To learn how to create documents from R code see <a href="http://rmarkdown.rstudio.com/">R Markdown â€” Dynamic Documents for R</a> and the rmarkdown <a href="https://github.com/bergant/nlexperiment/tree/gh-pages">source files</a> of the nlexperiment examples.</p>
+</div>
+<div id="related" class="section level2">
+<h2>Related</h2>
+<p>Links to related resources:</p>
+<p>nlexperiment requires <strong>RNetLogo</strong> to connect to NetLogo <a href="https://cran.r-project.org/web/packages/RNetLogo/index.html" class="uri">https://cran.r-project.org/web/packages/RNetLogo/index.html</a></p>
+<aside>
+Jan C. Thiele (2014). R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software, 58(2), 1-41. URL <a href="http://www.jstatsoft.org/v58/i02/" class="uri">http://www.jstatsoft.org/v58/i02/</a>.
+</aside>
+<p>Basic ideas and principles of NetLogo experiment definition is taken from the NetLogo’s <strong>Behavior Space</strong> <a href="http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html" class="uri">http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html</a> and <strong>BehaviorSearch</strong> <a href="http://www.behaviorsearch.org/" class="uri">http://www.behaviorsearch.org/</a></p>
+<aside>
+<p>Wilensky, U., &amp; Shargel, B. (2002). <a href="http://ccl.northwestern.edu/netlogo/behaviorspace.html">BehaviorSpace</a>. Center for Connected Learning and Computer Based Modeling, Northwestern University, Evanston, IL.</p>
+<p>Stonedahl, F.: <a href="http://www.behaviorsearch.org/">BehaviorSearch</a> [computer software]. Center for Connected Learning and Computer Based Modeling, Northwestern University, Evanston, IL. (2010)</p>
+Thiele, J. C., Kurth, W., &amp; Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11. <a href="http://jasss.soc.surrey.ac.uk/17/3/11.html" class="uri">http://jasss.soc.surrey.ac.uk/17/3/11.html</a>
+</aside>
+<p>The parallel implementation of <code>nl_run</code> function was inspired by <a href="https://cran.r-project.org/web/packages/RNetLogo/vignettes/parallelProcessing.pdf">RNetLogo vignette</a></p>
+<p>Some examples in the tutorial follow examples and methods from Thiele, Kurth &amp; Grimm (2014) article and its <a href="http://sourceforge.net/projects/calibrationsensitivityanalysis/">Supplementary Material</a></p>
+<p>This site was created with <strong>knitr</strong> and <strong>markdown</strong> packages as proposed in <a href="http://rmarkdown.rstudio.com/html_document_format.html" class="uri">http://rmarkdown.rstudio.com/html_document_format.html</a></p>
+<p>Plots were created with <strong>ggplot2</strong> (<a href="http://ggplot2.org" class="uri">http://ggplot2.org</a>) and <strong>igraph</strong> (<a href="http://igraph.org/r/" class="uri">http://igraph.org/r/</a>)</p>
+</div>
+
+
+<footer>
+  <a href="About.html">About</a> |
+  View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
+  Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
+</footer>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
 </html>

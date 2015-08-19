@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Fire Experiment</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/default.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header navbar-left">
+      <!--a class="navbar-brand" href="index.html">nlexperiment</a-->
+      <a class="navbar-brand" href="index.html">
+        <!--img class="img-responsive" src="img/logo.png"-->
+        <strong><nl>nl</nl><experiment>experiment</experiment></strong>
+      </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="tutorial.html">Overview</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Getting started</li>
+             <li><a href="fire.html">Fire Experiment</a></li>
+             <li><a href="agents.html">Agents and Patches</a></li>
+             <li><a href="ants.html">Ants</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Parameter Sets</li>
+             <li><a href="fur.html">Fur Patterns</a></li>
+             <li><a href="flocking.html">Flocking</a></li>
+             <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
+             <li><a href="flocking_sampling.html">Latin Hypercube Sampling</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Optimization</li>
+             <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
+             <li><a href="flocking_random_search.html">Random Search</a></li>
+             <li><a href="flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+          </ul>
+        </li>
+        <li><a href="help/index.html">Package documentation</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Fire Experiment</h1>
+</div>
+
+
+<p><nl_summary> This example uses NetLogo Fire model (Wilensky 1997) to demonstrate how to define and run experiments, export view images and get observations based on measures.</p>
+<p><aside_bib> Wilensky, U. (1997). NetLogo Fire model. <a href="http://ccl.northwestern.edu/netlogo/models/Fire" class="uri">http://ccl.northwestern.edu/netlogo/models/Fire</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL. </aside_bib> </nl_summary></p>
+<p><lside> Setup </lside></p>
+<pre class="r"><code>library(nlexperiment)
+nl_netlogo_path(&quot;c:/Program Files (x86)/NetLogo 5.2.0/&quot;) </code></pre>
+<aside>
+You have to do this only once per R session.
+</aside>
+<div id="run-model-and-export-view-image" class="section level2">
+<h2>Run model and export view image</h2>
+<p>To run a NetLogo model simulation we have to create an experiment object with <code>nl_experiment</code> function. Experiment definition includes a NetLogo model file, declares how to run the model, defines parameter values and what outputs are expected from simulation runs.</p>
+<p>For example:</p>
+<p><lside> Define the experiment </lside></p>
+<pre class="r"><code>experiment &lt;- nl_experiment(
+  model_file = file.path(nl_netlogo_path(), 
+                         &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;), 
+  param_values = list(density = c(57, 59, 61)),
+  while_condition = &quot;any? turtles&quot;,
+  random_seed = 1,
+  export_view = TRUE
+)</code></pre>
+<aside>
+<p>The model will run for three parameter values. Each simulation will run as long as there are any turtles.</p>
+The <code>export_view</code> option enables exporting view after each simulation.
+</aside>
+<p><lside> Run the experiment </lside></p>
+<pre class="r"><code>result &lt;- nl_run(experiment)     </code></pre>
+<p>Find paths to the exported view image files in <code>result$export</code> or just display them by calling <code>nl_show_views_grid</code> function:</p>
+<p><lside> Show exported images </lside></p>
+<pre class="r"><code>library(ggplot2)
+nl_show_views_grid(result, x_param = &quot;density&quot;)</code></pre>
+<p>
+<img src="img/pages-fireView-1.png">
+<aside>
+<p class="caption">
+Images taken at the end of each simulation
+</p>
+</aside>
+</p>
+</div>
+<div id="temporal-measures" class="section level2">
+<h2>Temporal Measures</h2>
+<p>Temporal measures quantify temporal behavior of agent based model. Example below shows how to measure <em>percent of burned trees</em> on each simulation step:</p>
+<p><span class="math">\[ percent_{burned}(t) = \frac{trees_{burned}(t)}{trees_{initial}} \times 100 \]</span></p>
+<p>To define a temporal measure use <code>step_measures</code> element. Measures have to be accurate NetLogo reporters.</p>
+<p><lside> Define the experiment </lside></p>
+<pre class="r"><code>experiment &lt;- nl_experiment( 
+  model_file = file.path(nl_netlogo_path(), 
+                         &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;), 
+  while_condition = &quot;any? turtles&quot;,
+  param_values = list(density = c(57, 59, 61)),
+  random_seed = 1,
+  step_measures = measures(
+    percent_burned = &quot;(burned-trees / initial-trees) * 100&quot;
+  )
+)</code></pre>
+<aside>
+Note that <code>burned-trees</code> and <code>initial-trees</code> are global variables in NetLogo <a href="https://github.com/NetLogo/models/blob/master/Sample%20Models/Earth%20Science/Fire.nlogo">Fire model</a>.
+</aside>
+<p><lside> Run the experiment </lside></p>
+<pre class="r"><code>result &lt;- nl_run(experiment) </code></pre>
+<p>To get the observations from the result object use <code>nl_get_step_result</code>:</p>
+<p><lside> Get observations </lside></p>
+<pre class="r"><code>dat &lt;- nl_get_step_result(result)</code></pre>
+<aside>
+<p>Values <code>run_id</code> and <code>step_id</code> are included in the <code>result$step</code> by default.</p>
+Parameter values are included only by reference to <code>parameter_set_id</code>. The function <code>nl_get_result</code> joins parameter sets with observation data.
+</aside>
+<pre class="r"><code>htmlTable::htmlTable(head(dat))</code></pre>
+<table class="gmisc_table" style="border-collapse: collapse;">
+<thead>
+<tr>
+<th style="border-bottom: 1px solid grey; border-top: 2px solid grey;">
+</th>
+<th style="border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+density
+</th>
+<th style="border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+param_set_id
+</th>
+<th style="border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+percent_burned
+</th>
+<th style="border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+step_id
+</th>
+<th style="border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+run_id
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">
+1
+</td>
+<td style="text-align: center;">
+57
+</td>
+<td style="text-align: center;">
+1
+</td>
+<td style="text-align: center;">
+0.403033950012595
+</td>
+<td style="text-align: center;">
+1
+</td>
+<td style="text-align: center;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+2
+</td>
+<td style="text-align: center;">
+57
+</td>
+<td style="text-align: center;">
+1
+</td>
+<td style="text-align: center;">
+0.643734781270117
+</td>
+<td style="text-align: center;">
+2
+</td>
+<td style="text-align: center;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+3
+</td>
+<td style="text-align: center;">
+57
+</td>
+<td style="text-align: center;">
+1
+</td>
+<td style="text-align: center;">
+0.878837918777464
+</td>
+<td style="text-align: center;">
+3
+</td>
+<td style="text-align: center;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+4
+</td>
+<td style="text-align: center;">
+57
+</td>
+<td style="text-align: center;">
+1
+</td>
+<td style="text-align: center;">
+1.08595258753394
+</td>
+<td style="text-align: center;">
+4
+</td>
+<td style="text-align: center;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+5
+</td>
+<td style="text-align: center;">
+57
+</td>
+<td style="text-align: center;">
+1
+</td>
+<td style="text-align: center;">
+1.30706149066585
+</td>
+<td style="text-align: center;">
+5
+</td>
+<td style="text-align: center;">
+1
+</td>
+</tr>
+<tr>
+<td style="border-bottom: 2px solid grey; text-align: left;">
+6
+</td>
+<td style="border-bottom: 2px solid grey; text-align: center;">
+57
+</td>
+<td style="border-bottom: 2px solid grey; text-align: center;">
+1
+</td>
+<td style="border-bottom: 2px solid grey; text-align: center;">
+1.51137731254723
+</td>
+<td style="border-bottom: 2px solid grey; text-align: center;">
+6
+</td>
+<td style="border-bottom: 2px solid grey; text-align: center;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+<aside>
+Table: first 6 observations.
+</aside>
+<p> </p>
+<p><lside> Plot observations </lside></p>
+<pre class="r"><code>nl_show_step(result, x_param = &quot;density&quot;)</code></pre>
+<p>
+<img src="img/pages-fireStepPlot-1.png">
+<aside>
+<p class="caption">
+Percent of burned trees as a function of time
+</p>
+</aside>
+</p>
+</div>
+<div id="observations-per-each-simulation-run" class="section level2">
+<h2>Observations per each simulation run</h2>
+<p>Stochastic models are usually run several times repeteadly for each parameter set and measured at the end of each run.</p>
+<p>In this example we observe percent of burned trees and fire progress for different <code>density</code> parameter. The model will run repetedly <code>30</code> times for every parameter value.</p>
+<p><lside> Define the experiment </lside></p>
+<pre class="r"><code>experiment &lt;- nl_experiment(
+  model_file = file.path(nl_netlogo_path(), 
+                         &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;), 
+  while_condition = &quot;any? turtles&quot;,
+  run_measures = measures(
+    percent_burned = &quot;(burned-trees / initial-trees) * 100&quot;,
+    progress = &quot;max [pxcor] of patches with [pcolor &gt; 0 and pcolor &lt; 55]&quot;
+  ),
+  repetitions = 30,
+  param_values = list(
+    density = seq(from = 55, to = 62, by = 1)
+  )
+)</code></pre>
+<aside>
+<p>Use <code>repetitions</code> parameter to set the number of simulation runs for each parameter set</p>
+Note that one could define <code>run_measures</code> and <code>step_measures</code> in the same experiment.
+</aside>
+<p>When running experiments with several repetitions we can save some time with <code>parallel</code> option.</p>
+<p><lside> Run the experiment </lside></p>
+<pre class="r"><code>result &lt;- nl_run(experiment, parallel = TRUE) </code></pre>
+<aside>
+To run experiment on several processor cores, run with <code>parallel = TRUE</code> option.
+</aside>
+<p><lside> Get data </lside></p>
+<pre class="r"><code>dat &lt;- nl_get_run_result(result)</code></pre>
+<p>One way to show the percent burned as a function of density is to use violin plot:</p>
+<p><lside> Plot the results </lside></p>
+<pre class="r"><code>library(ggplot2)
+ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) + 
+  geom_violin(fill = &quot;gray90&quot;) +
+  labs(x = &quot;Forest density&quot;, y = &quot;Percent burned&quot;) + 
+  theme_minimal()</code></pre>
+<p>
+<img src="img/pages-fireRunPlot-1.png">
+<aside>
+<p class="caption">
+Distribution of final percent of burned trees at different values of forest density.
+</p>
+</aside>
+</p>
+<p>Fire advances from left to right. It is interesting to observe final fire position (left border = 0 and right = 1) as a function of density.</p>
+<p><lside> Plot the results </lside></p>
+<pre class="r"><code>ggplot(dat, mapping = aes(x = factor(density), y = progress/250 + 0.5) ) + 
+  geom_boxplot()  +
+  #geom_jitter(position = position_jitter(width = .1), alpha = 0.3)  +
+  labs(x = &quot;Forest density&quot;, y = &quot;Fire progress&quot;) +
+  theme_minimal()</code></pre>
+<p>
+<img src="img/pages-fireRunPlot2-1.png">
+<aside>
+<p class="caption">
+Distribution of final fire position at different values of forest densities
+</p>
+</aside>
+</p>
+</div>
+<div id="more" class="section level2">
+<h2>More</h2>
+<p>Try other examples:</p>
+<ul>
+<li><a href="agents.html">Agents and Patches</a> to see how to observe agents and patches</li>
+<li><a href="ants.html">Ants</a> to see how to define simple parameter sets and mapping</li>
+</ul>
+</div>
+
+
+<footer>
+  <a href="About.html">About</a> |
+  View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
+  Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
+</footer>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

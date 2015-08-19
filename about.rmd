@@ -1,0 +1,61 @@
+---
+title: "About **<nl>nl</nl><experiment>experiment</experiment>**"
+---
+
+
+```{r ch_opt, child="include/chunk_options.rmd", cache=FALSE}
+```
+
+```{r echo = FALSE}
+nlexperimentPkg <- sessionInfo(package = "nlexperiment")$otherPkgs[[1]]
+```
+
+
+| Author:  __`r nlexperimentPkg$Author`__
+| Version: __`r nlexperimentPkg$Version`__
+| License: __`r nlexperimentPkg$License`__
+| Source: https://github.com/bergant/nlexperiment
+| Issues: https://github.com/bergant/nlexperiment/issues
+
+For [NetLogo](http://ccl.northwestern.edu/netlogo) see their
+[copyright information](http://ccl.northwestern.edu/netlogo/docs/copyright.html).
+
+Authors of NetLogo models used in examples are referenced in examples.
+
+See links for other packages utilised to create these pages:
+
+```{r echo=FALSE, results='asis'}
+
+
+si <- sessionInfo(
+  package = c(
+    "RNetLogo",
+    "igraph",
+    "ggplot2",
+    "knitr",
+    "rmarkdown",
+    "tufterhandout",
+    "tidyr",
+    "tgp",
+    "digest"
+  )
+)
+
+
+
+for( p in si$otherPkgs ){
+  cat( 
+    "  + <strong>",p$Package, "</strong> ", 
+    p$Version, ",",p$License, "<br/>",
+    p$Title, "<br/>",
+    p$URL, "<br/>",
+    'See description on <a href="', 
+    sprintf("https://cran.rstudio.com/web/packages/%s/index.html", p$Package), 
+    '">CRAN</a>',
+    "\n\n"
+  )
+}
+```
+
+
+

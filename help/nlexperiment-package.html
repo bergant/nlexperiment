@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Ants</title>
+
+<script src="../libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="../libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
+<script src="../libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="../libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="../libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="../libs/highlight/default.css"
+      type="text/css" />
+<script src="../libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="../tufterhandout2.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header navbar-left">
+      <!--a class="navbar-brand" href="../index.html">nlexperiment</a-->
+      <a class="navbar-brand" href="../index.html">
+        <!--img class="img-responsive" src="img/logo.png"-->
+        <strong><nl>nl</nl><experiment>experiment</experiment></strong>
+      </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="../tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="../tutorial.html">Overview</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Getting started</li>
+             <li><a href="../fire.html">Fire Experiment</a></li>
+             <li><a href="../agents.html">Agents and Patches</a></li>
+             <li><a href="../ants.html">Ants</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Parameter Sets</li>
+             <li><a href="../fur.html">Fur Patterns</a></li>
+             <li><a href="../flocking.html">Flocking</a></li>
+             <li><a href="../flocking_categorical.html">Categorical Criteria</a></li>
+             <li><a href="../flocking_sampling.html">Latin Hypercube Sampling</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Optimization</li>
+             <li><a href="../flocking_bestfit.html">Best-fit Criterion</a></li>
+             <li><a href="../flocking_random_search.html">Random Search</a></li>
+             <li><a href="../flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+          </ul>
+        </li>
+        <li><a href="../help/index.html">Package documentation</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+  <table width="100%" summary="page for nlexperiment-package">
+    <tr>
+      <td>nlexperiment-package</td>
+      <td style="text-align: right;">R Documentation</td>
+    </tr>
+  </table>
+  <h2>nlexperiment: NetLogo experiments</h2>
+  <h3>Description</h3>
+  <p>Define and run NetLogo (Wilensky 1999) model experiments.
+</p>
+  <h3>Details</h3>
+  <p>The purpose of <b>nlexperiment</b> is to make exploring NetLogo models
+as simple as possible
+while keeping complex functionalities available to advanced R users.
+</p>
+  <p>Functions in <b>nlexperiment</b> assume the following steps:
+</p>
+  <ul>
+    <li>
+      <p> Define NetLogo experiment object with parameter sets,
+measures and simulation options
+(see <code>nl_experiment</code> function).
+</p>
+    </li>
+    <li>
+      <p> Run experiment (see <code>nl_run</code>).
+The result of running an experiment keeps original
+experiment definition
+along with the simulation results and makes the process of model analysis
+more concise and reproducible.
+To run the simulation in parallel working processes
+use the <code>parallel</code> attribute in <code>nl_run</code> function.
+</p>
+    </li>
+    <li>
+      <p> Analyse and present results of simulation(s).
+See <code>nl_get_results</code> for getting different data from
+the result and
+<code>nl_show_step</code>,
+<code>nl_show_patches</code> for pre-defined plots.
+</p>
+    </li>
+    <li>
+      <p> When additional questions pop out, changes to
+experiment will be needed.
+Refine the original definition of the experiment by
+changing only parameter sets (<code>nl_set_param_values</code>),
+set different measures (<code>nl_set_measures</code>) or set other simulation
+options (<code>nl_set_run_options</code>).
+</p>
+    </li>
+  </ul>
+  <h3>References</h3>
+  <p>Wilensky, U. (1999) NetLogo. <a href="http://ccl.northwestern.edu/netlogo/">http://ccl.northwestern.edu/netlogo/</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University. Evanston, IL.
+</p>
+  <p>Thiele, J. (2014) R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software 58(2) 1-41. <a href="http://www.jstatsoft.org/v58/i02/">http://www.jstatsoft.org/v58/i02/</a>
+</p>
+  <p>The ideas and principles of NetLogo experiment definition is taken from
+the NetLogo's Behavior Space tool
+<a href="http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html">http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html</a>
+and BehaviorSearch tool <a href="http://www.behaviorsearch.org/">http://www.behaviorsearch.org/</a>
+</p>
+  <h3>Examples</h3>
+  <pre>
+## Not run: 
+# Set the path to your NetLogo installation
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/")
+
+# Create NetLogo experiment of Net Logo Fire model
+experiment &lt;- nl_experiment(
+  model_file = file.path(nl_netlogo_path(),
+      "models/Sample Models/Earth Science/Fire.nlogo")
+  while_condition = "any? turtles",
+  repetitions = 10,
+  run_measures = measures(
+    percent_burned = "(burned-trees / initial-trees) * 100",
+    progress = "max [pxcor] of patches with [pcolor &gt; 0 and pcolor &lt; 55]"
+  ),
+  param_values = list(
+    density = seq(from = 55, to = 62, by = 1)
+  )
+)
+
+# Run the experiment using multi-core processing
+result &lt;- nl_run(experiment, parallel = TRUE)
+
+# Get observations data frame
+dat &lt;- nl_get_run_result(result)
+
+# plot percent burned by density
+library(ggplot2)
+ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) +
+  geom_violin()
+
+## End(Not run)
+</pre>
+</body>
+<footer>
+  <a href="../About.html">About</a> |
+  View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
+  Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
+</footer>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

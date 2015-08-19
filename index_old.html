@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>nlexperiment by bergant</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>nlexperiment</h1>
+        <p>Define and run NetLogo experiments in R</p>
+
+        <p class="view"><a href="https://github.com/bergant/nlexperiment">View the Project on GitHub <small>bergant/nlexperiment</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/bergant/nlexperiment/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/bergant/nlexperiment/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/bergant/nlexperiment">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p><code>library(devtools)</code><br>
+<code>install_github("bergant/nlexperiment")</code></p>
+
+<h2>
+<a id="temporal-measures" class="anchor" href="#temporal-measures" aria-hidden="true"><span class="octicon octicon-link"></span></a>Temporal measures</h2>
+
+<p>Define experiment with step measures:</p>
+
+<div class="highlight highlight-r"><pre><span class="pl-smi">experiment</span> <span class="pl-k">&lt;-</span> nl_experiment(
+  <span class="pl-v">model_file</span> <span class="pl-k">=</span> file.path(nl_netlogo_path(), 
+                         <span class="pl-s"><span class="pl-pds">"</span>models/Sample Models/Earth Science/Fire.nlogo<span class="pl-pds">"</span></span>), 
+  <span class="pl-v">while_condition</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>any? turtles<span class="pl-pds">"</span></span>,
+  <span class="pl-v">param_values</span> <span class="pl-k">=</span> <span class="pl-k">list</span>(<span class="pl-v">density</span> <span class="pl-k">=</span> c(<span class="pl-c1">57</span>, <span class="pl-c1">59</span>, <span class="pl-c1">61</span>)),
+  <span class="pl-v">random_seed</span> <span class="pl-k">=</span> <span class="pl-c1">1</span>,
+  <span class="pl-v">step_measures</span> <span class="pl-k">=</span> measures(
+    <span class="pl-v">percent_burned</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>(burned-trees / initial-trees) * 100<span class="pl-pds">"</span></span>
+  )
+)</pre></div>
+
+<p>Run the experiment:</p>
+
+<div class="highlight highlight-r"><pre><span class="pl-smi">result</span> <span class="pl-k">&lt;-</span> nl_run(<span class="pl-smi">experiment</span>)</pre></div>
+
+<p>Plot of burned forest as a function of time for different forest densities:</p>
+
+<div class="highlight highlight-r"><pre><span class="pl-c"># get the observation data for step measures</span>
+<span class="pl-smi">dat</span> <span class="pl-k">&lt;-</span> nl_get_result(<span class="pl-smi">result</span>, <span class="pl-v">type</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>step<span class="pl-pds">"</span></span>) 
+<span class="pl-c"># plot the observations</span>
+library(<span class="pl-smi">ggplot2</span>)
+ggplot(<span class="pl-smi">dat</span>, <span class="pl-v">mapping</span> <span class="pl-k">=</span> aes(<span class="pl-v">x</span> <span class="pl-k">=</span> <span class="pl-smi">step_id</span>, <span class="pl-v">y</span> <span class="pl-k">=</span> <span class="pl-smi">percent_burned</span>)) <span class="pl-k">+</span> 
+  geom_step() <span class="pl-k">+</span>
+  facet_grid(. <span class="pl-k">~</span> <span class="pl-smi">density</span>) <span class="pl-k">+</span>
+  labs(<span class="pl-v">y</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>Percent burned<span class="pl-pds">"</span></span>, <span class="pl-v">x</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>Iteration<span class="pl-pds">"</span></span>)</pre></div>
+
+<p><img src="img/README-model_step_plot-1.png" alt=""> </p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/bergant">bergant</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>

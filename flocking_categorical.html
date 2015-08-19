@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Categorical Criteria</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/default.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header navbar-left">
+      <!--a class="navbar-brand" href="index.html">nlexperiment</a-->
+      <a class="navbar-brand" href="index.html">
+        <!--img class="img-responsive" src="img/logo.png"-->
+        <strong><nl>nl</nl><experiment>experiment</experiment></strong>
+      </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="tutorial.html">Overview</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Getting started</li>
+             <li><a href="fire.html">Fire Experiment</a></li>
+             <li><a href="agents.html">Agents and Patches</a></li>
+             <li><a href="ants.html">Ants</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Parameter Sets</li>
+             <li><a href="fur.html">Fur Patterns</a></li>
+             <li><a href="flocking.html">Flocking</a></li>
+             <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
+             <li><a href="flocking_sampling.html">Latin Hypercube Sampling</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Optimization</li>
+             <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
+             <li><a href="flocking_random_search.html">Random Search</a></li>
+             <li><a href="flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+          </ul>
+        </li>
+        <li><a href="help/index.html">Package documentation</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Categorical Criteria</h1>
+</div>
+
+
+<p>This example is using NetLogo Flocking model (Wilensky, 1998) to demonstrate exploring parameter space with categorical evaluation.</p>
+<aside>
+<p>Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flocking">NetLogo Flocking model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.</p>
+Thiele, J. C., Kurth, W., &amp; Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11. <a href="http://jasss.soc.surrey.ac.uk/17/3/11.html" class="uri">http://jasss.soc.surrey.ac.uk/17/3/11.html</a>
+</aside>
+<p>See also Thiele, Kurth &amp; Grimm (2014) for categorical criteria example.</p>
+<div id="measures-and-evaluation-criteria" class="section level2">
+<h2>Measures and Evaluation Criteria</h2>
+<p>As in <a href="flocking.html">previous example</a> two measures of self-organization were defined:</p>
+<ul>
+<li><strong>converergence</strong> is based on variance of birds’ orientations and</li>
+<li><strong>mean crowding</strong> is average group size as experienced by individual.</li>
+</ul>
+<aside>
+See <a href="flocking.html">Flocking</a> example for formal definitions of the measures.
+</aside>
+<p>Additionaly</p>
+<ul>
+<li><em>criteria evaluation expressions</em> are aggregating those measures over time (note the <code>eval_criteria</code> element) and</li>
+<li><em>evaluation aggregation function</em> is aggregating these criteria values over several simulation repetitions.</li>
+</ul>
+<p><lside> Define the experiment </lside></p>
+<pre class="r"><code>experiment &lt;- nl_experiment( 
+  model_file = 
+    file.path(nl_netlogo_path(), &quot;models/Sample Models/Biology/Flocking.nlogo&quot;),
+  setup_commands = c(&quot;setup&quot;, &quot;repeat 100 [go]&quot;),
+  iterations = 5,
+
+  param_values = list(
+    world_size = 50,
+    population = 80,
+    vision = c(3,6),
+    min_separation = seq(from = 0, to = 4, by = 0.5),
+    max_align_turn = seq(from = 0, to = 20, by = 2.5)
+  ),
+  mapping = c(
+    min_separation = &quot;minimum-separation&quot;,
+    max_align_turn = &quot;max-align-turn&quot;),
+
+  step_measures = measures(
+    converged = &quot;1 - 
+      (standard-deviation [dx] of turtles + 
+       standard-deviation [dy] of turtles) / 2&quot;,
+    mean_crowding = 
+      &quot;mean [count flockmates + 1] of turtles&quot;
+  ),
+  eval_criteria = criteria(
+    c_converged = mean(step$converged),
+    c_mcrowding = mean(step$mean_crowding)
+  ),
+
+  repetitions = 10,                        # repeat simulations 10 times
+  random_seed = 1:10,
+  
+  eval_aggregate_fun = mean                # aggregate over repetitions
+)</code></pre>
+<aside>
+<p>Criteria expressions (in <code>eval_criteria</code> element) use the result from step measures (<code>step$</code> prefix)</p>
+Aggregate function (<code>eval_aggregate_fun</code>) specifies that the results from criteria function should be aggregated (over all 10 repetitions for each parameter set)
+</aside>
+<p><lside> Run the experiment </lside></p>
+<pre class="r"><code>result3 &lt;- nl_run(experiment, parallel = TRUE) </code></pre>
+</div>
+<div id="add-categorical-criteria" class="section level2">
+<h2>Add Categorical Criteria</h2>
+<p>If we were interested in parameters where the model will produce <strong>medium sized flocks</strong> which <strong>fly in same direction</strong> we could define criteria based on crowding and direction convergence like this:</p>
+<p>Crowding criteria:</p>
+<p><span class="math">\[ 5 &lt;= crowding &lt; 11 \]</span></p>
+<p>Alignment criteria:</p>
+<p><span class="math">\[ converged &gt; 0.7 \]</span></p>
+<p><lside> Prepare data </lside></p>
+<pre class="r"><code>dat &lt;- nl_get_criteria_result( 
+  result3,
+  are_grouped = c_mcrowding &gt;= 5 &amp; c_mcrowding &lt; 11,
+  are_aligned = c_converged &gt; 0.7
+)</code></pre>
+<aside>
+Note that changing categorical criteria from base evaluation criteria does not require additional model run.
+</aside>
+<p><lside> Plot the results </lside></p>
+<pre class="r"><code>library(ggplot2)
+ggplot( dat, aes(x = min_separation, y = max_align_turn) ) +
+  geom_point() +
+  geom_point(data=subset(dat,are_aligned),color=&quot;red&quot;,size=5,shape=2) +
+  geom_point(data=subset(dat,are_grouped),color=&quot;blue&quot;,size=5,shape=3) +
+  coord_equal(ratio = 1/5) +
+  facet_grid(. ~ vision, labeller = label_both) +
+  theme_minimal() +
+  theme(panel.margin = grid::unit(0.07,&quot;npc&quot;))</code></pre>
+<p>
+<img src="img/pages-pFlockCatPlot-1.png">
+<aside>
+<p class="caption">
+Categorical criteria “aligned” (red triangle) and “grouped” (blue cross). Black dots are parameter sets
+</p>
+</aside>
+</p>
+</div>
+
+
+<footer>
+  <a href="About.html">About</a> |
+  View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
+  Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
+</footer>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

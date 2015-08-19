@@ -1,0 +1,164 @@
+---
+title: "Agents and Patches"
+---
+
+```{r ch_opt, child="include/chunk_options.rmd", cache=FALSE}
+```
+
+
+```{r, echo = FALSE}
+library(nlexperiment)
+# Set the path to your NetLogo instalation
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
+```
+
+While `step_measures` and `run_measures` 
+(see [Fire experiments](fire.html)) 
+is good enough for aggregate measures, sometimes we need to measure 
+values for each agent individually.
+
+## Turtles and Links
+Example below shows usage of `agents_after` element to read 
+the network structure from 
+Netlogo Preferential attachment
+model (Wilensky, 2005).
+
+<aside>
+Wilensky, U. (2005). NetLogo 
+[Preferential Attachment model](http://ccl.northwestern.edu/netlogo/models/PreferentialAttachment) . 
+Center for Connected Learning and Computer-Based Modeling, Northwestern University, 
+Evanston, IL.
+</aside>
+
+To get data about agents use `agents_after` argument
+with a list of agents variables and type of agent (turtles and links in this example).
+
+Element `agents_before` is analogous tp `agents_after` - it just gets the data before model runs.
+
+```{r agentsModel, title = "Define the experiment"}
+experiment <- nl_experiment(
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample models/Networks/Preferential attachment.nlogo"), 
+  iterations = 50,
+  agents_after = list(
+    vertices = agent_set(
+      vars = c("who", "xcor", "ycor"), 
+      agents = "turtles"),
+    edges = agent_set(
+      vars = c(e1 = "[who] of end1", e2 ="[who] of end2"), 
+      agents = "links")
+  ),
+  repetitions = 2,
+  random_seed = c(42, 69)
+)
+```
+<aside>
+Instead of `while_condition` the end of simulation run is here defined 
+by `iterations` element (number of simulation steps).
+
+With `repetitions` the number of simulation runs (with same parameters) are defined.
+The random seed is defined as a vector. It is applied to each repetition respectively.
+</aside>
+
+```{r agentsRun, title = "Run the experiment", cache=TRUE}
+result <- nl_run(experiment)
+```
+
+
+The data about individual agents are now stored in `result$agents_after$edges`
+and `result$agents_after$vertices`. To join the data with parameter sets use 
+`nl_get_result(result, type = "agents_after", sub_type = "edges")`
+
+With **igraph** package one can recreate the graph structure from
+agents' data:
+
+```{r agentsGraph, title = "Create graph objects", dpi=200, fig.height=4}
+library(igraph, quietly = TRUE, warn.conflicts = FALSE)
+glist <- 
+  lapply(
+    1:experiment$run_options$repetitions,
+    function(i){
+      g_edges <- subset(result$agents_after$edges, run_id == i)
+      g1 <- graph.data.frame(g_edges, directed = FALSE)
+      V(g1)$size <- sqrt(degree(g1))*6
+      V(g1)$label <- 
+        ifelse(as.numeric(V(g1)$name) < 4, as.numeric(V(g1)$name), NA)
+      g1
+    }
+)
+```
+<aside>
+Here we set the labels to the first 4 vertices (measured when created)
+and the size of the vertice is set to its degree.
+</aside>
+
+
+```{r agentsGraphPlot, title = "Plot the graphs", dpi=200, fig.height=4}
+par(mfrow=c(1,2), mai=c(0,0,0,0))
+for(g1 in glist) {
+  plot.igraph(g1, margin = 0, 
+              vertex.label.font = V(g1)$size * 0.07,
+              vertex.label.color = "white",
+              vertex.color="darkseagreen4",
+              edge.color = "gray",
+              vertex.frame.color="#ffffff",
+              edge.curved=.1
+  )
+}
+```
+
+
+
+## Patches
+Getting patches information is analogous to reading agents' data.
+Example below shows usage of `patches_after` element to read 
+the fur patterns from 
+Netlogo Fur model (Wilensky, 2003).
+
+<aside>
+Wilensky, U. (2003). NetLogo [Fur model](http://ccl.northwestern.edu/netlogo/models/Fur). 
+Center for Connected Learning and Computer-Based Modeling, 
+Northwestern University, Evanston, IL.
+</aside>
+
+```{r agentsFurModel, title = "Define the model"}
+experiment2 <- nl_experiment( 
+  model_file = file.path(nl_netlogo_path(), 
+                         "models/Sample Models/Biology/Fur.nlogo"), 
+  iterations = 20,                                     
+  
+  param_values = list(
+    ratio = c(0.3, 0.35, 0.4, 0.45)
+  ),
+  patches_after = list(
+    patches = patch_set(
+      vars = c("pxcor", "pycor", "pcolor"),
+      patches = "patches"
+    )
+  ),
+  random_seed = 2
+)
+```
+
+```{r agentsFurRun, title = "Run the model", cache=TRUE}
+result2 <- nl_run(experiment2)
+```
+
+```{r agentsFurGet, title = "Get data"}
+dat <- nl_get_result(result2, type = "patches_after", sub_type = "patches")
+str(dat, vec.len = 2)
+```
+<aside>
+Function `nl_show_patches` uses `ggplot2::geom_raster` to plot patches.
+The color palette must be provided by user.
+</aside>
+
+
+```{r agentsFurPlot, title = "Plot results", fig.height=3}
+library(ggplot2)
+nl_show_patches(result2, x_param = "ratio") +
+  ggplot2::scale_fill_manual(values = c("black","white"))
+```
+
+
+

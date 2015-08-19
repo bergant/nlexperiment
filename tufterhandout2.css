@@ -1,0 +1,114 @@
+    .caption {
+     font-size: smaller;
+    }
+
+html {
+  min-width: 1040px;
+}
+
+body {
+  padding-top: 50px;
+  background: #fcfcfa;
+  color: #333;
+  margin: 1em auto 4em auto;
+  position: relative;
+  width: 960px;
+}
+
+nl {
+  color: red;
+}
+experiment {
+  color: #555555;
+}
+
+header aside,
+footer aside {
+  float: left;
+  margin-right: .5em;
+}
+
+header aside:after,
+footer aside:after {
+  padding-left: .5em;
+  content: "/";
+}
+
+footer {
+  margin-top: 8em;
+}
+
+aside {
+  font-size: smaller;
+  line-height: 1em;
+  right: 0;
+  position: absolute;
+  width: 280px;
+  margin-top: -5em;
+}
+
+asideclose {
+  font-size: smaller;
+  line-height: 1em;
+  right: 0;
+  position: absolute;
+  width: 280px;
+  margin-bottom: -2em;
+}
+
+lside {
+  font-size: smaller;
+  width: 160px;
+  position: absolute;
+  float: left;
+  margin-left: -160px;
+}
+
+
+aside > pre > code {
+  font-size: smaller;
+  line-height: 1em;
+}
+
+div > pre, body > pre {
+  width: 620px;
+}
+
+aside > pre {
+  width: 280px;
+  padding: 5px;
+  margin: 5px;
+}
+
+
+div > p, li > p {
+  line-height: 1.5em;
+}
+
+div > p, li > p {
+  width: 620px;
+}
+
+.fullwidth {
+    width: 960px;
+}
+
+body > blockquote {
+  width: 540px;
+}
+
+blockquote q {
+  display: block;
+  font-style: oblique;
+}
+
+
+li {
+  max-width: 580px;
+}
+
+footer {
+  width: 620px;
+  font-size: smaller;
+  text-align: center
+}

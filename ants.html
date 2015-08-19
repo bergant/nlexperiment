@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Ants</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/default.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header navbar-left">
+      <!--a class="navbar-brand" href="index.html">nlexperiment</a-->
+      <a class="navbar-brand" href="index.html">
+        <!--img class="img-responsive" src="img/logo.png"-->
+        <strong><nl>nl</nl><experiment>experiment</experiment></strong>
+      </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="tutorial.html">Overview</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Getting started</li>
+             <li><a href="fire.html">Fire Experiment</a></li>
+             <li><a href="agents.html">Agents and Patches</a></li>
+             <li><a href="ants.html">Ants</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Parameter Sets</li>
+             <li><a href="fur.html">Fur Patterns</a></li>
+             <li><a href="flocking.html">Flocking</a></li>
+             <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
+             <li><a href="flocking_sampling.html">Latin Hypercube Sampling</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Optimization</li>
+             <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
+             <li><a href="flocking_random_search.html">Random Search</a></li>
+             <li><a href="flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+          </ul>
+        </li>
+        <li><a href="help/index.html">Package documentation</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">Ants</h1>
+</div>
+
+
+<p>The following example is using Ants model (Wilensky 1997) to show simple parameter sets definition and parameter mapping.</p>
+<aside>
+Wilensky, U. (1997). <a href="http://ccl.northwestern.edu/netlogo/models/Ants">NetLogo Ants model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+</aside>
+<p>When parameters (<code>param_values</code>) are defined as a list of value vecors, parameter sets are constructed as combination of all possible parameter value combination what is called “full factorial design”. In practice it is feasible with few parameters and small number of factors for each parameter. See <a href="sampling.html">sampling methods</a> for advanced usage of <code>param_values</code>.</p>
+<p>The <code>mapping</code> element takes care of mapping between R names and NetLogo variables. NetLogo identifiers may contain any Unicode letter or digit and the following ASCII characters:</p>
+<p><code>.?=*!&lt;&gt;:#+/%$_^'&amp;-</code></p>
+<p>It is not impossible to define such variables and column names in R but using them is somehow inelegant.</p>
+<aside>
+See <em>syntax/identifiers</em> section in <a href="http://ccl.northwestern.edu/netlogo/5.0/docs/programming.html#syntax">NetLogo programming guide</a> and R FAQ about <a href="http://cran.r-project.org/doc/FAQ/R-FAQ.html#What-are-valid-names_003f">valid names</a>.
+</aside>
+<p><lside> Define the experiment </lside></p>
+<pre class="r"><code>experiment &lt;- nl_experiment(
+  model_file = file.path(nl_netlogo_path(), 
+                         &quot;models/Sample Models/Biology/Ants.nlogo&quot;), 
+  iterations = 150,
+  step_measures = measures(
+    pile1 = &quot;sum [food] of patches with [pcolor = cyan]&quot;,  
+    pile2 = &quot;sum [food] of patches with [pcolor = sky]&quot;,  
+    pile3 = &quot;sum [food] of patches with [pcolor = blue]&quot;  
+  ),
+  param_values = list(
+    population = 125,
+    diffusion_rate = c(50, 70),
+    evaporation_rate = c(5, 10, 15)
+  ),
+  mapping = c(
+    diffusion_rate = &quot;diffusion-rate&quot;,
+    evaporation_rate = &quot;evaporation-rate&quot;
+    ),
+  random_seed = 2,
+  export_view = TRUE
+)</code></pre>
+<aside>
+<p>It is not required to include all parameters in mapping. Variable <code>population</code> is used as is.</p>
+Element <code>mapping</code> maps <code>difussion_rate</code> and <code>evaporation_rate</code> to NetLogo variables <code>diffusion-rate</code> and <code>evaporation-rate</code>.
+</aside>
+<p>Run experiment</p>
+<pre class="r"><code>results &lt;- nl_run(experiment)    </code></pre>
+<p><lside> Show views </lside></p>
+<pre class="r"><code>nl_show_views_grid(results, 
+                   x_param = &quot;evaporation_rate&quot;, 
+                   y_param = &quot;diffusion_rate&quot;)</code></pre>
+<p>
+<img src="img/pages-antsPlotViews-1.png">
+<aside>
+</aside>
+</p>
+<p><lside> Prepare data </lside></p>
+<pre class="r"><code>library(tidyr)
+dat &lt;- nl_get_step_result(results)
+dat &lt;- tidyr::gather(dat, pile, value, pile1, pile2, pile3)</code></pre>
+<aside>
+Gathering columns from 3 measures to key-value pairs to use it in ggplot
+</aside>
+<p><lside> Plot the results </lside></p>
+<pre class="r"><code>library(ggplot2)
+ggplot(dat, aes(x = step_id, y = value, color = pile) ) +
+  geom_line() +
+  facet_grid(diffusion_rate ~ evaporation_rate) +
+  theme_minimal()</code></pre>
+<p>
+<img src="img/pages-antsPlotStep-1.png">
+<aside>
+<p class="caption">
+Remaining food by difussion and evaporation rate for three food piles
+</p>
+</aside>
+</p>
+
+
+<footer>
+  <a href="About.html">About</a> |
+  View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
+  Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
+</footer>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
