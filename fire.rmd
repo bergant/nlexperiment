@@ -79,8 +79,7 @@ Measures have to be accurate NetLogo reporters.
 
 ```{r fireStepModel, title = "Define the experiment"}
 experiment <- nl_experiment( 
-  model_file = file.path(nl_netlogo_path(), 
-                         "models/Sample Models/Earth Science/Fire.nlogo"), 
+  model_file = "models/Sample Models/Earth Science/Fire.nlogo", 
   while_condition = "any? turtles",
   param_values = list(density = c(57, 59, 61)),
   random_seed = 1,
@@ -139,8 +138,7 @@ for every parameter value.
 
 ```{r fireRunModel, title = "Define the experiment"}
 experiment <- nl_experiment(
-  model_file = file.path(nl_netlogo_path(), 
-                         "models/Sample Models/Earth Science/Fire.nlogo"), 
+  model_file = "models/Sample Models/Earth Science/Fire.nlogo", 
   while_condition = "any? turtles",
   run_measures = measures(
     percent_burned = "(burned-trees / initial-trees) * 100",

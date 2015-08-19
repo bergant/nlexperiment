@@ -155,8 +155,7 @@ Images taken at the end of each simulation
 <p>To define a temporal measure use <code>step_measures</code> element. Measures have to be accurate NetLogo reporters.</p>
 <p><lside> Define the experiment </lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment( 
-  model_file = file.path(nl_netlogo_path(), 
-                         &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;), 
+  model_file = &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;, 
   while_condition = &quot;any? turtles&quot;,
   param_values = list(density = c(57, 59, 61)),
   random_seed = 1,
@@ -343,8 +342,7 @@ Percent of burned trees as a function of time
 <p>In this example we observe percent of burned trees and fire progress for different <code>density</code> parameter. The model will run repetedly <code>30</code> times for every parameter value.</p>
 <p><lside> Define the experiment </lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment(
-  model_file = file.path(nl_netlogo_path(), 
-                         &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;), 
+  model_file = &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;, 
   while_condition = &quot;any? turtles&quot;,
   run_measures = measures(
     percent_burned = &quot;(burned-trees / initial-trees) * 100&quot;,
