@@ -10,7 +10,7 @@ title: "Tutorial Overview"
 
 
 
-* [Fire Experiment](Fire.html) demonstrates 
+* [Fire Experiment](fire.html) demonstrates 
 simple experiment definition, 
 exporting views as images, 
 definition of temporal and "run" measures.
