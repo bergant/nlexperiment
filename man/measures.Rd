@@ -14,7 +14,7 @@ Convert measure list to named vector
 }
 \examples{
 experiment <- nl_experiment(
-  model_file = "my_model.nlogo",
+  model_file = "models/Sample Models/Earth Science/Fire.nlogo",
   while_condition = "any? turtles",
   repetitions = 20,
   run_measures = measures(

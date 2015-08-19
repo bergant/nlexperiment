@@ -17,8 +17,7 @@ Create an agent set reporter to set agent reporters in `nl_experiment` or
 }
 \examples{
 experiment <- nl_experiment(
-  model_file = file.path(nl_netlogo_path(),
-     "models/Sample models/Networks/Preferential attachment.nlogo"),
+  model_file = "models/Sample models/Networks/Preferential attachment.nlogo",
   iterations = 30,
   export_view = TRUE,
   agents_after = list(

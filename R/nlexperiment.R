@@ -208,6 +208,9 @@ nl_experiment <- function(model_file,
                           ) {
 
   # NetLogo model library exemption
+  if(length(model_file) != 1)
+    stop("model_file must be a character string")
+
   if(substring(model_file, 1, 21) == "models/Sample Models/") {
     model_file <- file.path(nl_netlogo_path(), model_file)
   }
@@ -253,7 +256,7 @@ nl_experiment <- function(model_file,
 #' @param ... Named character values
 #' @examples
 #' experiment <- nl_experiment(
-#'   model_file = "my_model.nlogo",
+#'   model_file = "models/Sample Models/Earth Science/Fire.nlogo",
 #'   while_condition = "any? turtles",
 #'   repetitions = 20,
 #'   run_measures = measures(
@@ -293,8 +296,7 @@ criteria <- function(...) {
 #' @param agentset A string specifying the agent or agentset to be queried.
 #' @examples
 #' experiment <- nl_experiment(
-#'   model_file = file.path(nl_netlogo_path(),
-#'      "models/Sample models/Networks/Preferential attachment.nlogo"),
+#'   model_file = "models/Sample models/Networks/Preferential attachment.nlogo",
 #'   iterations = 30,
 #'   export_view = TRUE,
 #'   agents_after = list(
