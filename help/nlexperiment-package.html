@@ -112,12 +112,16 @@ img {
   </table>
   <h2>nlexperiment: NetLogo experiments</h2>
   <h3>Description</h3>
-  <p>Define and run NetLogo (Wilensky 1999) model experiments.
+  <p>Exploration of NetLogo (Wilensky 1999) agent based models.
 </p>
   <h3>Details</h3>
-  <p>The purpose of <b>nlexperiment</b> is to make exploring NetLogo models
-as simple as possible
-while keeping complex functionalities available to advanced R users.
+  <p>Provides functions to define a complete experiment with parameter sets,
+measures and run options in concise structure.
+The cycle of experiment definition, data analysis, visualisations and
+parameter fitting can be easily turned into
+readable and reproducible documents.
+</p>
+  <p>RNetLogo package (Thiele 2014) is used as an interface to NetLogo environment.
 </p>
   <p>Functions in <b>nlexperiment</b> assume the following steps:
 </p>
@@ -202,7 +206,7 @@ ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) +
 </pre>
 </body>
 <footer>
-  <a href="../About.html">About</a> |
+  <a href="../about.html">About</a> |
   View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
   Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
 </footer>
