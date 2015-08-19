@@ -207,6 +207,11 @@ nl_experiment <- function(model_file,
                           data_handler = NULL
                           ) {
 
+  # NetLogo model library exemption
+  if(substring(model_file, 1, 21) == "models/Sample Models/") {
+    model_file <- file.path(nl_netlogo_path(), model_file)
+  }
+
   experiment <- list(
     model_file = model_file,
     iterations = iterations,
