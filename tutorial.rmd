@@ -17,9 +17,9 @@ definition of temporal and "run" measures.
 
 
 <aside>
-[![Fire](img/pages-fireView-1.png)](Fire.html)
-[![Fire](img/pages-fireRunPlot-1.png)](Fire.html)
-[![Ants](img/pages-antsPlotViews-1.png)](Ants.html)
+[![Fire](img/pages-fireView-1.png)](fire.html)
+[![Fire](img/pages-fireRunPlot-1.png)](fire.html)
+[![Ants](img/pages-antsPlotViews-1.png)](ants.html)
 </aside>
 
 * [Agents and Patches](agents.html) example demonstrates how collect variables from
