@@ -2,7 +2,7 @@
 % Please edit documentation in R/nlexperiment.R
 \name{print.nl_experiment}
 \alias{print.nl_experiment}
-\title{Print a NetLogo experiment object}
+\title{Print NetLogo experiment object}
 \usage{
 \method{print}{nl_experiment}(x, ...)
 }
@@ -12,6 +12,6 @@
 \item{...}{further arguments passed to or from other methods.}
 }
 \description{
-Print a NetLogo experiment object
+Print NetLogo experiment object
 }
 

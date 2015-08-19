@@ -164,7 +164,7 @@ nl_show_views_grid <- function(result,
   }
 
 
-  if(missing(y_param)) {
+  if(missing(y_param) || missing(x_param)) {
     y_param <- "run_id"
     if(missing(x_param)) {
       x_param <- "run_id"
@@ -288,3 +288,5 @@ nl_get_criteria_result <- function(result, add_parameters = TRUE, ...) {
 
   nl_get_result(result, add_parameters, "criteria", ...)
 }
+
+

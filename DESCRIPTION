@@ -1,12 +1,16 @@
 Package: nlexperiment
 Type: Package
-Title: NetLogo Experiments
+Title: NetLogo Agent Based Models Experiments
 Version: 0.1.2
 Date: 2015-07-30
 Author: Darko Bergant
 Maintainer: Darko Bergant <darko.bergant@gmail.com>
-Description: Define and run controlled NetLogo experiments
-  analogous to NetLogo BehaviorSpace.
+URL: https://github.com/bergant/nlexperiment
+Description: Provides functions to define a complete experiment
+  with parameter sets, measures and run options in concise structure.
+  The cycle of experiment definition, data analysis, visualisations and
+  parameter fitting can be easily turned into readable and reproducible documents
+  It uses RNetLogo package as an interface to NetLogo environment.
 Depends: R (>= 3.1)
 License: GPL-2
 Imports:

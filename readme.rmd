@@ -50,7 +50,7 @@ library(ggplot2)
 
 ```{r ch3, child="readme_parts/readme3.rmd", cache=FALSE, eval=TRUE}
 ```
-
+ 
 ```{r ch6, child="readme_parts/readme6.rmd", cache=FALSE, eval=TRUE}
 ```
 
@@ -68,7 +68,6 @@ library(ggplot2)
 
 
 ## References
-
 
 * Thiele, J. (2014) R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software 58(2) 1-41. http://www.jstatsoft.org/v58/i02/
 

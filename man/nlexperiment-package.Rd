@@ -6,25 +6,21 @@
 \alias{nlexperiment-package}
 \title{nlexperiment: NetLogo experiments}
 \description{
-Define and run NetLogo (Wilensky 1999) model experiments.
+Exploration of NetLogo (Wilensky 1999) agent based models.
 }
 \details{
-\pkg{RNetLogo} package (Thiele 2014) opens countless possibilities
-by connecting R with NetLogo.
-But it does require some R programming to define and run
-model experiments.
-The purpose of \bold{nlexperiment} is to make exploring NetLogo models
-as simple as possible
-while keeping complex functionalities available to advanced R users.
-User can start with
-experiment (analogous to NetLogo Behavior Space),
-run the experiment, explore the results
-and return to refine the experiment definition.
+Provides functions to define a complete experiment with parameter sets,
+measures and run options in concise structure.
+The cycle of experiment definition, data analysis, visualisations and
+parameter fitting can be easily turned into
+readable and reproducible documents.
+
+RNetLogo package (Thiele 2014) is used as an interface to NetLogo environment.
 
 Functions in \bold{nlexperiment} assume the following steps:
 \itemize{
 \item Define NetLogo experiment object with parameter sets,
-   measures and other related simulation options
+   measures and simulation options
    (see \code{\link{nl_experiment}} function).
 \item Run experiment (see \code{\link{nl_run}}).
   The result of running an experiment keeps original
@@ -32,8 +28,12 @@ Functions in \bold{nlexperiment} assume the following steps:
   along with the simulation results and makes the process of model analysis
   more concise and reproducible.
   To run the simulation in parallel working processes
-  just use the \code{parallel} attribute in \code{nl_run} function.
+  use the \code{parallel} attribute in \code{nl_run} function.
 \item Analyse and present results of simulation(s).
+  See \code{\link{nl_get_results}} for getting different data from
+  the result and
+  \code{\link{nl_show_step}},
+  \code{\link{nl_show_patches}} for pre-defined plots.
 \item When additional questions pop out, changes to
   experiment will be needed.
   Refine the original definition of the experiment by
@@ -71,8 +71,7 @@ dat <- nl_get_run_result(result)
 # plot percent burned by density
 library(ggplot2)
 ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) +
-  geom_violin() +
-  geom_jitter(position = position_jitter(width = 0.2), alpha = 0.3)
+  geom_violin()
 }
 }
 \references{
@@ -83,8 +82,6 @@ Wilensky, U. (1999) NetLogo. \url{http://ccl.northwestern.edu/netlogo/}. Center 
   The ideas and principles of NetLogo experiment definition is taken from
   the NetLogo's Behavior Space tool
   \url{http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html}
-
-  The parallel implementation of \code{nl_run} is based on the RNetLogo vignette
-  \url{https://cran.r-project.org/web/packages/RNetLogo/vignettes/parallelProcessing.pdf}
+  and BehaviorSearch tool \url{http://www.behaviorsearch.org/}
 }
 
