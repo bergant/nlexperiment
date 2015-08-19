@@ -24,7 +24,7 @@
 #'   To run the simulation in parallel working processes
 #'   use the \code{parallel} attribute in \code{nl_run} function.
 #' \item Analyse and present results of simulation(s).
-#'   See \code{\link{nl_get_results}} for getting different data from
+#'   See \code{\link{nl_get_result}} for getting different data from
 #'   the result and
 #'   \code{\link{nl_show_step}},
 #'   \code{\link{nl_show_patches}} for pre-defined plots.
