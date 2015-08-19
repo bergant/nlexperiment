@@ -3,11 +3,9 @@
 
 
 
-# __nlexperiment__
-
-####Define and run NetLogo experiments in R
-
 [![](https://travis-ci.org/bergant/nlexperiment.svg)](https://travis-ci.org/bergant/nlexperiment)
+
+# __nlexperiment__
 
 Provides functions to 
 define __NetLogo__<sup>[1](#fn1)</sup> __experiments__ with parameter sets, measures and 
@@ -15,9 +13,7 @@ related simulation options in __concise__ structure.
 The cycle of experiment definition, simulations, data analysis, visualisations and
 parameter fitting can be easily turned 
 into __readable__ and __reproducible__ documents.
-
-
-__RNetLogo__<sup>[2](#fn2)</sup> is used as an interface to NetLogo environment.
+It uses __RNetLogo__<sup>[2](#fn2)</sup> as an interface to NetLogo environment.
 
 
 ## Documentation and Examples
@@ -35,8 +31,7 @@ devtools::install_github("bergant/nlexperiment")
 ```
 
 ## Example
-Simple Experiment with NetLogo Fire model:<sup>[3](#fn3)</sup>
-
+Simple experiment with NetLogo Fire model:<sup>[3](#fn3)</sup>
 
 
 ```r
@@ -79,7 +74,7 @@ on the [project website](http://bergant.github.io/nlexperiment/).
 
 ---
 
-<a name="fn1">1</a>: [^1]: Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+<a name="fn1">1</a>: Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 
 <a name="fn2">2</a>: Jan C. Thiele (2014). R Marries NetLogo: Introduction to the RNetLogo Package. Journal
 of Statistical Software, 58(2), 1-41. URL http://www.jstatsoft.org/v58/i02/.
