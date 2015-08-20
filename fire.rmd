@@ -202,3 +202,6 @@ Try other examples:
 * [Agents and Patches](agents.html) to see how to observe agents and patches
 * [Ants](ants.html) to see how to define simple parameter sets and mapping
 
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>

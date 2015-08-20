@@ -134,8 +134,6 @@ ggplot(tr, aes(x = iter_id,  y = result)) +
 ```
 
 
-
-
 ```{r pFlockOptimPlot2, title = "Plot tracing data", fig.cap="Where did `optim` look for best value?"}
 library(ggplot2)
 ggplot(tr, aes(x = min_separation,  y = max_align_turn)) +
@@ -147,3 +145,11 @@ ggplot(tr, aes(x = min_separation,  y = max_align_turn)) +
 
 ```
 
+## Related
+
+[Random Search](flocking_random_search.html) demonstrates searching for optimal parameters
+  using random search.
+  
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>

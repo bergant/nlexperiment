@@ -118,3 +118,15 @@ nl_show_patches(result, x_param = "ratio", y_param = "radius_diff") +
 ```
 
 
+## Related
+
+[Flocking Example](flocking.html) shows simple measure definition and observation in parameter space. It is the first in a series of parameter space exploration of the Flocking model.
+
+[Categorical Criteria](flocking_categorical.html) and 
+[Hyper Latinc Cube Sampling](flocking_sampling.html) examples
+demontrate how to explore parameter space with categorical 
+criteria and sampling methods.
+
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>

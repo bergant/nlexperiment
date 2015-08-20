@@ -144,3 +144,12 @@ ggplot( dat, aes(x = min_separation, y = max_align_turn) ) +
 
 ```
 
+## Related
+
+[Hyper Latinc Cube Sampling](flocking_sampling.html) examples
+demontrate how to explore parameter space with categorical 
+criteria and sampling methods.
+
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>

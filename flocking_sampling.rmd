@@ -103,3 +103,15 @@ ggplot( dat, aes(x = min_separation, y = max_align_turn) ) +
   theme_minimal()
 ```
 
+## Related
+
+[Best-fit Criterion](flocking_bestfit.html) shows how to define 
+  single criterion evaluation expression 
+  and evaluate parameter space with full-factor design.
+  
+[Random Search](flocking_random_search.html) demonstrate searching for optimal parameters
+  using random search.  
+
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>

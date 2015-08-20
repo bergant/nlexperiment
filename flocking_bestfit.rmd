@@ -110,3 +110,7 @@ ggplot( dat, aes(x = min_separation, y = max_align_turn, z = eval_value) ) +
 
 [L-BFGS-B Optimization](flocking_bfgs.html) shows how to use
   optimization functions from other R packages.
+
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>

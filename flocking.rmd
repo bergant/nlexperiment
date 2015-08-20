@@ -180,3 +180,6 @@ to learn how to explore parameter space with categorical evaluation.
   single criterion evaluation expression 
   and evaluate parameter space with full-factor design.
   
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>

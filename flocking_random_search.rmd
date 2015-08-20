@@ -25,7 +25,7 @@ Like in the [LHS](flocking_sampling.html) example the
 Latin hypercube sampling method is used but instead
 of categorical criteria the
 simulations are evaluated with single best-fit criterion
-defined in [Best-fit](flocking_bestfit.rmd) example.
+defined in [Best-fit](flocking_bestfit.html) example.
 
 ```{r flockSampModel, title = "Define the experiment"}
 library(tgp)
@@ -122,5 +122,19 @@ ggplot(dat, aes(x = eval_id, y = eval_value)) +
 
 
 ```
+
+## See also
+
+[L-BFGS-B Optimization](flocking_bfgs.html) shows how to use
+  optimization functions from other R packages.
+  
+[Categorical Criteria](flocking_categorical.html) and 
+[Hyper Latinc Cube Sampling](flocking_sampling.html) examples
+demontrate how to explore parameter space with categorical 
+criteria and sampling methods.
+
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>
 
 

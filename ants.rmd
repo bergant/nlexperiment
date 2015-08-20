@@ -109,4 +109,11 @@ ggplot(dat, aes(x = step_id, y = value, color = pile) ) +
   theme_minimal()
 ```
 
+## Related
+See [Fur Patterns](fur.html) example to see
+explicit definition of parameter sets and 
+parameter mapping when parameter space is transformed. 
 
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>
