@@ -114,7 +114,7 @@ img {
 Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flocking">NetLogo Flocking model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 </aside>
 <p>Like in <a href="flocking_categorical.html">previous example</a> we are using categorical evaluation criteria but instead of exploring parameter space with (full) factorial design we use Latin hypercube sampling method from <strong>tgp</strong> package.</p>
-<p><lside> Define the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(tgp)
 
 experiment &lt;- nl_experiment( 
@@ -155,8 +155,9 @@ experiment &lt;- nl_experiment(
 <p>Function <code>nl_param_lhs</code> is using <code>lhs</code> function from <strong>tgp</strong> package to create random parameter sets. Argument <code>n</code> defines the size of the LH sample.</p>
 Instead of using <code>nl_param_lhs</code> one can put any data frame in param_values. The columns of a data frame are interpreted as parameter names and rows should represent parameter sets.
 </aside>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>result4 &lt;- nl_run(experiment, parallel = TRUE)</code></pre>
-<p><lside> Add categorical criteria </lside></p>
+<p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Add categorical criteria" style="color:gray"></span></lside></p>
 <pre class="r"><code>dat &lt;- nl_get_criteria_result( 
   result4,
   are_grouped = c_mcrowding &gt;= 5 &amp; c_mcrowding &lt; 11,
@@ -165,7 +166,7 @@ Instead of using <code>nl_param_lhs</code> one can put any data frame in param_v
 <aside>
 See <a href="flocking_categorical.html">previous example</a> for categorical criteria definition.
 </aside>
-<p><lside> Plot the results </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot the results" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(ggplot2)
 ggplot( dat, aes(x = min_separation, y = max_align_turn) ) +
   geom_point() +

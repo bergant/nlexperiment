@@ -130,7 +130,7 @@ See <a href="flocking.html">Flocking</a> example for formal definitions of the m
 <li><em>criteria evaluation expressions</em> are aggregating those measures over time (note the <code>eval_criteria</code> element) and</li>
 <li><em>evaluation aggregation function</em> is aggregating these criteria values over several simulation repetitions.</li>
 </ul>
-<p><lside> Define the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment( 
   model_file = &quot;models/Sample Models/Biology/Flocking.nlogo&quot;,
   setup_commands = c(&quot;setup&quot;, &quot;repeat 100 [go]&quot;),
@@ -168,7 +168,7 @@ See <a href="flocking.html">Flocking</a> example for formal definitions of the m
 <p>Criteria expressions (in <code>eval_criteria</code> element) use the result from step measures (<code>step$</code> prefix)</p>
 Aggregate function (<code>eval_aggregate_fun</code>) specifies that the results from criteria function should be aggregated (over all 10 repetitions for each parameter set)
 </aside>
-<p><lside> Run the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>result3 &lt;- nl_run(experiment, parallel = TRUE) </code></pre>
 </div>
 <div id="add-categorical-criteria" class="section level2">
@@ -178,7 +178,7 @@ Aggregate function (<code>eval_aggregate_fun</code>) specifies that the results 
 <p><span class="math">\[ 5 &lt;= crowding &lt; 11 \]</span></p>
 <p>Alignment criteria:</p>
 <p><span class="math">\[ converged &gt; 0.7 \]</span></p>
-<p><lside> Prepare data </lside></p>
+<p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Prepare data" style="color:gray"></span></lside></p>
 <pre class="r"><code>dat &lt;- nl_get_criteria_result( 
   result3,
   are_grouped = c_mcrowding &gt;= 5 &amp; c_mcrowding &lt; 11,
@@ -187,7 +187,7 @@ Aggregate function (<code>eval_aggregate_fun</code>) specifies that the results 
 <aside>
 Note that changing categorical criteria from base evaluation criteria does not require additional model run.
 </aside>
-<p><lside> Plot the results </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot the results" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(ggplot2)
 ggplot( dat, aes(x = min_separation, y = max_align_turn) ) +
   geom_point() +

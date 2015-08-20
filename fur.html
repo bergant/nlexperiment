@@ -131,7 +131,7 @@ Wilensky, U. (2003). <a href="http://ccl.northwestern.edu/netlogo/models/Fur">Ne
 See also <a href="http://classes.yale.edu/fractals/Panorama/Biology/Leopard/Leopard.html">this site</a> for model description.
 </aside>
 <p>Example below still uses factorial design but on transformed parameter space <code>ratio</code> x <code>radius_diff</code> while keeping the <code>gap</code> between the circles constant.</p>
-<p><lside> Prepare parameter sets </lside></p>
+<p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Prepare parameter sets" style="color:gray"></span></lside></p>
 <pre class="r"><code>#All combinations of ratio x radius_diff 
 param_sets &lt;- expand.grid(
   gap = 3,
@@ -150,7 +150,7 @@ param_sets &lt;- transform(param_sets,
 <code>transform</code> adds new columns to the data frame as defined by expressions
 </aside>
 <p>We can use is this data frame with explicit parameter sets to define <code>param_values</code> instead of list of parameter values:</p>
-<p><lside> Define the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment(
   model_file = &quot;models/Sample Models/Biology/Fur.nlogo&quot;,
   iterations = 20,
@@ -176,12 +176,12 @@ param_sets &lt;- transform(param_sets,
 <aside>
 Note that variables <code>gap</code> and <code>radius_diff</code> must be mapped to empty string (since they are not NetLogo model variables).
 </aside>
-<p><lside> Run the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>result &lt;- nl_run(experiment, parallel = TRUE, max_cores = 3)</code></pre>
 <aside>
 Parallel execution is limited to 3 cores since there will be only <span class="math">\(5 \times 8 = 40\)</span> simulation runs.
 </aside>
-<p>Show resulting fur patterns:</p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Show fur patterns" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(ggplot2)
 nl_show_patches(result, x_param = &quot;ratio&quot;, y_param = &quot;radius_diff&quot;) +
   scale_fill_manual(values = c(&quot;black&quot;,&quot;white&quot;)) +

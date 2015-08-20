@@ -114,7 +114,7 @@ img {
 Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flocking">NetLogo Flocking model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 </aside>
 <p>Like in the <a href="flocking_sampling.html">LHS</a> example the Latin hypercube sampling method is used but instead of categorical criteria the simulations are evaluated with single best-fit criterion defined in <a href="flocking_bestfit.rmd">Best-fit</a> example.</p>
-<p><lside> Define the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(tgp)
 
 experiment &lt;- nl_experiment( 
@@ -158,12 +158,12 @@ Instead of using <code>nl_param_lhs</code> one can put any data frame in param_v
 <pre class="r"><code>result &lt;- nl_run(experiment, parallel = TRUE)</code></pre>
 <p>We are using the same best-fit criterion function as in previous example:</p>
 <p><span class="math">\[ value = \sqrt{(crowding - 8)^2 + 100 \times (converged - 1)^2} \]</span></p>
-<p><lside> Define criterium </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define criterium" style="color:gray"></span></lside></p>
 <pre class="r"><code>dat &lt;- nl_get_criteria_result( 
   result,
   eval_value = sqrt((c_mcrowding - 8)^2 + 400*(c_converged - 1)^2)
 )</code></pre>
-<p><lside> Find parameter set with minimal value </lside></p>
+<p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Find parameter set with minimal value" style="color:gray"></span></lside></p>
 <pre class="r"><code>res_value &lt;- min(dat$eval_value)
 min_eval_id &lt;- which(dat$eval_value == res_value)
 res_params &lt;- dat[min_eval_id, c(&quot;min_separation&quot;, &quot;max_align_turn&quot;)]
@@ -172,7 +172,7 @@ round(res_value, 1)
 round(res_params,1)
 #&gt;    min_separation max_align_turn
 #&gt; 74            2.2             14</code></pre>
-<p><lside> Plot the results </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot the results" style="color:gray"></span></lside></p>
 <pre class="r"><code>dat$eval_id = 1:nrow(result$criteria)
 library(ggplot2)
 ggplot(dat, aes(x = min_separation, y = max_align_turn, color = eval_value)) +
@@ -187,7 +187,7 @@ ggplot(dat, aes(x = min_separation, y = max_align_turn, color = eval_value)) +
 Minimal value found with random search
 </p>
 </aside>
-<p><lside> Plot the results </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot the results" style="color:gray"></span></lside></p>
 <pre class="r"><code>dat$min_eval &lt;- 
   sapply(1:nrow(dat), function(i) min(dat$eval_value[dat$eval_id &lt;= i]) )
 ggplot(dat, aes(x = eval_id, y = eval_value)) +

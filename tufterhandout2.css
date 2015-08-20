@@ -1,9 +1,9 @@
-    .caption {
+/*    .caption {
      font-size: smaller;
     }
-
+*/
 html {
-  min-width: 1040px;
+  min-width: 960px;
 }
 
 body {
@@ -58,10 +58,10 @@ asideclose {
 
 lside {
   font-size: smaller;
-  width: 160px;
+  width: 2em;
   position: absolute;
   float: left;
-  margin-left: -160px;
+  margin-left: -2em;
 }
 
 

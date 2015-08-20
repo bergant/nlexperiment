@@ -76,7 +76,7 @@ Instead of using `nl_param_lhs` one can put any data frame in param_values.
 </aside>
 
 
-```{r flockSampRun, cache=TRUE}
+```{r flockSampRun, title = "Run experiment", cache=TRUE}
 result4 <- nl_run(experiment, parallel = TRUE)
 ```
 

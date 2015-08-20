@@ -90,7 +90,7 @@ experiment <- nl_experiment(
 ```
 
 
-```{r flockBfgsOptimRun, title = "Call optim function", cache=TRUE}
+```{r flockBfgsOptimRun, title = "Run optim function", cache=TRUE}
 cl <- nl_eval_init(experiment, parallel = TRUE)
 trace <- nl_eval_tracer(verbose = FALSE)
 param_range <- nl_get_param_range(experiment)   

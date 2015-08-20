@@ -109,8 +109,8 @@ Parallel execution is limited to 3 cores since there will be
 only $5 \times 8 = 40$ simulation runs.
 </aside>
 
-Show resulting fur patterns:
-```{r furShowPatches}
+
+```{r title = "Show fur patterns", furShowPatches}
 library(ggplot2)
 nl_show_patches(result, x_param = "ratio", y_param = "radius_diff") +
   scale_fill_manual(values = c("black","white")) +

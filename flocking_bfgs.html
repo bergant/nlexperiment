@@ -121,7 +121,7 @@ Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flockin
 <aside>
 Thiele, J. C., Kurth, W., &amp; Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11. <a href="http://jasss.soc.surrey.ac.uk/17/3/11.html" class="uri">http://jasss.soc.surrey.ac.uk/17/3/11.html</a>
 </aside>
-<p><lside> Define the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment( 
   model_file = &quot;models/Sample Models/Biology/Flocking.nlogo&quot;,
 
@@ -160,7 +160,7 @@ Thiele, J. C., Kurth, W., &amp; Grimm, V. (2014). Facilitating Parameter Estimat
       sqrt((c_mcrowding - 8)^2 + 400*(c_converged - 1)^2)
   )
 )</code></pre>
-<p><lside> Call optim function </lside></p>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run optim function" style="color:gray"></span></lside></p>
 <pre class="r"><code>cl &lt;- nl_eval_init(experiment, parallel = TRUE)
 #&gt; [1] &quot;Creating sockets...&quot;
 trace &lt;- nl_eval_tracer(verbose = FALSE)
@@ -176,7 +176,7 @@ o_result &lt;- optim(
   method = &quot;L-BFGS-B&quot;,
   lower = param_range$lower, upper = param_range$upper, 
   control = list(maxit = 200, trace = 1))
-#&gt; final  value 4.578245 
+#&gt; final  value 4.480883 
 #&gt; converged
 
 nl_eval_close(parallel = TRUE, cl)</code></pre>
@@ -184,18 +184,18 @@ nl_eval_close(parallel = TRUE, cl)</code></pre>
 <p>Function <code>nl_eval_init</code> starts processes with NetLogo instance</p>
 Function <code>nl_get_param_range</code> returns parameters’ lower and upper values as they are defined in experiment object. This range will be used as optimization constraints in L-BFGS-B method.
 </aside>
-<p><lside> Optim results </lside></p>
+<p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Optim results" style="color:gray"></span></lside></p>
 <pre class="r"><code>o_result
 #&gt; $par
 #&gt; min_separation max_align_turn 
-#&gt;       1.891199      10.544003 
+#&gt;       1.877521       9.382087 
 #&gt; 
 #&gt; $value
-#&gt; [1] 4.578245
+#&gt; [1] 4.480883
 #&gt; 
 #&gt; $counts
 #&gt; function gradient 
-#&gt;       17       17 
+#&gt;       24       24 
 #&gt; 
 #&gt; $convergence
 #&gt; [1] 0
@@ -203,7 +203,7 @@ Function <code>nl_get_param_range</code> returns parameters’ lower and upper v
 #&gt; $message
 #&gt; [1] &quot;CONVERGENCE: REL_REDUCTION_OF_F &lt;= FACTR*EPSMCH&quot;</code></pre>
 <p>The <code>trace$add</code> function colected every iteration of <code>optim</code>.</p>
-<p><lside> Plot tracing data </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot tracing data" style="color:gray"></span></lside></p>
 <pre class="r"><code>tr &lt;- trace$get()
 
 library(ggplot2)
@@ -215,7 +215,7 @@ ggplot(tr, aes(x = iter_id,  y = result)) +
 <aside>
 </aside>
 </p>
-<p><lside> Plot tracing data </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot tracing data" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(ggplot2)
 ggplot(tr, aes(x = min_separation,  y = max_align_turn)) +
   geom_path(alpha = 0.1)+

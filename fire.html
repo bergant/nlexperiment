@@ -109,9 +109,9 @@ img {
 </div>
 
 
-<p><nl_summary> This example uses NetLogo Fire model (Wilensky 1997) to demonstrate how to define and run experiments, export view images and get observations based on measures.</p>
-<p><aside_bib> Wilensky, U. (1997). NetLogo Fire model. <a href="http://ccl.northwestern.edu/netlogo/models/Fire" class="uri">http://ccl.northwestern.edu/netlogo/models/Fire</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL. </aside_bib> </nl_summary></p>
-<p><lside> Setup </lside></p>
+<p>This example uses NetLogo Fire model (Wilensky 1997) to demonstrate how to define and run experiments, export view images and get observations based on measures.</p>
+<p><aside_bib> Wilensky, U. (1997). NetLogo Fire model. <a href="http://ccl.northwestern.edu/netlogo/models/Fire" class="uri">http://ccl.northwestern.edu/netlogo/models/Fire</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL. </aside_bib></p>
+<p><lside><span class="glyphicon glyphicon-cog" aria-hidden="true" title="Setup" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(nlexperiment)
 nl_netlogo_path(&quot;c:/Program Files (x86)/NetLogo 5.2.0/&quot;) </code></pre>
 <aside>
@@ -121,7 +121,7 @@ You have to do this only once per R session.
 <h2>Run model and export view image</h2>
 <p>To run a NetLogo model simulation we have to create an experiment object with <code>nl_experiment</code> function. Experiment definition includes a NetLogo model file, declares how to run the model, defines parameter values and what outputs are expected from simulation runs.</p>
 <p>For example:</p>
-<p><lside> Define the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment(
   model_file = &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;, 
   param_values = list(density = c(57, 59, 61)),
@@ -133,10 +133,10 @@ You have to do this only once per R session.
 <p>The model will run for three parameter values. Each simulation will run as long as there are any turtles.</p>
 The <code>export_view</code> option enables exporting view after each simulation.
 </aside>
-<p><lside> Run the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>result &lt;- nl_run(experiment)     </code></pre>
 <p>Find paths to the exported view image files in <code>result$export</code> or just display them by calling <code>nl_show_views_grid</code> function:</p>
-<p><lside> Show exported images </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Show exported images" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(ggplot2)
 nl_show_views_grid(result, x_param = &quot;density&quot;)</code></pre>
 <p>
@@ -153,7 +153,7 @@ Images taken at the end of each simulation
 <p>Temporal measures quantify temporal behavior of agent based model. Example below shows how to measure <em>percent of burned trees</em> on each simulation step:</p>
 <p><span class="math">\[ percent_{burned}(t) = \frac{trees_{burned}(t)}{trees_{initial}} \times 100 \]</span></p>
 <p>To define a temporal measure use <code>step_measures</code> element. Measures have to be accurate NetLogo reporters.</p>
-<p><lside> Define the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment( 
   model_file = &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;, 
   while_condition = &quot;any? turtles&quot;,
@@ -166,10 +166,10 @@ Images taken at the end of each simulation
 <aside>
 Note that <code>burned-trees</code> and <code>initial-trees</code> are global variables in NetLogo <a href="https://github.com/NetLogo/models/blob/master/Sample%20Models/Earth%20Science/Fire.nlogo">Fire model</a>.
 </aside>
-<p><lside> Run the experiment </lside></p>
-<pre class="r"><code>result &lt;- nl_run(experiment) </code></pre>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
+<pre class="r"><code>result &lt;- nl_run(experiment)  </code></pre>
 <p>To get the observations from the result object use <code>nl_get_step_result</code>:</p>
-<p><lside> Get observations </lside></p>
+<p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Get observations" style="color:gray"></span></lside></p>
 <pre class="r"><code>dat &lt;- nl_get_step_result(result)</code></pre>
 <aside>
 <p>Values <code>run_id</code> and <code>step_id</code> are included in the <code>result$step</code> by default.</p>
@@ -325,7 +325,7 @@ run_id
 Table: first 6 observations.
 </aside>
 <p> </p>
-<p><lside> Plot observations </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot observations" style="color:gray"></span></lside></p>
 <pre class="r"><code>nl_show_step(result, x_param = &quot;density&quot;)</code></pre>
 <p>
 <img src="img/pages-fireStepPlot-1.png">
@@ -340,7 +340,7 @@ Percent of burned trees as a function of time
 <h2>Observations per each simulation run</h2>
 <p>Stochastic models are usually run several times repeteadly for each parameter set and measured at the end of each run.</p>
 <p>In this example we observe percent of burned trees and fire progress for different <code>density</code> parameter. The model will run repetedly <code>30</code> times for every parameter value.</p>
-<p><lside> Define the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment(
   model_file = &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;, 
   while_condition = &quot;any? turtles&quot;,
@@ -358,15 +358,15 @@ Percent of burned trees as a function of time
 Note that one could define <code>run_measures</code> and <code>step_measures</code> in the same experiment.
 </aside>
 <p>When running experiments with several repetitions we can save some time with <code>parallel</code> option.</p>
-<p><lside> Run the experiment </lside></p>
-<pre class="r"><code>result &lt;- nl_run(experiment, parallel = TRUE) </code></pre>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
+<pre class="r"><code>result &lt;- nl_run(experiment, parallel = TRUE)  </code></pre>
 <aside>
 To run experiment on several processor cores, run with <code>parallel = TRUE</code> option.
 </aside>
-<p><lside> Get data </lside></p>
+<p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Get data" style="color:gray"></span></lside></p>
 <pre class="r"><code>dat &lt;- nl_get_run_result(result)</code></pre>
 <p>One way to show the percent burned as a function of density is to use violin plot:</p>
-<p><lside> Plot the results </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot the results" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(ggplot2)
 ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) + 
   geom_violin(fill = &quot;gray90&quot;) +
@@ -381,7 +381,7 @@ Distribution of final percent of burned trees at different values of forest dens
 </aside>
 </p>
 <p>Fire advances from left to right. It is interesting to observe final fire position (left border = 0 and right = 1) as a function of density.</p>
-<p><lside> Plot the results </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot the results" style="color:gray"></span></lside></p>
 <pre class="r"><code>ggplot(dat, mapping = aes(x = factor(density), y = progress/250 + 0.5) ) + 
   geom_boxplot()  +
   #geom_jitter(position = position_jitter(width = .1), alpha = 0.3)  +

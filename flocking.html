@@ -131,7 +131,7 @@ Stonedahl, F. J. (2011). Genetic algorithms for the exploration of parameter spa
 Reiczigel, J., Lang, Z., Rózsa, L., &amp; Tóthmérész, B. (2008). Measures of sociality: two different views of group size. Animal Behaviour, 75(2), 715–721.
 </aside>
 <p>where <span class="math">\(v_x(b)\)</span> and <span class="math">\(v_y(b)\)</span> are the horizontal and vertical components of the velocity of bird b, <span class="math">\(flockmates_b\)</span> are flockmates of bird <span class="math">\(b\)</span> and <span class="math">\(B\)</span> is the set of all birds.</p>
-<p><lside> Define the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment( 
   model_file = &quot;models/Sample Models/Biology/Flocking.nlogo&quot;,
   setup_commands = c(&quot;setup&quot;, &quot;repeat 10 [go]&quot;),
@@ -157,9 +157,9 @@ Reiczigel, J., Lang, Z., Rózsa, L., &amp; Tóthmérész, B. (2008). Measures of
 <aside>
 Note that parameter <code>world_size</code> is special. It changes model world size instead of setting NetLogo variable.
 </aside>
-<p><lside> Run the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>result &lt;- nl_run(experiment)       </code></pre>
-<p><lside> Plot the results </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot the results" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(ggplot2) 
 nl_show_views_grid(result, x_param = &quot;vision&quot;, y_param = &quot;run_id&quot;, 
                    img_gap = 0.01) + labs(title = &quot;Simulation views&quot;)</code></pre>
@@ -171,7 +171,7 @@ Birds after 100 iterations. Results for two simulation runs for two different vi
 </p>
 </aside>
 </p>
-<p><lside> Plot the results </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot the results" style="color:gray"></span></lside></p>
 <pre class="r"><code>nl_show_step(result, x = &quot;step_id&quot;, y =  &quot;converged&quot;, 
              x_param = &quot;vision&quot;,  title = &quot;Convergence&quot;)</code></pre>
 <p>
@@ -182,7 +182,7 @@ Convergence in time with different values of <em>vision</em> parameter and two s
 </p>
 </aside>
 </p>
-<p><lside> Plot the results </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot the results" style="color:gray"></span></lside></p>
 <pre class="r"><code>nl_show_step(result, x = &quot;step_id&quot;, y =  &quot;mean_crowding&quot;, 
              x_param = &quot;vision&quot;, title = &quot;Mean crowding&quot;)</code></pre>
 <p>
@@ -198,7 +198,7 @@ Crowding in time with different <em>vision</em> parameter values
 <h2>Explore Temporal Measures</h2>
 <p>Initial (random) positions influence the resulting measures. To see the connection between measures and parameter values we have to run the simulation several times for each parameter set.</p>
 <p>The example below explore the influence of <em>min_separation</em> and <em>max_align_turn</em> parameters on the convergence measure by running each parameter set 30 times and simply plotting all observations for different parameter values.</p>
-<p><lside> Define the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment( 
   model_file = 
     file.path(nl_netlogo_path(), 
@@ -227,10 +227,10 @@ Crowding in time with different <em>vision</em> parameter values
   repetitions = 30, 
   random_seed = 1:30
 )</code></pre>
-<p><lside> Run the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>result2 &lt;- nl_run(experiment, parallel = TRUE)    </code></pre>
 <p>Plot temporal measure with 2 varying parameters:</p>
-<p><lside> Plot convergence </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot convergence" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(ggplot2)
 nl_show_step(result2, x = &quot;step_id&quot;, y = &quot;converged&quot;,
              y_param = &quot;max_align_turn&quot;, x_param = &quot;min_separation&quot;,
@@ -243,7 +243,7 @@ Convergence: 30 simulation runs for every parameter set
 </p>
 </aside>
 </p>
-<p><lside> Plot crowding </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot crowding" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(ggplot2)
 nl_show_step(result2, x = &quot;step_id&quot;, y = &quot;mean_crowding&quot;,
              y_param = &quot;max_align_turn&quot;, x_param = &quot;min_separation&quot;,
@@ -256,6 +256,11 @@ Mean crowding: 30 simulation runs for every parameter set
 </p>
 </aside>
 </p>
+</div>
+<div id="see-also" class="section level2">
+<h2>See also</h2>
+<p>See <a href="flocking_categorical.html">Categorical Criteria</a> and <a href="flocking_sampling.html">Hyper Latinc Cube Sampling</a> examples to learn how to explore parameter space with categorical evaluation.</p>
+<p><a href="flocking_bestfit.html">Best-fit Criterion</a> shows how to define single criterion evaluation expression and evaluate parameter space with full-factor design.</p>
 </div>
 
 

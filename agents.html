@@ -118,7 +118,7 @@ Wilensky, U. (2005). NetLogo <a href="http://ccl.northwestern.edu/netlogo/models
 </aside>
 <p>To get data about agents use <code>agents_after</code> argument with a list of agents variables and type of agent (turtles and links in this example).</p>
 <p>Element <code>agents_before</code> is analogous tp <code>agents_after</code> - it just gets the data before model runs.</p>
-<p><lside> Define the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment(
   model_file = file.path(nl_netlogo_path(), 
                          &quot;models/Sample models/Networks/Preferential attachment.nlogo&quot;), 
@@ -138,12 +138,12 @@ Wilensky, U. (2005). NetLogo <a href="http://ccl.northwestern.edu/netlogo/models
 <p>Instead of <code>while_condition</code> the end of simulation run is here defined by <code>iterations</code> element (number of simulation steps).</p>
 With <code>repetitions</code> the number of simulation runs (with same parameters) are defined. The random seed is defined as a vector. It is applied to each repetition respectively.
 </aside>
-<p><lside> Run the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>result &lt;- nl_run(experiment)
 #&gt; Warning: Parameter sets not defined. Using default parameters</code></pre>
 <p>The data about individual agents are now stored in <code>result$agents_after$edges</code> and <code>result$agents_after$vertices</code>. To join the data with parameter sets use <code>nl_get_result(result, type = &quot;agents_after&quot;, sub_type = &quot;edges&quot;)</code></p>
 <p>With <strong>igraph</strong> package one can recreate the graph structure from agents’ data:</p>
-<p><lside> Create graph objects </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Create graph objects" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(igraph, quietly = TRUE, warn.conflicts = FALSE)
 glist &lt;- 
   lapply(
@@ -160,7 +160,7 @@ glist &lt;-
 <aside>
 Here we set the labels to the first 4 vertices (measured when created) and the size of the vertice is set to its degree.
 </aside>
-<p><lside> Plot the graphs </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot the graphs" style="color:gray"></span></lside></p>
 <pre class="r"><code>par(mfrow=c(1,2), mai=c(0,0,0,0))
 for(g1 in glist) {
   plot.igraph(g1, margin = 0, 
@@ -184,7 +184,7 @@ for(g1 in glist) {
 <aside>
 Wilensky, U. (2003). NetLogo <a href="http://ccl.northwestern.edu/netlogo/models/Fur">Fur model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 </aside>
-<p><lside> Define the model </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the model" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment2 &lt;- nl_experiment( 
   model_file = file.path(nl_netlogo_path(), 
                          &quot;models/Sample Models/Biology/Fur.nlogo&quot;), 
@@ -201,9 +201,9 @@ Wilensky, U. (2003). NetLogo <a href="http://ccl.northwestern.edu/netlogo/models
   ),
   random_seed = 2
 )</code></pre>
-<p><lside> Run the model </lside></p>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the model" style="color:gray"></span></lside></p>
 <pre class="r"><code>result2 &lt;- nl_run(experiment2)</code></pre>
-<p><lside> Get data </lside></p>
+<p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Get data" style="color:gray"></span></lside></p>
 <pre class="r"><code>dat &lt;- nl_get_result(result2, type = &quot;patches_after&quot;, sub_type = &quot;patches&quot;)
 str(dat, vec.len = 2)
 #&gt; &#39;data.frame&#39;:    14884 obs. of  6 variables:
@@ -216,7 +216,7 @@ str(dat, vec.len = 2)
 <aside>
 Function <code>nl_show_patches</code> uses <code>ggplot2::geom_raster</code> to plot patches. The color palette must be provided by user.
 </aside>
-<p><lside> Plot results </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot results" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(ggplot2)
 nl_show_patches(result2, x_param = &quot;ratio&quot;) +
   ggplot2::scale_fill_manual(values = c(&quot;black&quot;,&quot;white&quot;))</code></pre>

@@ -55,7 +55,7 @@ parameter mapping when parameter space is transformed.
 </aside>
 
 * [Categorical Criteria](flocking_categorical.html) and 
-[Hyper Latinc Cube Sampling](flocking_sampling) examples
+[Hyper Latinc Cube Sampling](flocking_sampling.html) examples
 demontrate how to explore parameter space with categorical 
 criteria and sampling methods.
 
@@ -70,7 +70,7 @@ criteria and sampling methods.
 [<img src = "img/pages-flockBestFitPlot1-1.png"/>](flocking_bestfit.html)
 </aside>
 
-* [Random Search](flocking_random.html) demonstrate searching for optimal parameters
+* [Random Search](flocking_random_search.html) demonstrate searching for optimal parameters
   using random search.
   
 [<img src = "img/pages-flockSampPlot1-1.png"/>](flocking_random.html)

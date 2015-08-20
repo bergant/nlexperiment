@@ -120,7 +120,7 @@ Wilensky, U. (1997). <a href="http://ccl.northwestern.edu/netlogo/models/Ants">N
 <aside>
 See <em>syntax/identifiers</em> section in <a href="http://ccl.northwestern.edu/netlogo/5.0/docs/programming.html#syntax">NetLogo programming guide</a> and R FAQ about <a href="http://cran.r-project.org/doc/FAQ/R-FAQ.html#What-are-valid-names_003f">valid names</a>.
 </aside>
-<p><lside> Define the experiment </lside></p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment(
   model_file = file.path(nl_netlogo_path(), 
                          &quot;models/Sample Models/Biology/Ants.nlogo&quot;), 
@@ -146,9 +146,9 @@ See <em>syntax/identifiers</em> section in <a href="http://ccl.northwestern.edu/
 <p>It is not required to include all parameters in mapping. Variable <code>population</code> is used as is.</p>
 Element <code>mapping</code> maps <code>difussion_rate</code> and <code>evaporation_rate</code> to NetLogo variables <code>diffusion-rate</code> and <code>evaporation-rate</code>.
 </aside>
-<p>Run experiment</p>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>results &lt;- nl_run(experiment)    </code></pre>
-<p><lside> Show views </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Show views" style="color:gray"></span></lside></p>
 <pre class="r"><code>nl_show_views_grid(results, 
                    x_param = &quot;evaporation_rate&quot;, 
                    y_param = &quot;diffusion_rate&quot;)</code></pre>
@@ -157,14 +157,14 @@ Element <code>mapping</code> maps <code>difussion_rate</code> and <code>evaporat
 <aside>
 </aside>
 </p>
-<p><lside> Prepare data </lside></p>
+<p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Prepare data" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(tidyr)
 dat &lt;- nl_get_step_result(results)
 dat &lt;- tidyr::gather(dat, pile, value, pile1, pile2, pile3)</code></pre>
 <aside>
 Gathering columns from 3 measures to key-value pairs to use it in ggplot
 </aside>
-<p><lside> Plot the results </lside></p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot the results" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(ggplot2)
 ggplot(dat, aes(x = step_id, y = value, color = pile) ) +
   geom_line() +

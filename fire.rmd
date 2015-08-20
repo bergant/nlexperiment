@@ -5,7 +5,7 @@ title: "Fire Experiment"
 ```{r ch_opt, child="include/chunk_options.rmd", cache=FALSE}
 ```
 
-<nl_summary>
+
 This example uses NetLogo Fire model (Wilensky 1997) to demonstrate
 how to define and run experiments,
 export view images and
@@ -17,7 +17,6 @@ http://ccl.northwestern.edu/netlogo/models/Fire.
 Center for Connected Learning and Computer-Based Modeling, 
 Northwestern University, Evanston, IL.
 </aside_bib>
-</nl_summary>
 
 
 ```{r Initialize, title = "Setup"}
@@ -95,7 +94,7 @@ Note that `burned-trees` and `initial-trees` are global variables in NetLogo
 
 
 ```{r fireStepRun, title = "Run the experiment", cache=TRUE}
-result <- nl_run(experiment) 
+result <- nl_run(experiment)  
 ```
 
 To get the observations from the result object
@@ -111,6 +110,7 @@ Values `run_id` and `step_id` are included in the `result$step` by default.
 Parameter values are included only by reference to `parameter_set_id`. The 
 function `nl_get_result` joins parameter sets with observation data.
 </aside>
+
 
 ```{r fireShowTable}
 htmlTable::htmlTable(head(dat))
@@ -163,7 +163,7 @@ with `parallel` option.
 
 
 ```{r fireRunRun, title = "Run the experiment", cache=TRUE}
-result <- nl_run(experiment, parallel = TRUE) 
+result <- nl_run(experiment, parallel = TRUE)  
 ```
 <aside>To run experiment on several processor cores, run with `parallel = TRUE` option.</aside>
 

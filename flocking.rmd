@@ -170,3 +170,13 @@ nl_show_step(result2, x = "step_id", y = "mean_crowding",
 
 ```
 
+## See also
+
+See [Categorical Criteria](flocking_categorical.html) and
+[Hyper Latinc Cube Sampling](flocking_sampling.html) examples
+to learn how to explore parameter space with categorical evaluation.
+
+[Best-fit Criterion](flocking_bestfit.html) shows how to define 
+  single criterion evaluation expression 
+  and evaluate parameter space with full-factor design.
+  
