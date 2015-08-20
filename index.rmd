@@ -117,7 +117,7 @@ Thiele, J. C., Kurth, W., & Grimm, V. (2014). Facilitating Parameter Estimation 
 </aside>
 
 The parallel implementation of `nl_run` function was inspired by
-  [RNetLogo vignette](https://cran.r-project.org/web/packages/RNetLogo/vignettes/parallelProcessing.pdf)
+  [RNetLogo vignette](https://cran.rstudio.com/web/packages/RNetLogo/vignettes/parallelProcessing.pdf)
 
 Some examples in the tutorial follow examples and methods from Thiele, 
   Kurth & Grimm (2014) article and its 

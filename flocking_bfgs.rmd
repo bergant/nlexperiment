@@ -38,7 +38,7 @@ with more than a few repetitions needed to evaluate one parameter set.
 
 
 There are many R packages for solving optimization problems 
-(see [CRAN Task View](https://cran.r-project.org/web/views/Optimization.html)).
+(see [CRAN Task View](https://cran.rstudio.com/web/views/Optimization.html)).
 This example use **L-BFGS-B method** with standard `stats::optim` function.
 See also Thiele, Kurth & Grimm (2014) chapter 
 [2.28 Gradient and quasi-Newton methods](http://jasss.soc.surrey.ac.uk/17/3/11.html#sectionGQNM).
