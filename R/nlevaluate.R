@@ -1,34 +1,9 @@
-#' @param parallel If TRUE nl_eval_init returns cluster object which should be
-#'   passed to nl_eval_run and nl_eval_close.
-#' @param max_cores If not defined all available cores are used.
-#' @rdname nl_eval_run
-#' @export
-nl_eval_init <- function(experiment, parallel = FALSE, max_cores = NULL) {
-  if(!parallel) {
-    nl_run_init(gui = FALSE, nl_path = nl_netlogo_path(),
-                model_path = experiment$model_file)
-    return(invisible(NULL))
-  }
-
-  #parallel
-  print("Creating sockets...")
-  processors <- parallel::detectCores()
-  if(!missing(max_cores)) {
-    processors <- min(processors, max_cores)
-  }
-  cluster <- parallel::makeCluster(processors)
-
-  parallel::clusterCall(cluster, nl_run_init, gui=FALSE, nl_path = nl_netlogo_path(),
-                        model_path = experiment$model_file)
-  return(cluster)
-
-}
 
 #' Evaluate experiment with specific parameters
 #'
-#' Runs experiment as with \code{\link{nl_run}} but requires started NetLogo instance
-#' with loaded model.
-#'
+#' @description Function \code{nl_eval_run} runs experiment as
+#'   with \code{\link{nl_run}} but requires started NetLogo instance
+#'   with loaded model.
 #' @param param_set parameter set (a list of parameters with values)
 #' @param experiment NetLogo experiment object (see \code{\link{nl_experiment}})
 #' @param criteria Which experiment evaluation criteria to be returned
@@ -37,6 +12,7 @@ nl_eval_init <- function(experiment, parallel = FALSE, max_cores = NULL) {
 #'   processes
 #' @param cluster Required for parallel execution (nl_eval_init returns
 #'   cluster object)
+#' @param param_names parameter names for parameter set
 #' @details Use when parameters depend on previous evaluation (like in
 #'   parameter fitting / callibration / optimization methods).
 #'   It can use the same experiment object as \code{nl_run} function
@@ -45,7 +21,8 @@ nl_eval_init <- function(experiment, parallel = FALSE, max_cores = NULL) {
 #' @export
 nl_eval_run <- function(param_set, experiment, criteria = NULL,
                         print_progress = FALSE, call_back = NULL,
-                        parallel = FALSE, cluster = NULL) {
+                        parallel = FALSE, cluster = NULL,
+                        param_names = NULL) {
 
   if(!inherits(experiment, nl_experiment_class))
     stop("Not a NetLogo experiment object")
@@ -60,7 +37,8 @@ nl_eval_run <- function(param_set, experiment, criteria = NULL,
   if(!inherits(param_set, "data.frame")) {
     if(!inherits(param_set, "list")) {
       if(is.null(names(param_set))) {
-        names(param_set) <- names(experiment$param_sets)
+        if(missing(param_names)) param_names <- names(experiment$param_sets)
+        names(param_set) <- param_names
       }
       param_set <- as.data.frame(as.list(param_set))
     } else {
@@ -83,15 +61,42 @@ nl_eval_run <- function(param_set, experiment, criteria = NULL,
   } else {
     ret <- ret$criteria
   }
-  if(!missing(call_back)) {
+  if(!missing(call_back) && !is.null(call_back)) {
     call_back(
       cbind(param_set, result = ret))
   }
   invisible(ret)
 }
 
-#' Stop NetLogo instance
-#'
+#' @description Function \code{nl_eval_init} starts NetLogo instance and
+#'   loads the NetLogo model. When using parallel version it initializes several
+#'   processes and returns cluster objects
+#' @param parallel If TRUE nl_eval_init returns cluster object which should be
+#'   passed to nl_eval_run and nl_eval_close.
+#' @param max_cores If not defined all available cores are used.
+#' @rdname nl_eval_run
+#' @export
+nl_eval_init <- function(experiment, parallel = FALSE, max_cores = NULL) {
+  if(!parallel) {
+    nl_run_init(gui = FALSE, nl_path = nl_netlogo_path(),
+                model_path = experiment$model_file)
+    return(invisible(NULL))
+  }
+
+  #parallel
+  processors <- parallel::detectCores()
+  if(!missing(max_cores)) {
+    processors <- min(processors, max_cores)
+  }
+  cluster <- parallel::makeCluster(processors)
+
+  parallel::clusterCall(cluster, nl_run_init, gui=FALSE, nl_path = nl_netlogo_path(),
+                        model_path = experiment$model_file)
+  return(cluster)
+
+}
+
+#' @description Function \code{nl_eval_close} stops NetLogo instance
 #' @rdname nl_eval_run
 #' @export
 nl_eval_close <- function(parallel = FALSE, cluster = NULL) {
@@ -123,4 +128,22 @@ nl_eval_tracer <- function(verbose = TRUE) {
     iterations
   }
   return(list(add = add, get = get))
+}
+
+#' @description Function \code{nl_get_eval_fun} returns a function
+#'   wich calls \code{\link{nl_eval_run}} but does not need
+#'   additional parameters.
+#' @rdname nl_eval_run
+#' @export
+nl_get_eval_fun <- function(experiment, param_names, parallel = FALSE, cluster = NULL, criteria, call_back = NULL) {
+  eval_fun <- function(x) {
+    nl_eval_run(x,
+                experiment = experiment,
+                criteria = criteria,
+                call_back = call_back,
+                parallel = parallel,
+                cluster = cluster,
+                param_names = param_names)
+  }
+  return(eval_fun)
 }
