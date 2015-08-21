@@ -93,6 +93,8 @@ img {
              <li><a href="../flocking_bestfit.html">Best-fit Criterion</a></li>
              <li><a href="../flocking_random_search.html">Random Search</a></li>
              <li><a href="../flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+             <li><a href="../flocking_sa.html">Simulated Annealing</a></li>
+             <li><a href="../flocking_ga.html">Genetic Algorithm</a></li>
           </ul>
         </li>
         <li><a href="../help/index.html">Package documentation</a></li>
@@ -104,61 +106,57 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-  <table width="100%" summary="page for nl_eval_init">
+  <table width="100%" summary="page for nl_eval_run">
     <tr>
-      <td>nl_eval_init</td>
+      <td>nl_eval_run</td>
       <td style="text-align: right;">R Documentation</td>
     </tr>
   </table>
   <h2>Evaluate experiment with specific parameters</h2>
   <h3>Description</h3>
-  <p>Runs experiment as with <code>nl_run</code> but requires started NetLogo instance
+  <p>Function <code>nl_eval_run</code> runs experiment as
+with <code>nl_run</code> but requires started NetLogo instance
 with loaded model.
 </p>
-  <p>Stop NetLogo instance
+  <p>Function <code>nl_eval_init</code> starts NetLogo instance and
+loads the NetLogo model. When using parallel version it initializes several
+processes and returns cluster objects
+</p>
+  <p>Function <code>nl_eval_close</code> stops NetLogo instance
+</p>
+  <p>Function <code>nl_get_eval_fun</code> returns a function
+wich calls <code>nl_eval_run</code> but does not need
+additional parameters.
 </p>
   <h3>Usage</h3>
   <pre>
+nl_eval_run(param_set, experiment, criteria = NULL, print_progress = FALSE,
+  call_back = NULL, parallel = FALSE, cluster = NULL,
+  param_names = NULL)
+
 nl_eval_init(experiment, parallel = FALSE, max_cores = NULL)
 
-nl_eval_run(param_set, experiment, criteria = NULL, print_progress = FALSE,
-  call_back = NULL, parallel = FALSE, cluster = NULL)
-
 nl_eval_close(parallel = FALSE, cluster = NULL)
+
+nl_get_eval_fun(experiment, param_names, parallel = FALSE, cluster = NULL,
+  criteria, call_back = NULL)
 </pre>
   <h3>Arguments</h3>
   <table summary="R argblock">
-    <tr valign="top">
-      <td>
-        <code>experiment</code>
-      </td>
-      <td>
-        <p>NetLogo experiment object (see <code>nl_experiment</code>)</p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td>
-        <code>parallel</code>
-      </td>
-      <td>
-        <p>If TRUE nl_eval_init returns cluster object which should be
-passed to nl_eval_run and nl_eval_close.</p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td>
-        <code>max_cores</code>
-      </td>
-      <td>
-        <p>If not defined all available cores are used.</p>
-      </td>
-    </tr>
     <tr valign="top">
       <td>
         <code>param_set</code>
       </td>
       <td>
         <p>parameter set (a list of parameters with values)</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>experiment</code>
+      </td>
+      <td>
+        <p>NetLogo experiment object (see <code>nl_experiment</code>)</p>
       </td>
     </tr>
     <tr valign="top">
@@ -188,11 +186,36 @@ processes</p>
     </tr>
     <tr valign="top">
       <td>
+        <code>parallel</code>
+      </td>
+      <td>
+        <p>If TRUE nl_eval_init returns cluster object which should be
+passed to nl_eval_run and nl_eval_close.</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
         <code>cluster</code>
       </td>
       <td>
         <p>Required for parallel execution (nl_eval_init returns
 cluster object)</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>param_names</code>
+      </td>
+      <td>
+        <p>parameter names for parameter set</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>max_cores</code>
+      </td>
+      <td>
+        <p>If not defined all available cores are used.</p>
       </td>
     </tr>
   </table>

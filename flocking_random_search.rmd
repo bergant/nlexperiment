@@ -120,13 +120,15 @@ ggplot(dat, aes(x = eval_id, y = eval_value)) +
   geom_step(aes(x = eval_id, y = min_eval), alpha = 0.3) +
   theme_minimal()
 
-
 ```
 
 ## See also
 
 [L-BFGS-B Optimization](flocking_bfgs.html) shows how to use
   optimization functions from other R packages.
+
+[Genetic Algorithm](flocking_ga.html) demonstrates optimization
+  with genetic algorithm.
   
 [Categorical Criteria](flocking_categorical.html) and 
 [Hyper Latinc Cube Sampling](flocking_sampling.html) examples

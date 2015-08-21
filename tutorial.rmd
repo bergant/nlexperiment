@@ -78,7 +78,15 @@ criteria and sampling methods.
 * [L-BFGS-B Optimization](flocking_bfgs.html) shows how to use
   optimization functions from other R packages.
 
+* [Simulated Annealing](flocking_sa.html) demonstrates optimization
+  with simulated annealing.
+
+* [Genetic Algorithm](flocking_ga.html) demonstrates optimization
+  with genetic algorithm.
+
 <aside>
 [<img src = "img/pages-pFlockOptimPlot-1.png"/>](flocking_bfgs.html)
 </aside>
+
+[<img src = "img/pages-flockGAPlot2-1.png"/>](flocking_ga.html)
 

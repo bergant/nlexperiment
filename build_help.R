@@ -130,9 +130,4 @@ build_help_index <- function(package_path, site_path) {
 }
 
 
-package_path <- "C:/Users/dare/Documents/R/GitHub/nlexperiment"
-site_path <- file.path(package_path, "pages", "help")
-
-build_help_site(package_path, site_path)
-build_help_index(package_path, site_path)
 

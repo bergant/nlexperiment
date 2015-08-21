@@ -10,7 +10,7 @@
 
 
 
-<title>Best-fit Criterion</title>
+<title>Genetic Algorithm</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -107,19 +107,24 @@ img {
 </div><!--/.navbar -->
 
 <div id="header">
-<h1 class="title">Best-fit Criterion</h1>
+<h1 class="title">Genetic Algorithm</h1>
 </div>
 
 
-<p>This example is using NetLogo Flocking model (Wilensky, 1998) to demonstrate single best-fit criterion evaluation.</p>
-<p>Use full factor design experiment as in <a href="flocking_categorical.html">Categorical Criteria Example</a>:</p>
+<p>This example is using NetLogo Flocking model (Wilensky, 1998) to demonstrate parameter fitting with genetic algorithms.</p>
 <aside>
-<p>Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flocking">NetLogo Flocking model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.</p>
-See <a href="flocking.html">Flocking</a> example for measures definitions and <a href="flocking_categorical.html">Categorical Criteria</a> example for aggregated evaluation criteria definition.
+Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flocking">NetLogo Flocking model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 </aside>
+<p>There are many R packages for solving optimization problems (see <a href="https://cran.rstudio.com/web/views/Optimization.html">CRAN Task View</a>). This example uses <strong>rbga</strong> function from <strong>genalg</strong> package. See also Thiele, Kurth &amp; Grimm (2014) chapter <a href="http://jasss.soc.surrey.ac.uk/17/3/11.html#sectionEGA">2.35 Evolutionary or genetic algorithms</a>.</p>
+<aside>
+<p>Egon Willighagen and Michel Ballings (2015). genalg: R Based Genetic Algorithm. R package version 0.2.0. <a href="http://CRAN.R-project.org/package=genalg" class="uri">http://CRAN.R-project.org/package=genalg</a></p>
+<p>Thiele, J. C., Kurth, W., &amp; Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11. <a href="http://jasss.soc.surrey.ac.uk/17/3/11.html" class="uri">http://jasss.soc.surrey.ac.uk/17/3/11.html</a></p>
+</aside>
+<p>Experiment definition is the same as in <a href="flocking_bfgs.html">L-BFGS-B Optimization</a> example:</p>
 <p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment( 
   model_file = &quot;models/Sample Models/Biology/Flocking.nlogo&quot;,
+
   setup_commands = c(&quot;setup&quot;, &quot;repeat 100 [go]&quot;),
   iterations = 5,
 
@@ -127,8 +132,8 @@ See <a href="flocking.html">Flocking</a> example for measures definitions and <a
     world_size = 50,
     population = 80,
     vision = 6,
-    min_separation = seq(from = 0, to = 4, by = 0.25),
-    max_align_turn = seq(from = 0, to = 20, by = 1.25)
+    min_separation = seq(from = 0, to = 4, by = 0.5),
+    max_align_turn = seq(from = 0, to = 20, by = 2.5)
   ),
   mapping = c(
     min_separation = &quot;minimum-separation&quot;,
@@ -146,52 +151,90 @@ See <a href="flocking.html">Flocking</a> example for measures definitions and <a
     c_mcrowding = mean(step$mean_crowding)
   ),
 
-  repetitions = 10,                        # repeat simulations 10 times
-  random_seed = 1:10,
-  
-  eval_aggregate_fun = mean                # aggregate over repetitions
+  repetitions = 10,                 # repeat simulations 10 times
+
+  eval_aggregate_fun = mean,        # aggregate over repetitions
+
+  eval_mutate = criteria(           # evaluation criterium
+    eval_value = 
+      sqrt((c_mcrowding - 8)^2 + 400*(c_converged - 1)^2)
+  )
 )</code></pre>
-<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
-<pre class="r"><code>result &lt;- nl_run(experiment, parallel = TRUE)</code></pre>
-<div id="best-fit-criterion-function" class="section level2">
-<h2>Best-fit Criterion Function</h2>
-<p>If our ideal <strong>mean crowding is around 8</strong> and <strong>convergence is near 1</strong> we can construct a function like this:</p>
-<p><span class="math">\[ value = \sqrt{(crowding - 8)^2 + 100 \times (converged - 1)^2} \]</span></p>
-<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define criterium" style="color:gray"></span></lside></p>
-<pre class="r"><code>dat &lt;- nl_get_criteria_result( 
-  result,
-  eval_value = sqrt((c_mcrowding - 8)^2 + 400*(c_converged - 1)^2)
-)</code></pre>
-<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot heatmap" style="color:gray"></span></lside></p>
-<pre class="r"><code>library(ggplot2)
-ggplot(dat,
-       aes( x = min_separation, y = max_align_turn, fill = eval_value)) +
-  geom_tile() + 
-  coord_fixed(4/20) + 
-  theme_minimal() +
-  theme(legend.position=&quot;none&quot;)</code></pre>
-<aside style="margin-top:-13em">
-<img src="img/pages-flockBestFitPlot1-1.png">
-<p class="caption">
-Heat map reveals a promissing area in the middle of parameter space.
-</p>
-</aside>
-<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot contour" style="color:gray"></span></lside></p>
-<pre class="r"><code>library(ggplot2)
-ggplot( dat, aes(x = min_separation, y = max_align_turn, z = eval_value) ) +
-  stat_contour(bins = 11, aes(color = ..level..)) +
-  coord_fixed(4/20) + theme_minimal() + theme(legend.position=&quot;none&quot;)</code></pre>
-<p>
-<img src="img/pages-flockBestFitPlot2-1.png">
+<p>In this example the <code>nl_get_eval_fun</code> function is used to get the evaluation function used instead of evaluating with <code>nl_run</code>.</p>
+<p>Note that this kind of evaluation requires started NetLogo instance. User have to take care to initialize NetLogo and load the model before optimization begins and close NetLogo when it is no longer needed (see <code>nl_eval_init</code> and <code>nl_eval_close</code> in package documentation).</p>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run genalg::rbga" style="color:gray"></span></lside></p>
+<pre class="r"><code>library(genalg) 
+
+cl &lt;- nl_eval_init(experiment, parallel = TRUE)
+
+param_range &lt;- nl_get_param_range(experiment)   
+set.seed(1) 
+
+eval_fun &lt;- nl_get_eval_fun(
+  experiment = experiment, 
+  param_names = names(param_range$lower),
+  criteria = &quot;eval_value&quot;, 
+  parallel = TRUE, 
+  cluster = cl )
+
+monitor_data &lt;- list()
+monitor &lt;- function(obj) {
+    monitor_data[[obj$iter]] &lt;&lt;- obj
+}
+
+result &lt;-
+  genalg::rbga(
+    stringMin = param_range$lower, 
+    stringMax = param_range$upper, 
+    popSize = 10, 
+    evalFunc = eval_fun,
+    iters = 9,
+    monitorFunc = monitor
+  )
+
+nl_eval_close(parallel = TRUE, cl)</code></pre>
 <aside>
+See <a href="http://www.inside-r.org/packages/cran/genalg/docs/rbga">rbga</a> documentation to set genetic algorithm parameters for your needs.
+</aside>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot evaluation progress" style="color:gray"></span></lside></p>
+<pre class="r"><code>library(genalg)
+plot(result)</code></pre>
+<p>
+<img src="img/pages-flockGAPlot1-1.png">
+<aside>
+<p class="caption">
+Genetic algorithm progressing over generations
+</p>
 </aside>
 </p>
-</div>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot results" style="color:gray"></span></lside></p>
+<pre class="r"><code>plot_monitor &lt;- function(obj) {
+  xlim = c(obj$stringMin[1], obj$stringMax[1]);
+  ylim = c(obj$stringMin[2], obj$stringMax[2]);
+  plot(obj$population, xlim=xlim, ylim=ylim, 
+       main = paste(&quot;Iteration: &quot;,obj$iter), 
+       xlab = names(param_range$lower)[1], 
+       ylab = names(param_range$lower)[2]);
+}
+
+op &lt;- par(mfrow = c(3,3))
+for(obj in monitor_data)
+  plot_monitor(obj)
+par(op)</code></pre>
+<p>
+<img src="img/pages-flockGAPlot2-1.png">
+<aside>
+<p class="caption">
+Generations in separate plots
+</p>
+</aside>
+</p>
 <div id="related" class="section level2">
 <h2>Related</h2>
-<p><a href="flocking_random_search.html">Random Search</a> demonstrate searching for optimal parameters using random search.</p>
+<p><a href="flocking_sa.html">Simulated Annealing</a> demonstrates optimization with simulated annealing.</p>
 <p><a href="flocking_bfgs.html">L-BFGS-B Optimization</a> shows how to use optimization functions from other R packages.</p>
-<p><asideclose> Get <a href="flocking_bestfit.rmd">rmarkdown source</a> of this page. </asideclose></p>
+<p><a href="flocking_random_search.html">Random Search</a> demonstrates searching for optimal parameters using random search.</p>
+<p><asideclose> Get <a href="flocking_ga.rmd">rmarkdown source</a> of this page. </asideclose></p>
 </div>
 
 

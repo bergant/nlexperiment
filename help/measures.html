@@ -93,6 +93,8 @@ img {
              <li><a href="../flocking_bestfit.html">Best-fit Criterion</a></li>
              <li><a href="../flocking_random_search.html">Random Search</a></li>
              <li><a href="../flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+             <li><a href="../flocking_sa.html">Simulated Annealing</a></li>
+             <li><a href="../flocking_ga.html">Genetic Algorithm</a></li>
           </ul>
         </li>
         <li><a href="../help/index.html">Package documentation</a></li>
@@ -132,7 +134,7 @@ measures(...)
   <h3>Examples</h3>
   <pre>
 experiment &lt;- nl_experiment(
-  model_file = "my_model.nlogo",
+  model_file = "models/Sample Models/Earth Science/Fire.nlogo",
   while_condition = "any? turtles",
   repetitions = 20,
   run_measures = measures(

@@ -93,7 +93,6 @@ img {
              <li><a href="../flocking_bestfit.html">Best-fit Criterion</a></li>
              <li><a href="../flocking_random_search.html">Random Search</a></li>
              <li><a href="../flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
-             <li><a href="../flocking_sa.html">Simulated Annealing</a></li>
              <li><a href="../flocking_ga.html">Genetic Algorithm</a></li>
           </ul>
         </li>
@@ -106,52 +105,61 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-  <table width="100%" summary="page for nl_show_views_grid">
+  <table width="100%" summary="page for nl_get_eval_fun">
     <tr>
-      <td>nl_show_views_grid</td>
+      <td>nl_get_eval_fun</td>
       <td style="text-align: right;">R Documentation</td>
     </tr>
   </table>
-  <h2>Show exported views images in a grid</h2>
+  <h2>Create evaluation function</h2>
   <h3>Description</h3>
-  <p>Show exported views images in a grid
+  <p>Returns a function object which evaluates experiment given parameter values
 </p>
   <h3>Usage</h3>
   <pre>
-nl_show_views_grid(result, x_param = NULL, y_param = NULL, img_gap = 0.03)
+nl_get_eval_fun(experiment, param_names, parallel = FALSE, cluster = NULL,
+  criteria, call_back = NULL)
 </pre>
   <h3>Arguments</h3>
   <table summary="R argblock">
     <tr valign="top">
       <td>
-        <code>result</code>
+        <code>experiment</code>
       </td>
       <td>
-        <p>Result from <code>nl_run</code> function</p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td>
-        <code>x_param</code>
-      </td>
-      <td>
-        <p>Name of parameter on x axis</p>
+        <p>Experiment object</p>
       </td>
     </tr>
     <tr valign="top">
       <td>
-        <code>y_param</code>
+        <code>param_names</code>
       </td>
       <td>
-        <p>Name of parameter on y axis</p>
+        <p>A vector of parameter names</p>
       </td>
     </tr>
     <tr valign="top">
       <td>
-        <code>img_gap</code>
+        <code>parallel</code>
       </td>
       <td>
-        <p>A gap between the images</p>
+        <p>Set TRUE to create a parallel evaluation</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>cluster</code>
+      </td>
+      <td>
+        <p>Required for parallel execution (nl_eval_init returns cluster object)</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>criteria</code>
+      </td>
+      <td>
+        <p>Which experiment evaluation criteria to be returned</p>
       </td>
     </tr>
   </table>

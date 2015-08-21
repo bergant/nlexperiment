@@ -12,5 +12,15 @@ build_pages <- function(pages_path) {
   }
 }
 
+message("Building pages...")
+
 pages_path <- "~/R/GitHub/nlexperiment/pages"
 build_pages(pages_path)
+
+message("Building help...")
+
+source(file.path(pages_path, "build_help.R"))
+package_path <- "C:/Users/dare/Documents/R/GitHub/nlexperiment"
+site_path <- file.path(package_path, "pages", "help")
+build_help_site(package_path, site_path)
+build_help_index(package_path, site_path)

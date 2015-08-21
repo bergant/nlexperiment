@@ -12,7 +12,8 @@ nlexperimentPkg <- sessionInfo(package = "nlexperiment")$otherPkgs[[1]]
 
 
 | Author:  __`r nlexperimentPkg$Author`__
-| Version: __`r nlexperimentPkg$Version`__
+| Version: __`r nlexperimentPkg$Version`__ 
+| Date:    __`r nlexperimentPkg$Date`__ 
 | License: __`r nlexperimentPkg$License`__
 | Source: https://github.com/bergant/nlexperiment
 | Issues: https://github.com/bergant/nlexperiment/issues
@@ -26,7 +27,6 @@ See links for other packages utilised to create these pages:
 
 ```{r echo=FALSE, results='asis'}
 
-
 si <- sessionInfo(
   package = c(
     "RNetLogo",
@@ -37,6 +37,7 @@ si <- sessionInfo(
     "tufterhandout",
     "tidyr",
     "tgp",
+    "genalg",
     "digest"
   )
 )

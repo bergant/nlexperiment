@@ -160,5 +160,11 @@ nl_show_patches(result2, x_param = "ratio") +
   ggplot2::scale_fill_manual(values = c("black","white"))
 ```
 
+## See also
 
+[Ants](ants.html) example demonstrates simple parameter sets 
+definition and parameter mapping.
 
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>

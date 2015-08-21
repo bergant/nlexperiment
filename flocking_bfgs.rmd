@@ -39,7 +39,7 @@ with more than a few repetitions needed to evaluate one parameter set.
 
 There are many R packages for solving optimization problems 
 (see [CRAN Task View](https://cran.rstudio.com/web/views/Optimization.html)).
-This example use **L-BFGS-B method** with standard `stats::optim` function.
+This example uses **L-BFGS-B method** with standard `stats::optim` function.
 See also Thiele, Kurth & Grimm (2014) chapter 
 [2.28 Gradient and quasi-Newton methods](http://jasss.soc.surrey.ac.uk/17/3/11.html#sectionGQNM).
 
@@ -146,6 +146,12 @@ ggplot(tr, aes(x = min_separation,  y = max_align_turn)) +
 ```
 
 ## Related
+
+[Simulated Annealing](flocking_sa.html) demonstrates optimization
+  with simulated annealing.
+
+[Genetic Algorithm](flocking_ga.html) demonstrates optimization
+  with genetic algorithm.
 
 [Random Search](flocking_random_search.html) demonstrates searching for optimal parameters
   using random search.

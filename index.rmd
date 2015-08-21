@@ -76,7 +76,7 @@ nl_show_step(result, x = "step_id", y = "percent_burned",
 
 ## Learning
 
-Start with examples in the [tutorial](tutorial.html).
+Start with examples in the __[tutorial](tutorial.html)__.
 
 For reference use R help by typing `?nlexperiment` or
 see package [documentation online](help/index.html).
