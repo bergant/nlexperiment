@@ -37,6 +37,8 @@ si <- sessionInfo(
     "tufterhandout",
     "tidyr",
     "tgp",
+    "dfoptim",
+    "GenSA",
     "genalg",
     "digest"
   )
@@ -49,7 +51,7 @@ for( p in si$otherPkgs ){
     "  + <strong>",p$Package, "</strong> ", 
     p$Version, ",",p$License, "<br/>",
     p$Title, "<br/>",
-    p$URL, "<br/>",
+    ifelse(is.null(p$URL), "", paste(p$URL, "<br/>")),
     'See description on <a href="', 
     sprintf("https://cran.rstudio.com/web/packages/%s/index.html", p$Package), 
     '">CRAN</a>',

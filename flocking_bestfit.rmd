@@ -105,7 +105,7 @@ ggplot( dat, aes(x = min_separation, y = max_align_turn, z = eval_value) ) +
 
 ## Related
 
-[Random Search](flocking_random_search.html) demonstrate searching for optimal parameters
+[Random Search](flocking_random_search.html) example demonstrates searching for optimal parameters
   using random search.
 
 [L-BFGS-B Optimization](flocking_bfgs.html) shows how to use

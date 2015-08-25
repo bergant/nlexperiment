@@ -119,6 +119,15 @@ See [GenSA package documentation](http://www.inside-r.org/packages/cran/GenSA/do
 for more information about GenSA.
 </aside>
 
+
+```{r flockSAData, title = "Result"}
+final <- setNames(data.frame(t(result$par)), names(param_range$lower))
+final$result <- result$value
+htmlTable::htmlTable(round(final,1))
+```
+
+
+
 ```{r flockSAPlot1, title = "Plot evaluation progress", fig.cap="Simulated annealing progress"}
 library(ggplot2) 
 dat <- as.data.frame(result$trace.mat)
@@ -130,13 +139,6 @@ ggplot(dat, aes(x = nb.steps, y =current.minimum)) +
   geom_step(alpha = 0.3) +
   theme_minimal() +
   ylab("Values, current minimum")
-```
-
-
-```{r flockSAData, title = "Result"}
-final <- setNames(data.frame(t(result$par)), names(param_range$lower))
-final$result <- result$value
-htmlTable::htmlTable(round(final,1))
 ```
 
 

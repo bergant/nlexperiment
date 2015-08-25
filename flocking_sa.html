@@ -93,6 +93,7 @@ img {
              <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
              <li><a href="flocking_random_search.html">Random Search</a></li>
              <li><a href="flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+             <li><a href="flocking_nm.html">Nelder-Mead Optimization</a></li>
              <li><a href="flocking_sa.html">Simulated Annealing</a></li>
              <li><a href="flocking_ga.html">Genetic Algorithm</a></li>
           </ul>
@@ -189,25 +190,6 @@ nl_eval_close(parallel = TRUE, cl)</code></pre>
 <aside>
 See <a href="http://www.inside-r.org/packages/cran/GenSA/docs/GenSA">GenSA package documentation</a> for more information about GenSA.
 </aside>
-<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot evaluation progress" style="color:gray"></span></lside></p>
-<pre class="r"><code>library(ggplot2) 
-dat &lt;- as.data.frame(result$trace.mat)
-ggplot(dat, aes(x = nb.steps, y =current.minimum)) +
-  geom_point(data = dat, 
-             aes(x = nb.steps, y = function.value), 
-             position = position_jitter(height = 0, width = 0.05),
-             alpha = 0.5)+
-  geom_step(alpha = 0.3) +
-  theme_minimal() +
-  ylab(&quot;Values, current minimum&quot;)</code></pre>
-<p>
-<img src="img/pages-flockSAPlot1-1.png">
-<aside>
-<p class="caption">
-Simulated annealing progress
-</p>
-</aside>
-</p>
 <p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Result" style="color:gray"></span></lside></p>
 <pre class="r"><code>final &lt;- setNames(data.frame(t(result$par)), names(param_range$lower))
 final$result &lt;- result$value
@@ -245,6 +227,25 @@ result
 </tr>
 </tbody>
 </table>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot evaluation progress" style="color:gray"></span></lside></p>
+<pre class="r"><code>library(ggplot2) 
+dat &lt;- as.data.frame(result$trace.mat)
+ggplot(dat, aes(x = nb.steps, y =current.minimum)) +
+  geom_point(data = dat, 
+             aes(x = nb.steps, y = function.value), 
+             position = position_jitter(height = 0, width = 0.05),
+             alpha = 0.5)+
+  geom_step(alpha = 0.3) +
+  theme_minimal() +
+  ylab(&quot;Values, current minimum&quot;)</code></pre>
+<p>
+<img src="img/pages-flockSAPlot1-1.png">
+<aside>
+<p class="caption">
+Simulated annealing progress
+</p>
+</aside>
+</p>
 <p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot results" style="color:gray"></span></lside></p>
 <pre class="r"><code>dat &lt;- trace$get()
 ggplot(dat, aes(x = min_separation, y = max_align_turn, color = result)) +

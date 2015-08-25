@@ -8,7 +8,8 @@ html {
 
 body {
   padding-top: 50px;
-  background: #fcfcfa;
+  /*background: #fcfcfa;*/
+  background: #ffffff;
   color: #333;
   margin: 1em auto 4em auto;
   position: relative;

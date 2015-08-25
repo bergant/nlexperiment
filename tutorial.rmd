@@ -68,14 +68,19 @@ criteria and sampling methods.
   and evaluate parameter space with full-factor design.
 <aside>
 [<img src = "img/pages-flockBestFitPlot1-1.png"/>](flocking_bestfit.html)
+[<img src = "img/pages-flockSampPlot1-1.png"/>](flocking_random.html)
+[<img src = "img/pages-pFlockNMPlot2-1.png"/>](flocking_nm.html)
+
 </aside>
+
 
 * [Random Search](flocking_random_search.html) demonstrate searching for optimal parameters
   using random search.
-  
-[<img src = "img/pages-flockSampPlot1-1.png"/>](flocking_random.html)
 
 * [L-BFGS-B Optimization](flocking_bfgs.html) shows how to use
+  standard optimization functions.
+
+* [Nelder-Mead Optimization](flocking_nm.html) shows how to use
   optimization functions from other R packages.
 
 * [Simulated Annealing](flocking_sa.html) demonstrates optimization
@@ -85,7 +90,6 @@ criteria and sampling methods.
   with genetic algorithm.
 
 <aside>
-[<img src = "img/pages-pFlockOptimPlot-1.png"/>](flocking_bfgs.html)
 </aside>
 
 [<img src = "img/pages-flockGAPlot2-1.png"/>](flocking_ga.html)

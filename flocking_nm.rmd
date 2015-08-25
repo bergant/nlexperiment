@@ -1,6 +1,6 @@
 
 ---
-title: "L-BFGS-B Optimization"
+title: "Nelder-Mead Optimization"
 ---
 
 ```{r ch_opt, child="include/chunk_options.rmd", cache=FALSE}
@@ -12,7 +12,7 @@ nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0")
 ```
 
 This example is using NetLogo Flocking model (Wilensky, 1998) to
-demonstrate model fitting with L-BFGS-B optimization method.
+demonstrate model fitting with Nelder-Mead optimization method.
 
 <aside>
 Wilensky, U. (1998). 
@@ -23,16 +23,17 @@ Northwestern University, Evanston, IL.
 
 There are many R packages for solving optimization problems 
 (see [CRAN Task View](https://cran.rstudio.com/web/views/Optimization.html)).
-This example uses **L-BFGS-B method** with standard `stats::optim` function.
-See also Thiele, Kurth & Grimm (2014) chapter 
-[2.28 Gradient and quasi-Newton methods](http://jasss.soc.surrey.ac.uk/17/3/11.html#sectionGQNM).
+This example uses Nelder-Mead optimization algorithm for derivative-free optimization
+implemented in `nmkb` function from __dfoptim__ package.
+
 
 <aside>
-Thiele, J. C., Kurth, W., & Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11. http://jasss.soc.surrey.ac.uk/17/3/11.html
+Ravi Varadhan, Johns Hopkins University, Hans W. Borchers and ABB Corporate Research. (2011). dfoptim:
+Derivative-free Optimization. R package version 2011.8-1. http://CRAN.R-project.org/package=dfoptim
 </aside>
 
 
-```{r flockBfgsModel, title = "Define the experiment"}
+```{r flockNMModel, title = "Define the experiment"}
 experiment <- nl_experiment( 
   model_file = "models/Sample Models/Biology/Flocking.nlogo",
 
@@ -72,6 +73,10 @@ experiment <- nl_experiment(
   )
 )
 ```
+<aside>
+Note that best-fit criteria function is defined in the experiment.
+$$ \sqrt{(crowding - 8)^2 + 800 \times (converged - 1)^2} $$
+</aside>
 
 In this example the `nl_eval_run` function is used instead of `nl_run`. 
 
@@ -89,21 +94,26 @@ Use `nl_eval_run` _parallel_ option when optimizing stochastic models
 with more than a few repetitions needed to evaluate one parameter set. 
 
 
-```{r flockBfgsOptimRun, title = "Run optim function", cache=TRUE}
+```{r flockNMOptimRun, title = "Run optim function", cache=TRUE}
+library(dfoptim)
+
 cl <- nl_eval_init(experiment, parallel = TRUE)
 trace <- nl_eval_tracer(verbose = FALSE)
 param_range <- nl_get_param_range(experiment)   
 set.seed(1) 
 
-o_result <- optim(
-  #par = param_range$upper,  
+o_result <- nmkb(
   par = (param_range$upper + param_range$lower)/2,
-  nl_eval_run, 
-    experiment = experiment, criteria = "eval_value", 
-    call_back = trace$add, parallel = TRUE, cluster = cl,
-  method = "L-BFGS-B",
-  lower = param_range$lower, upper = param_range$upper, 
-  control = list(maxit = 200, trace = 1))
+  fn = nl_eval_run, 
+    experiment = experiment, 
+    criteria = "eval_value", 
+    call_back = trace$add, 
+    parallel = TRUE, cluster = cl,
+    param_names = names(param_range$lower),
+  lower = param_range$lower, 
+  upper = param_range$upper, 
+  control = list(maxfeval = 200)
+)
 
 nl_eval_close(parallel = TRUE, cl)
 ```
@@ -116,17 +126,16 @@ This range will be used as optimization constraints in L-BFGS-B method.
 </aside>
 
 
-```{r flockBfgsGetData, title = "Optim results"}
+```{r flockNMGetData, title = "Optim results"}
 o_result
 ```
 
 
 The `trace$add` function colected every iteration of `optim`. 
 
-```{r pFlockOptimPlot, title = "Plot tracing data", dev.args = list(bg = 'transparent')}
+```{r pFlockNMPlot, title = "Plot tracing data", dev.args = list(bg = 'transparent')}
 tr <- trace$get()
 tr$current_best <- cummin(tr$result)
-
 library(ggplot2)
 ggplot(tr, aes(x = iter_id,  y = result)) +
   geom_point() +
@@ -135,7 +144,7 @@ ggplot(tr, aes(x = iter_id,  y = result)) +
 ```
 
 
-```{r pFlockOptimPlot2, title = "Plot tracing data", fig.cap="Where did `optim` look for best value?", dev.args = list(bg = 'transparent')}
+```{r pFlockNMPlot2, title = "Plot tracing data", fig.cap="Where did `optim` look for best value?", dev.args = list(bg = 'transparent')}
 library(ggplot2)
 ggplot(tr, aes(x = min_separation,  y = max_align_turn)) +
   geom_path(alpha = 0.1)+
@@ -147,9 +156,6 @@ ggplot(tr, aes(x = min_separation,  y = max_align_turn)) +
 ```
 
 ## Related
-
-[Nelder-Mead Optimization](flocking_nm.html) shows how to use
-  optimization functions from other R packages.
 
 [Simulated Annealing](flocking_sa.html) demonstrates optimization
   with simulated annealing.

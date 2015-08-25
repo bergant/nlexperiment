@@ -127,6 +127,12 @@ ggplot(dat, aes(x = eval_id, y = eval_value)) +
 [L-BFGS-B Optimization](flocking_bfgs.html) shows how to use
   optimization functions from other R packages.
 
+[Nelder-Mead Optimization](flocking_nm.html) shows how to use
+  optimization functions from other R packages.
+
+[Simulated Annealing](flocking_sa.html) demonstrates optimization
+  with simulated annealing.
+
 [Genetic Algorithm](flocking_ga.html) demonstrates optimization
   with genetic algorithm.
   

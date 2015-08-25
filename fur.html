@@ -93,6 +93,7 @@ img {
              <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
              <li><a href="flocking_random_search.html">Random Search</a></li>
              <li><a href="flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+             <li><a href="flocking_nm.html">Nelder-Mead Optimization</a></li>
              <li><a href="flocking_sa.html">Simulated Annealing</a></li>
              <li><a href="flocking_ga.html">Genetic Algorithm</a></li>
           </ul>
@@ -151,7 +152,7 @@ param_sets &lt;- transform(param_sets,
 <p><code>expand.grid</code> from R base package creates a data frame from all combinations of factors</p>
 <code>transform</code> adds new columns to the data frame as defined by expressions
 </aside>
-<p>We can use is this data frame with explicit parameter sets to define <code>param_values</code> instead of list of parameter values:</p>
+<p>Instead of list with parameter values as in previous examples, we can use this data frame with explicit parameter sets to define <code>param_values</code>:</p>
 <p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment(
   model_file = &quot;models/Sample Models/Biology/Fur.nlogo&quot;,

@@ -10,7 +10,7 @@
 
 
 
-<title>Latin Hypercube Sampling</title>
+<title>Nelder-Mead Optimization</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -108,30 +108,31 @@ img {
 </div><!--/.navbar -->
 
 <div id="header">
-<h1 class="title">Latin Hypercube Sampling</h1>
+<h1 class="title">Nelder-Mead Optimization</h1>
 </div>
 
 
-<p>This example is using NetLogo Flocking model (Wilensky, 1998) to demonstrate exploring parameter space with categorical evaluation and Latin hypercube sampling (LHS).</p>
+<p>This example is using NetLogo Flocking model (Wilensky, 1998) to demonstrate model fitting with Nelder-Mead optimization method.</p>
 <aside>
 Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flocking">NetLogo Flocking model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 </aside>
-<p>Like in <a href="flocking_categorical.html">previous example</a> we are using categorical evaluation criteria but instead of exploring parameter space with (full) factorial design we use Latin hypercube sampling method from <strong>tgp</strong> package.</p>
+<p>There are many R packages for solving optimization problems (see <a href="https://cran.rstudio.com/web/views/Optimization.html">CRAN Task View</a>). This example uses Nelder-Mead optimization algorithm for derivative-free optimization implemented in <code>nmkb</code> function from <strong>dfoptim</strong> package.</p>
+<aside>
+Ravi Varadhan, Johns Hopkins University, Hans W. Borchers and ABB Corporate Research. (2011). dfoptim: Derivative-free Optimization. R package version 2011.8-1. <a href="http://CRAN.R-project.org/package=dfoptim" class="uri">http://CRAN.R-project.org/package=dfoptim</a>
+</aside>
 <p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
-<pre class="r"><code>library(tgp)
-
-experiment &lt;- nl_experiment( 
+<pre class="r"><code>experiment &lt;- nl_experiment( 
   model_file = &quot;models/Sample Models/Biology/Flocking.nlogo&quot;,
+
   setup_commands = c(&quot;setup&quot;, &quot;repeat 100 [go]&quot;),
   iterations = 5,
 
-  param_values = nl_param_lhs(
-    n = 100, 
+  param_values = list(
     world_size = 50,
     population = 80,
     vision = 6,
-    min_separation = c(0, 4),
-    max_align_turn = c(0, 20)
+    min_separation = seq(from = 0, to = 4, by = 0.5),
+    max_align_turn = seq(from = 0, to = 20, by = 2.5)
   ),
   mapping = c(
     min_separation = &quot;minimum-separation&quot;,
@@ -149,47 +150,103 @@ experiment &lt;- nl_experiment(
     c_mcrowding = mean(step$mean_crowding)
   ),
 
-  repetitions = 10,                        # repeat simulations 10 times
-  random_seed = 1:10,
-  
-  eval_aggregate_fun = mean                # aggregate over repetitions
-)  </code></pre>
-<aside>
-<p>Function <code>nl_param_lhs</code> is using <code>lhs</code> function from <strong>tgp</strong> package to create random parameter sets. Argument <code>n</code> defines the size of the LH sample.</p>
-Instead of using <code>nl_param_lhs</code> one can put any data frame in param_values. The columns of a data frame are interpreted as parameter names and rows should represent parameter sets.
-</aside>
-<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run experiment" style="color:gray"></span></lside></p>
-<pre class="r"><code>result4 &lt;- nl_run(experiment, parallel = TRUE)</code></pre>
-<p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Add categorical criteria" style="color:gray"></span></lside></p>
-<pre class="r"><code>dat &lt;- nl_get_criteria_result( 
-  result4,
-  are_grouped = c_mcrowding &gt;= 5 &amp; c_mcrowding &lt; 11,
-  are_aligned = c_converged &gt; 0.7
+  repetitions = 10,                 # repeat simulations 10 times
+
+  eval_aggregate_fun = mean,        # aggregate over repetitions
+
+  eval_mutate = criteria(           # evaluation criterium
+    eval_value = 
+      sqrt((c_mcrowding - 8)^2 + 400*(c_converged - 1)^2)
+  )
 )</code></pre>
 <aside>
-See <a href="flocking_categorical.html">previous example</a> for categorical criteria definition.
+Note that best-fit criteria function is defined in the experiment. <span class="math">\[ \sqrt{(crowding - 8)^2 + 800 \times (converged - 1)^2} \]</span>
 </aside>
-<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot the results" style="color:gray"></span></lside></p>
-<pre class="r"><code>library(ggplot2)
-ggplot( dat, aes(x = min_separation, y = max_align_turn) ) +
+<p>In this example the <code>nl_eval_run</code> function is used instead of <code>nl_run</code>.</p>
+<p>While <code>nl_run</code> expects predefined parameter sets, <code>nl_run_eval</code> accepts a single parameter set and returns a numeric value. That makes it compatible with optimization functions from different R packages where next parameter combination depends on the result of previous simulation.</p>
+<p>But note that <code>nl_eval_run</code> requires started NetLogo instance. User have to take care to initialize NetLogo and load the model before optimization begins and close NetLogo when it is no longer needed (see <code>nl_eval_init</code> and <code>nl_eval_close</code> in package documentation).</p>
+<p>Use <code>nl_eval_run</code> <em>parallel</em> option when optimizing stochastic models with more than a few repetitions needed to evaluate one parameter set.</p>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run optim function" style="color:gray"></span></lside></p>
+<pre class="r"><code>library(dfoptim)
+
+cl &lt;- nl_eval_init(experiment, parallel = TRUE)
+trace &lt;- nl_eval_tracer(verbose = FALSE)
+param_range &lt;- nl_get_param_range(experiment)   
+set.seed(1) 
+
+o_result &lt;- nmkb(
+  par = (param_range$upper + param_range$lower)/2,
+  fn = nl_eval_run, 
+    experiment = experiment, 
+    criteria = &quot;eval_value&quot;, 
+    call_back = trace$add, 
+    parallel = TRUE, cluster = cl,
+    param_names = names(param_range$lower),
+  lower = param_range$lower, 
+  upper = param_range$upper, 
+  control = list(maxfeval = 200)
+)
+
+nl_eval_close(parallel = TRUE, cl)</code></pre>
+<aside>
+<p>Function <code>nl_eval_init</code> starts processes with NetLogo instance</p>
+Function <code>nl_get_param_range</code> returns parameters’ lower and upper values as they are defined in experiment object. This range will be used as optimization constraints in L-BFGS-B method.
+</aside>
+<p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Optim results" style="color:gray"></span></lside></p>
+<pre class="r"><code>o_result
+#&gt; $par
+#&gt; [1]  2.081577 14.876627
+#&gt; 
+#&gt; $value
+#&gt; [1] 3.602917
+#&gt; 
+#&gt; $feval
+#&gt; [1] 112
+#&gt; 
+#&gt; $restarts
+#&gt; [1] 0
+#&gt; 
+#&gt; $convergence
+#&gt; [1] 0
+#&gt; 
+#&gt; $message
+#&gt; [1] &quot;Successful convergence&quot;</code></pre>
+<p>The <code>trace$add</code> function colected every iteration of <code>optim</code>.</p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot tracing data" style="color:gray"></span></lside></p>
+<pre class="r"><code>tr &lt;- trace$get()
+tr$current_best &lt;- cummin(tr$result)
+library(ggplot2)
+ggplot(tr, aes(x = iter_id,  y = result)) +
   geom_point() +
-  geom_point(data=subset(dat,are_aligned), color=&quot;red&quot;,size=5,shape=2) +
-  geom_point(data=subset(dat,are_grouped), color=&quot;blue&quot;,size=5,shape=3) +
-  coord_equal(ratio = 1/5) +
+  geom_step(aes(y = current_best), alpha  =0.3) +
   theme_minimal()</code></pre>
 <p>
-<img src="img/pages-flockSampPlot-1.png">
+<img src="img/pages-pFlockNMPlot-1.png">
+<aside>
+</aside>
+</p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot tracing data" style="color:gray"></span></lside></p>
+<pre class="r"><code>library(ggplot2)
+ggplot(tr, aes(x = min_separation,  y = max_align_turn)) +
+  geom_path(alpha = 0.1)+
+  geom_point(shape = 4, size = 5, alpha = 0.3) +
+  scale_x_continuous(limits = c(0, 4)) +
+  scale_y_continuous(limits = c(0, 20)) +
+  theme_minimal()</code></pre>
+<p>
+<img src="img/pages-pFlockNMPlot2-1.png">
 <aside>
 <p class="caption">
-Categorical criteria “aligned” (red triangle) and “grouped” (blue cross). Black dots are parameter sets
+Where did <code>optim</code> look for best value?
 </p>
 </aside>
 </p>
 <div id="related" class="section level2">
 <h2>Related</h2>
-<p><a href="flocking_bestfit.html">Best-fit Criterion</a> shows how to define single criterion evaluation expression and evaluate parameter space with full-factor design.</p>
-<p><a href="flocking_random_search.html">Random Search</a> demonstrate searching for optimal parameters using random search.</p>
-<p><asideclose> Get <a href="flocking_sampling.rmd">rmarkdown source</a> of this page. </asideclose></p>
+<p><a href="flocking_sa.html">Simulated Annealing</a> demonstrates optimization with simulated annealing.</p>
+<p><a href="flocking_ga.html">Genetic Algorithm</a> demonstrates optimization with genetic algorithm.</p>
+<p><a href="flocking_random_search.html">Random Search</a> demonstrates searching for optimal parameters using random search.</p>
+<p><asideclose> Get <a href="flocking_nm.rmd">rmarkdown source</a> of this page. </asideclose></p>
 </div>
 
 

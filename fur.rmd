@@ -67,8 +67,9 @@ param_sets <- transform(param_sets,
 `transform` adds new columns to the data frame as defined by expressions
 </aside>
 
-We can use is this data frame with explicit parameter sets 
-to define `param_values` instead of list of parameter values:
+Instead of list with parameter values as in previous examples, 
+we can use this data frame with explicit parameter sets 
+to define `param_values`:
 
 ```{r furModel, title = "Define the experiment"}
 experiment <- nl_experiment(
