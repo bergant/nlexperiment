@@ -66,11 +66,11 @@ nl_show_step(result, x = "step_id", y = "percent_burned",
 
 -->
 
-## Getting started
+## Getting Started
 
 Start with examples in the __[tutorial](tutorial.html)__.
 
-## Creating documents
+## Creating Documents
 
 All examples in the [tutorial](tutorial.html) also link to
 their rmarkdown source file (follow the last side note on each sample page).
