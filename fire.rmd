@@ -11,12 +11,12 @@ how to define and run experiments,
 export view images and
 get observations based on measures. 
 
-<aside_bib>
+<aside>
 Wilensky, U. (1997). NetLogo Fire model. 
 http://ccl.northwestern.edu/netlogo/models/Fire. 
 Center for Connected Learning and Computer-Based Modeling, 
 Northwestern University, Evanston, IL.
-</aside_bib>
+</aside>
 
 
 ```{r Initialize, title = "Setup"}
