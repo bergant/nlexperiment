@@ -19,14 +19,13 @@ It uses __RNetLogo__<sup>[2](#fn2)</sup> as an interface to NetLogo environment.
 ## Documentation and Examples
 See __[project website](http://bergant.github.io/nlexperiment/)__ for more information
 or go through __[examples](http://bergant.github.io/nlexperiment/tutorial.html)__ to 
-learn how to create experiments.
+learn how to define and run experiments.
 
 
 ## Installation
 
 
 ```r
-install.packages("RNetLogo")
 devtools::install_github("bergant/nlexperiment")
 ```
 
