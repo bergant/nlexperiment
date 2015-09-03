@@ -1,4 +1,7 @@
-#system("R CMD Rd2pdf C:/Users/dare/Documents/R/GitHub/nlexperiment")
+
+
+
+
 build_topic <- function(rd_file, site_path, header, footer) {
 
   out_file <- file.path(site_path,
@@ -31,6 +34,11 @@ get_header <- function(package_path, sample_file = "ants.html") {
     ifelse(grepl("http", header),
            header,
            gsub("<script src=\"libs/", "<script src=\"../libs/", header ))
+
+  header <-
+    ifelse(grepl("<title>", header),
+           gsub("<title>Ants</title>", "<title>Help</title>", header ),
+           header)
 
   header
 }

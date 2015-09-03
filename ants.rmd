@@ -13,7 +13,7 @@ nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/")
 ```
 
 
-The following example is using Ants model (Wilensky 1997) to show 
+The following example is using NetLogo Ants model (Wilensky 1997) to show 
 simple parameter sets definition and parameter mapping.
 
 <aside>
@@ -23,12 +23,11 @@ Center for Connected Learning and Computer-Based Modeling,
 Northwestern University, Evanston, IL.
 </aside>
 
-When parameters (`param_values`) are defined as a list of value vecors, parameter sets are
-constructed as combination of all possible parameter value combination 
+When parameters (`param_values`) are defined as a list of value vectors, 
+parameter sets are expanded to all possible parameter value combination 
 what is called "full factorial design". 
 In practice it is feasible with few parameters and small number of factors
 for each parameter.
-See [sampling methods](sampling.html) for advanced usage of `param_values`.
 
 The `mapping` element takes care of mapping between R names and
 NetLogo variables. 
@@ -110,9 +109,11 @@ ggplot(dat, aes(x = step_id, y = value, color = pile) ) +
 ```
 
 ## Related
-See [Fur Patterns](fur.html) example to see
-explicit definition of parameter sets and 
-parameter mapping when parameter space is transformed. 
+[Fur Patterns](fur.html) example shows how to
+define parameter sets explicitly with a data frame. 
+
+[Hyper Latinc Cube Sampling](flocking_sampling.html) examples
+demontrate how to explore parameter space with sampling methods.
 
 <asideclose>
 Get [rmarkdown source](`r knitr::current_input()`) of this page.

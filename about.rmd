@@ -1,5 +1,5 @@
 ---
-title: "About **<nl>nl</nl><experiment>experiment</experiment>**"
+title: "Authors"
 ---
 
 
@@ -15,15 +15,15 @@ nlexperimentPkg <- sessionInfo(package = "nlexperiment")$otherPkgs[[1]]
 | Version: __`r nlexperimentPkg$Version`__ 
 | Date:    __`r nlexperimentPkg$Date`__ 
 | License: __`r nlexperimentPkg$License`__
-| Source: https://github.com/bergant/nlexperiment
-| Issues: https://github.com/bergant/nlexperiment/issues
+| URL:     `r nlexperimentPkg$URL`
+| Issues:  `r nlexperimentPkg$BugReports`
 
 For [NetLogo](http://ccl.northwestern.edu/netlogo) see their
 [copyright information](http://ccl.northwestern.edu/netlogo/docs/copyright.html).
 
 Authors of NetLogo models used in examples are referenced in examples.
 
-See links for other packages utilised to create these pages:
+Other packages utilised to create these pages:
 
 ```{r echo=FALSE, results='asis'}
 

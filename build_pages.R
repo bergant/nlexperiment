@@ -24,3 +24,8 @@ package_path <- "C:/Users/dare/Documents/R/GitHub/nlexperiment"
 site_path <- file.path(package_path, "pages", "help")
 build_help_site(package_path, site_path)
 build_help_index(package_path, site_path)
+
+.pwd <- setwd(site_path)
+unlink("nlexperiment.pdf")
+system("R CMD Rd2pdf C:/Users/dare/Documents/R/GitHub/nlexperiment")
+setwd(.pwd)

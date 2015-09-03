@@ -10,7 +10,7 @@
 
 
 
-<title>Ants</title>
+<title>Help</title>
 
 <script src="../libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -221,15 +221,81 @@ cluster object)</p>
     </tr>
   </table>
   <h3>Details</h3>
-  <p>Use when parameters depend on previous evaluation (like in
-parameter fitting / callibration / optimization methods).
-It can use the same experiment object as <code>nl_run</code> function
-where evaluation criteria should be defined
+  <p>Use <code>nl_eval_run</code> when parameter set depend on previous evaluation
+(parameter fitting / callibration / optimization methods).
+It can use the same experiment object as <code>nl_run</code> function.
+Evaluation criteria should be defined.
 (see <code>nl_experiment</code> or <code>nl_set_measures</code>).
 </p>
+  <h3>Examples</h3>
+  <pre>
+## Not run: 
+
+  experiment &lt;- nl_experiment(
+    model_file = "models/Sample Models/Biology/Flocking.nlogo",
+
+    setup_commands = c("setup", "repeat 100 [go]"),
+    iterations = 5,
+
+    param_values = list(
+      world_size = 50,
+      population = 80,
+      vision = 6,
+      min_separation = seq(from = 0, to = 4, by = 0.5),
+      max_align_turn = seq(from = 0, to = 20, by = 2.5)
+    ),
+    mapping = c(
+      min_separation = "minimum-separation",
+      max_align_turn = "max-align-turn"),
+
+    step_measures = measures(
+      converged = "1 -
+      (standard-deviation [dx] of turtles +
+      standard-deviation [dy] of turtles) / 2",
+      mean_crowding =
+        "mean [count flockmates + 1] of turtles"
+    ),
+    eval_criteria = criteria(
+      c_converged = mean(step$converged),
+      c_mcrowding = mean(step$mean_crowding)
+    ),
+
+    repetitions = 10,                 # repeat simulations 10 times
+
+    eval_aggregate_fun = mean,        # aggregate over repetitions
+
+    eval_mutate = criteria(           # evaluation criterium
+      eval_value =
+        sqrt((c_mcrowding - 8)^2 + 400*(c_converged - 1)^2)
+    )
+ )
+
+ library(dfoptim)
+
+ cl &lt;- nl_eval_init(experiment, parallel = TRUE)
+ trace &lt;- nl_eval_tracer(verbose = FALSE)
+ param_range &lt;- nl_get_param_range(experiment)
+ set.seed(1)
+
+ o_result &lt;- nmkb(
+   par = (param_range$upper + param_range$lower)/2,
+   fn = nl_eval_run,
+     experiment = experiment,
+     criteria = "eval_value",
+     call_back = trace$add,
+     parallel = TRUE, cluster = cl,
+     param_names = names(param_range$lower),
+   lower = param_range$lower,
+   upper = param_range$upper,
+   control = list(maxfeval = 200)
+ )
+ nl_eval_close(parallel = TRUE, cl)
+
+## End(Not run)
+</pre>
 </body>
 <footer>
-  <a href="../about.html">About</a> |
+  <a href="../about.html">Authors</a> |
   View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
   Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
 </footer>

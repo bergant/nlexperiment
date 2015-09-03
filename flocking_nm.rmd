@@ -131,7 +131,7 @@ o_result
 ```
 
 
-The `trace$add` function colected every iteration of `optim`. 
+The `trace$add` function colected every iteration of `nmkb`. 
 
 ```{r pFlockNMPlot, title = "Plot tracing data", dev.args = list(bg = 'transparent')}
 tr <- trace$get()
@@ -144,7 +144,7 @@ ggplot(tr, aes(x = iter_id,  y = result)) +
 ```
 
 
-```{r pFlockNMPlot2, title = "Plot tracing data", fig.cap="Where did `optim` look for best value?", dev.args = list(bg = 'transparent')}
+```{r pFlockNMPlot2, title = "Plot tracing data", fig.cap="Where did `nmkb` look for best value?", dev.args = list(bg = 'transparent')}
 library(ggplot2)
 ggplot(tr, aes(x = min_separation,  y = max_align_turn)) +
   geom_path(alpha = 0.1)+

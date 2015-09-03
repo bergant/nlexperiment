@@ -6,36 +6,27 @@ title: "**<nl>nl</nl><experiment>experiment</experiment>**"
 ```
 
 
-R package for __exploration__ of  **NetLogo**^1^ agent based models.
+<experiment>__R package for exploration of  NetLogo^1^ agent based models.__</experiment>
 <asideclose>
 ^1^ Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 </asideclose>
 
-It provides functions to
-define a complete __experiment__ with parameter sets, measures and run options
-in __concise__ structure. 
-The cycle of experiment definition, data analysis, visualisations and
-parameter fitting can be easily turned 
-into __readable__ and __reproducible__ documents.
-
-
-__RNetLogo__ package^2^ is used as an interface to NetLogo environment.
-<asideclose>
-^2^ Jan C. Thiele (2014). R Marries NetLogo: Introduction to the RNetLogo Package. Journal
-of Statistical Software, 58(2), 1-41. URL http://www.jstatsoft.org/v58/i02/.
-</asideclose>
+A tool for NetLogo experiment definition, 
+  exploring simulation results and model optimization.
+  Makes it easy to turn the cycle of experiment definition, 
+  data analysis, visualisations and
+  parameter fitting into readable and reproducible documents.
 
 ## Installation
 ```{r eval=FALSE}
-install.packages("RNetLogo")
 devtools::install_github("bergant/nlexperiment")
 ```
-
+<!--
 ## Example
-Experiment with NetLogo Fire model^3^.
+Experiment with NetLogo Fire model^2^.
 
 <aside>
-^3^ Wilensky, U. (1997). 
+^2^ Wilensky, U. (1997). 
 [NetLogo Fire model](http://ccl.northwestern.edu/netlogo/models/Fire). 
 Center for Connected Learning and Computer-Based Modeling, 
 Northwestern University, Evanston, IL.
@@ -73,35 +64,42 @@ nl_show_step(result, x = "step_id", y = "percent_burned",
              x_param = "density")
 ```
 
+-->
 
-## Learning
+## Getting started
 
 Start with examples in the __[tutorial](tutorial.html)__.
 
-For reference use R help by typing `?nlexperiment` or
-see package [documentation online](help/index.html).
+## Creating documents
 
-To learn how to create documents from R code see
-[R Markdown — Dynamic Documents for R](http://rmarkdown.rstudio.com/)
-and the 
-rmarkdown [source files](https://github.com/bergant/nlexperiment/tree/gh-pages) of the 
-nlexperiment examples.
+All examples in the [tutorial](tutorial.html) also link to
+their rmarkdown source file (follow the last side note on each sample page).
+To learn more about creating documents with R see
+[R Markdown page](http://rmarkdown.rstudio.com/).
+
+## Package Documentation
+
+For reference use R help, download documentation in [pdf](help/nlexperiment.pdf)
+or use package [documentation online](help/index.html).
+
 
 ## Related
-Links to related resources:
 
-nlexperiment requires __RNetLogo__ to connect to NetLogo
-https://cran.r-project.org/web/packages/RNetLogo/index.html
+__<nl>nl</nl><experiment>experiment</experiment>__ requires [RNetLogo](http://rnetlogo.r-forge.r-project.org/) (Thiele 2014) to connect to NetLogo.
+See also [Agent Based Models and RNetLogo](http://blog.revolutionanalytics.com/2014/07/agent-based-models-and-rnetlogo.html)
+blog from Joseph Rickert.
 
 <aside>
 Jan C. Thiele (2014). R Marries NetLogo: Introduction to the RNetLogo Package. Journal
 of Statistical Software, 58(2), 1-41. URL http://www.jstatsoft.org/v58/i02/.
 </aside> 
 
-Basic ideas and principles of NetLogo experiment definition is taken from
-  the NetLogo's **Behavior Space** 
-  http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html 
-  and **BehaviorSearch** http://www.behaviorsearch.org/
+Basic ideas and principles of NetLogo experiment definition are taken from
+  the NetLogo's 
+  [Behavior Space](http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html)
+  (Wilensky & Shargel 2002)
+  and [BehaviorSearch](http://www.behaviorsearch.org/) software
+  (Stonedahl 2010). 
 
 <aside>
 Wilensky, U., & Shargel, B. (2002). 
@@ -114,19 +112,15 @@ Center for Connected Learning and Computer Based Modeling,
 Northwestern University, Evanston, IL.  (2010)
 
 Thiele, J. C., Kurth, W., & Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11. http://jasss.soc.surrey.ac.uk/17/3/11.html
+
+
 </aside>
 
-The parallel implementation of `nl_run` function was inspired by
-  [RNetLogo vignette](https://cran.rstudio.com/web/packages/RNetLogo/vignettes/parallelProcessing.pdf)
 
-Some examples in the tutorial follow examples and methods from Thiele, 
-  Kurth & Grimm (2014) article and its 
-  [Supplementary Material](http://sourceforge.net/projects/calibrationsensitivityanalysis/)
+Some examples in the [tutorial](tutorial.html) follow a RNetLogo Cookbook from Thiele, 
+  Kurth & Grimm (2014) and its 
+  [Supplementary Material](http://sourceforge.net/projects/calibrationsensitivityanalysis/).
 
-This site was created with __knitr__ and __markdown__ packages
-  as proposed in http://rmarkdown.rstudio.com/html_document_format.html
 
-Plots were created with __ggplot2__ 
-  (http://ggplot2.org) and
-  __igraph__ (http://igraph.org/r/)
+
 

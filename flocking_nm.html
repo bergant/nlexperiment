@@ -211,7 +211,7 @@ Function <code>nl_get_param_range</code> returns parameters’ lower and upper v
 #&gt; 
 #&gt; $message
 #&gt; [1] &quot;Successful convergence&quot;</code></pre>
-<p>The <code>trace$add</code> function colected every iteration of <code>optim</code>.</p>
+<p>The <code>trace$add</code> function colected every iteration of <code>nmkb</code>.</p>
 <p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot tracing data" style="color:gray"></span></lside></p>
 <pre class="r"><code>tr &lt;- trace$get()
 tr$current_best &lt;- cummin(tr$result)
@@ -237,7 +237,7 @@ ggplot(tr, aes(x = min_separation,  y = max_align_turn)) +
 <img src="img/pages-pFlockNMPlot2-1.png">
 <aside>
 <p class="caption">
-Where did <code>optim</code> look for best value?
+Where did <code>nmkb</code> look for best value?
 </p>
 </aside>
 </p>
@@ -251,7 +251,7 @@ Where did <code>optim</code> look for best value?
 
 
 <footer>
-  <a href="about.html">About</a> |
+  <a href="about.html">Authors</a> |
   View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
   Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
 </footer>
