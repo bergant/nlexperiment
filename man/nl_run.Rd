@@ -22,8 +22,7 @@ If not defined all available processors will be used}
 }
 \value{
 Returns an object of class \code{nl_result}.
-  It is a list containing the following components:
-  and/or for each run, parameter sets, repetitions and export options.
+  It is a list containing at most the following components:
   \item{ step }{a data frame with observations based on temporal (step) measures.
     It includes at least
     param_set_id (id of parameter set),
@@ -39,7 +38,7 @@ Returns an object of class \code{nl_result}.
     after each simulation run }
   \item{ agents_before }{a data frame with observations based on agents
     before each simulation run}
-  \item{ patches_after }{a data frame with observations based on paatches
+  \item{ patches_after }{a data frame with observations based on patches
     after each simulation run }
   \item{ patches_before }{a data frame with observations based on patches
     before each simulation run}

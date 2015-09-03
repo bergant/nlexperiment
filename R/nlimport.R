@@ -22,6 +22,7 @@ nl_import_sliders <- function(experiment, max_values = 20) {
   interface <- nlogo[[1]][2]
   widgets <- strsplit(interface, "\n\n")[[1]]
   sliders <- widgets[substring(widgets, 1, 6) == "SLIDER"]
+  switches <- widgets[substring(widgets, 1, 6) == "SWITCH"]
 
   slider_values <-
     do.call(rbind,
@@ -47,9 +48,22 @@ nl_import_sliders <- function(experiment, max_values = 20) {
 
   mapping <- setNames(slider_values$name, names(param_values))
 
+  switches_values <-
+    do.call(rbind,
+            lapply( strsplit(switches, "\n"), function(x) {
+              x <- x[-1]
+              data.frame(
+                name = x[6],
+                def = 1 - as.numeric(x[7]),
+                stringsAsFactors = FALSE)
+            })
+    )
+
   list(
     sliders = slider_values,
     param_values = param_values,
-    mapping = mapping)
+    mapping = mapping,
+    switches = switches_values
+  )
 }
 

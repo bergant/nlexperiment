@@ -56,10 +56,74 @@ Function \code{nl_get_eval_fun} returns a function
   additional parameters.
 }
 \details{
-Use when parameters depend on previous evaluation (like in
-  parameter fitting / callibration / optimization methods).
-  It can use the same experiment object as \code{nl_run} function
-  where evaluation criteria should be defined
+Use \code{nl_eval_run} when parameter set depend on previous evaluation
+  (parameter fitting / callibration / optimization methods).
+  It can use the same experiment object as \code{nl_run} function.
+  Evaluation criteria should be defined.
   (see \code{\link{nl_experiment}} or \code{\link{nl_set_measures}}).
+}
+\examples{
+\dontrun{
+
+  experiment <- nl_experiment(
+    model_file = "models/Sample Models/Biology/Flocking.nlogo",
+
+    setup_commands = c("setup", "repeat 100 [go]"),
+    iterations = 5,
+
+    param_values = list(
+      world_size = 50,
+      population = 80,
+      vision = 6,
+      min_separation = seq(from = 0, to = 4, by = 0.5),
+      max_align_turn = seq(from = 0, to = 20, by = 2.5)
+    ),
+    mapping = c(
+      min_separation = "minimum-separation",
+      max_align_turn = "max-align-turn"),
+
+    step_measures = measures(
+      converged = "1 -
+      (standard-deviation [dx] of turtles +
+      standard-deviation [dy] of turtles) / 2",
+      mean_crowding =
+        "mean [count flockmates + 1] of turtles"
+    ),
+    eval_criteria = criteria(
+      c_converged = mean(step$converged),
+      c_mcrowding = mean(step$mean_crowding)
+    ),
+
+    repetitions = 10,                 # repeat simulations 10 times
+
+    eval_aggregate_fun = mean,        # aggregate over repetitions
+
+    eval_mutate = criteria(           # evaluation criterium
+      eval_value =
+        sqrt((c_mcrowding - 8)^2 + 400*(c_converged - 1)^2)
+    )
+ )
+
+ library(dfoptim)
+
+ cl <- nl_eval_init(experiment, parallel = TRUE)
+ trace <- nl_eval_tracer(verbose = FALSE)
+ param_range <- nl_get_param_range(experiment)
+ set.seed(1)
+
+ o_result <- nmkb(
+   par = (param_range$upper + param_range$lower)/2,
+   fn = nl_eval_run,
+     experiment = experiment,
+     criteria = "eval_value",
+     call_back = trace$add,
+     parallel = TRUE, cluster = cl,
+     param_names = names(param_range$lower),
+   lower = param_range$lower,
+   upper = param_range$upper,
+   control = list(maxfeval = 200)
+ )
+ nl_eval_close(parallel = TRUE, cl)
+}
 }
 

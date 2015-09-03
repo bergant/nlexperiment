@@ -14,4 +14,40 @@ nl_param_lhs(n, ...)
 \description{
 Parameter sets are created with \code{lhs} function from \pkg{tgp} package
 }
+\examples{
+experiment <- nl_experiment(
+  model_file = "models/Sample Models/Biology/Flocking.nlogo",
+  setup_commands = c("setup", "repeat 100 [go]"),
+  iterations = 5,
+
+  param_values = nl_param_lhs(
+    n = 100,
+    world_size = 50,
+    population = 80,
+    vision = 6,
+    min_separation = c(0, 4),
+    max_align_turn = c(0, 20)
+  ),
+  mapping = c(
+    min_separation = "minimum-separation",
+    max_align_turn = "max-align-turn"),
+
+  step_measures = measures(
+    converged = "1 -
+    (standard-deviation [dx] of turtles +
+    standard-deviation [dy] of turtles) / 2",
+    mean_crowding =
+      "mean [count flockmates + 1] of turtles"
+  ),
+  eval_criteria = criteria(
+    c_converged = mean(step$converged),
+    c_mcrowding = mean(step$mean_crowding)
+  ),
+
+  repetitions = 10,                        # repeat simulations 10 times
+  random_seed = 1:10,
+
+  eval_aggregate_fun = mean                # aggregate over repetitions
+)
+}
 

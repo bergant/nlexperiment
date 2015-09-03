@@ -9,11 +9,11 @@
 Exploration of NetLogo (Wilensky 1999) agent based models.
 }
 \details{
-Provides functions to define a complete experiment with parameter sets,
-measures and run options in concise structure.
-The cycle of experiment definition, data analysis, visualisations and
-parameter fitting can be easily turned into
-readable and reproducible documents.
+A tool for NetLogo experiment definition,
+  exploring simulation results and model optimization.
+  Makes it easy to turn the cycle of experiment definition,
+  data analysis, visualisations and
+  parameter fitting into readable and reproducible documents.
 
 RNetLogo package (Thiele 2014) is used as an interface to NetLogo environment.
 
@@ -49,8 +49,7 @@ nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.1.0/")
 
 # Create NetLogo experiment of Net Logo Fire model
 experiment <- nl_experiment(
-  model_file = file.path(nl_netlogo_path(),
-      "models/Sample Models/Earth Science/Fire.nlogo")
+  model_file = "models/Sample Models/Earth Science/Fire.nlogo",
   while_condition = "any? turtles",
   repetitions = 10,
   run_measures = measures(

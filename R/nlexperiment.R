@@ -3,11 +3,11 @@
 #' Exploration of NetLogo (Wilensky 1999) agent based models.
 #'
 #' @details
-#' Provides functions to define a complete experiment with parameter sets,
-#' measures and run options in concise structure.
-#' The cycle of experiment definition, data analysis, visualisations and
-#' parameter fitting can be easily turned into
-#' readable and reproducible documents.
+#' A tool for NetLogo experiment definition,
+#'   exploring simulation results and model optimization.
+#'   Makes it easy to turn the cycle of experiment definition,
+#'   data analysis, visualisations and
+#'   parameter fitting into readable and reproducible documents.
 #'
 #' RNetLogo package (Thiele 2014) is used as an interface to NetLogo environment.
 #'
@@ -58,8 +58,7 @@
 #'
 #' # Create NetLogo experiment of Net Logo Fire model
 #' experiment <- nl_experiment(
-#'   model_file = file.path(nl_netlogo_path(),
-#'       "models/Sample Models/Earth Science/Fire.nlogo")
+#'   model_file = "models/Sample Models/Earth Science/Fire.nlogo",
 #'   while_condition = "any? turtles",
 #'   repetitions = 10,
 #'   run_measures = measures(
@@ -109,8 +108,7 @@ nl_netlogo_path <- function(nl_path = NULL) {
 #' @details Setting export path is optional. If not set, running experiments
 #'   with export options (view images and worlds) will create "export"
 #'   folder in working directory.
-#'   Option is defined per session. When R session is restarded
-#'   and nlexperiment loaded, the export path is empty.
+#'   Option is defined per session.
 #' @export
 nl_export_path <- function(export_path = NULL) {
   if(missing(export_path)) {
@@ -168,7 +166,7 @@ nl_export_path <- function(export_path = NULL) {
 #'   the experiment with `nl_run` function.
 #' @examples
 #' experiment <- nl_experiment(
-#'   model_file = "my_model.nlogo",
+#'   model_file = "models/Sample Models/Earth Science/Fire.nlogo",
 #'   while_condition = "any? turtles",
 #'   repetitions = 20,
 #'   run_measures = measures(
@@ -307,6 +305,8 @@ criteria <- function(...) {
 #' @export
 #' @keywords internal
 agent_set <- function(vars, agents) {
+  if(is.null(names(vars))) names(vars) <- vars
+  names(vars) <- ifelse( names(vars) == "", vars, names(vars))
   list(vars = vars, agents = agents)
 }
 
@@ -588,6 +588,41 @@ nl_get_param_range <- function(experiment, diff_only = TRUE, as.data.frame = FAL
 #' @param n Number of parameter sets
 #' @param ... Named list of parameter ranges (numeric vectors)
 #' @export
+#' @examples
+#' experiment <- nl_experiment(
+#'   model_file = "models/Sample Models/Biology/Flocking.nlogo",
+#'   setup_commands = c("setup", "repeat 100 [go]"),
+#'   iterations = 5,
+#'
+#'   param_values = nl_param_lhs(
+#'     n = 100,
+#'     world_size = 50,
+#'     population = 80,
+#'     vision = 6,
+#'     min_separation = c(0, 4),
+#'     max_align_turn = c(0, 20)
+#'   ),
+#'   mapping = c(
+#'     min_separation = "minimum-separation",
+#'     max_align_turn = "max-align-turn"),
+#'
+#'   step_measures = measures(
+#'     converged = "1 -
+#'     (standard-deviation [dx] of turtles +
+#'     standard-deviation [dy] of turtles) / 2",
+#'     mean_crowding =
+#'       "mean [count flockmates + 1] of turtles"
+#'   ),
+#'   eval_criteria = criteria(
+#'     c_converged = mean(step$converged),
+#'     c_mcrowding = mean(step$mean_crowding)
+#'   ),
+#'
+#'   repetitions = 10,                        # repeat simulations 10 times
+#'   random_seed = 1:10,
+#'
+#'   eval_aggregate_fun = mean                # aggregate over repetitions
+#' )
 nl_param_lhs <- function(n, ...) {
 
   if( !requireNamespace("tgp", quietly = TRUE)) {
