@@ -1,6 +1,5 @@
 ## Getting Started
-To learn how to define and run experiments take a quick tour through the 
-following examples.
+
 
 [Fire Experiment](fire.html) example demonstrates 
 simple experiment definition with parameters and measures. 
