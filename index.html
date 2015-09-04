@@ -120,43 +120,36 @@ img {
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting Started</h2>
-<ul>
-<li><a href="fire.html">Fire Experiment</a> demonstrates simple experiment definition, exporting views as images, definition of temporal and “run” measures.</li>
-</ul>
+<p>To learn how to define and run experiments take a quick tour through the following examples.</p>
+<p><a href="fire.html">Fire Experiment</a> example demonstrates simple experiment definition with parameters and measures.</p>
 <aside>
-<a href="fire.html"><img src="img/pages-fireView-1.png" alt="Fire" /></a> <a href="fire.html"><img src="img/pages-fireRunPlot-1.png" alt="Fire" /></a> <a href="ants.html"><img src="img/pages-antsPlotViews-1.png" alt="Ants" /></a>
+<a href="fire.html"><img src="img/pages-fireView-1.png" alt="Fire" /></a> <a href="fire.html"><img src="img/pages-fireRunPlot2-1.png" alt="Fire" /></a>
 </aside>
-<ul>
-<li><a href="agents.html">Agents and Patches</a> example demonstrates how to collect values from agents and patches. Specifically:
+<p><a href="fire.html"><img src="img/pages-fireRunPlot-1.png" alt="Fire" /></a> <!--[<img width = "90%" src = "img/pages-fireRunPlot-1.png"/>](fire.html)--></p>
+<p><a href="agents.html">Agents and Patches</a> example demonstrates how to collect values from individual agents and patches. Specifically:</p>
 <ul>
 <li>reading turtles and their links to recreate network as <strong>igraph</strong> object</li>
 <li>reading patches’ colors and create a raster image</li>
-</ul></li>
 </ul>
-<p><a href="agents.html"><img width = "70%" src = "img/pages-agentsGraphPlot-1.png"/></a> <asideclose> </asideclose></p>
-<ul>
-<li><a href="ants.html">Ants</a> example demonstrates simple parameter sets definition and parameter mapping.</li>
-</ul>
+<p><a href="agents.html"><img src = "img/pages-agentsGraphPlot-1.png"/></a> <asideclose> </asideclose></p>
+<p><a href="ants.html">Ants</a> example demonstrates simple parameter sets definition and parameter mapping.</p>
+<p><asideclose> <a href="ants.html"><img src="img/pages-antsPlotStep-1.png" alt="Ants" /></a> </asideclose></p>
+<p><a href="ants.html"><img src="img/pages-antsPlotViews-1.png" alt="Ants" /></a></p>
 </div>
 <div id="parameter-sets" class="section level2">
 <h2>Parameter Sets</h2>
-<ul>
-<li><a href="fur.html">Fur Patterns</a> demonstrates explicit definition of parameter sets and parameter mapping when parameter space is transformed.</li>
-</ul>
-<p><a href="fur.html"><img width = "70%" src = "img/pages-furShowPatches-1.png"/></a></p>
-<ul>
-<li><a href="flocking.html">Flocking Example</a> shows simple measure definition and observation in parameter space. It is the first in a series of parameter space exploration of the Flocking model.</li>
-</ul>
+<p>Exploring parameter space with full factorial design and sampling methods.</p>
+<p><a href="fur.html">Fur Patterns</a> demonstrates explicit definition of parameter sets and parameter mapping when parameter space is transformed.</p>
+<p><a href="fur.html"><img src = "img/pages-furShowPatches-1.png"/></a></p>
+<p><a href="flocking.html">Flocking Example</a> shows simple measure definition and observation in parameter space. It is the first in a series of parameter space exploration of the Flocking model.</p>
 <aside>
-<a href="flocking.html"><img src="img/pages-flockPlot2-1.png" /></a> <a href="flocking_sampling.html"><img src="img/pages-flockSampPlot-1.png" /></a>
+<a href="flocking.html"><img src="img/pages-flockPlot2-1.png" /></a> <a href="flocking_categorical.html"><img width = "80%" src = "img/pages-pFlockCatPlot-1.png"/></a>
 </aside>
-<ul>
-<li><a href="flocking_categorical.html">Categorical Criteria</a> and <a href="flocking_sampling.html">Hyper Latinc Cube Sampling</a> examples demontrate how to explore parameter space with categorical criteria and sampling methods.</li>
-</ul>
-<p><a href="flocking_categorical.html"><img width = "80%" src = "img/pages-pFlockCatPlot-1.png"/></a></p>
+<p><a href="flocking_categorical.html">Categorical Criteria</a> and <a href="flocking_sampling.html">Hyper Latinc Cube Sampling</a> examples demontrate how to explore parameter space with categorical criteria and sampling methods. <a href="flocking_sampling.html"><img src="img/pages-flockSampPlot-1.png" /></a></p>
 </div>
 <div id="optimization" class="section level2">
 <h2>Optimization</h2>
+<p>Parameter fitting with best-fit criterion and optimization methods.</p>
 <ul>
 <li><a href="flocking_bestfit.html">Best-fit Criterion</a> shows how to define single criterion evaluation expression and evaluate parameter space with full-factor design.
 <aside>
@@ -176,7 +169,7 @@ img {
 </div>
 <div id="package-documentation" class="section level2">
 <h2>Package Documentation</h2>
-<p>For reference use R help, download documentation in <a href="help/nlexperiment.pdf">pdf</a> or use package <a href="help/index.html">documentation online</a>.</p>
+<p>Use R help for function reference. Download documentation in <a href="help/nlexperiment.pdf">pdf</a> or use package <a href="help/index.html">documentation online</a>.</p>
 </div>
 <div id="related" class="section level2">
 <h2>Related</h2>
@@ -184,13 +177,15 @@ img {
 <aside>
 Jan C. Thiele (2014). R Marries NetLogo: Introduction to the RNetLogo Package. Journal of Statistical Software, 58(2), 1-41. URL <a href="http://www.jstatsoft.org/v58/i02/" class="uri">http://www.jstatsoft.org/v58/i02/</a>.
 </aside>
-<p>Basic ideas and principles of NetLogo experiment definition are taken from the NetLogo’s <a href="http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html">Behavior Space</a> (Wilensky &amp; Shargel 2002) and <a href="http://www.behaviorsearch.org/">BehaviorSearch</a> software (Stonedahl 2010).</p>
+<p>Basic ideas and principles of NetLogo experiments are taken from the NetLogo’s <a href="http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html">Behavior Space</a> (Wilensky &amp; Shargel 2002) and <a href="http://www.behaviorsearch.org/">BehaviorSearch</a> software (Stonedahl 2010).</p>
 <aside>
 <p>Wilensky, U., &amp; Shargel, B. (2002). <a href="http://ccl.northwestern.edu/netlogo/behaviorspace.html">BehaviorSpace</a>. Center for Connected Learning and Computer Based Modeling, Northwestern University, Evanston, IL.</p>
 <p>Stonedahl, F.: <a href="http://www.behaviorsearch.org/">BehaviorSearch</a> [computer software]. Center for Connected Learning and Computer Based Modeling, Northwestern University, Evanston, IL. (2010)</p>
 <p>Thiele, J. C., Kurth, W., &amp; Grimm, V. (2014). Facilitating Parameter Estimation and Sensitivity Analysis of Agent-Based Models: A Cookbook Using NetLogo and R. Journal of Artificial Societies and Social Simulation, 17(3), 11. <a href="http://jasss.soc.surrey.ac.uk/17/3/11.html" class="uri">http://jasss.soc.surrey.ac.uk/17/3/11.html</a></p>
+<p>Stonedahl, F. J. (2011). Genetic algorithms for the exploration of parameter spaces in agent-based models. PhD Thesis, Northwestern University of Illinois</p>
 </aside>
-<p>Some examples in the <a href="tutorial.html">tutorial</a> follow a RNetLogo Cookbook from Thiele, Kurth &amp; Grimm (2014) and its <a href="http://sourceforge.net/projects/calibrationsensitivityanalysis/">Supplementary Material</a>.</p>
+<p>Some examples in the <a href="tutorial.html">tutorial</a> follow the <a href="http://jasss.soc.surrey.ac.uk/17/3/11.html">RNetLogo Cookbook</a> from Thiele, Kurth &amp; Grimm (2014) and its <a href="http://sourceforge.net/projects/calibrationsensitivityanalysis/">Supplementary Material</a> where you can find more methods and are described in more detail.</p>
+<p>Using NetLogo flocking model and related experiment definitions are inspired by (Stonedahl, 2011),</p>
 </div>
 
 

@@ -1,59 +1,69 @@
 ## Getting Started
+To learn how to define and run experiments take a quick tour through the 
+following examples.
 
-
-
-* [Fire Experiment](fire.html) demonstrates 
-simple experiment definition, 
-exporting views as images, 
-definition of temporal and "run" measures.
+[Fire Experiment](fire.html) example demonstrates 
+simple experiment definition with parameters and measures. 
 
 
 <aside>
 [![Fire](img/pages-fireView-1.png)](fire.html)
-[![Fire](img/pages-fireRunPlot-1.png)](fire.html)
-[![Ants](img/pages-antsPlotViews-1.png)](ants.html)
+[![Fire](img/pages-fireRunPlot2-1.png)](fire.html)
 </aside>
 
-* [Agents and Patches](agents.html) example demonstrates how to collect values from
-agents and patches. Specifically:
-    + reading turtles and their links to recreate network as __igraph__ object
-    + reading patches' colors and create a raster image
+[![Fire](img/pages-fireRunPlot-1.png)](fire.html)
+<!--[<img width = "90%" src = "img/pages-fireRunPlot-1.png"/>](fire.html)-->
 
 
-[<img width = "70%" src = "img/pages-agentsGraphPlot-1.png"/>](agents.html)
+[Agents and Patches](agents.html) example demonstrates how to collect values from
+individual agents and patches. Specifically:
+
+* reading turtles and their links to recreate network as __igraph__ object
+* reading patches' colors and create a raster image
+
+
+[<img src = "img/pages-agentsGraphPlot-1.png"/>](agents.html)
 <asideclose>
 </asideclose>
 
 
 
-* [Ants](ants.html) example demonstrates simple parameter sets 
+[Ants](ants.html) example demonstrates simple parameter sets 
 definition and parameter mapping.
 
 
+<asideclose>
+[![Ants](img/pages-antsPlotStep-1.png)](ants.html)
+</asideclose>
+
+[![Ants](img/pages-antsPlotViews-1.png)](ants.html)
 
 ## Parameter Sets
+Exploring parameter space with full factorial design and sampling methods.
 
-* [Fur Patterns](fur.html) demonstrates 
+[Fur Patterns](fur.html) demonstrates 
 explicit definition of parameter sets and 
 parameter mapping when parameter space is transformed. 
 
-[<img width = "70%" src = "img/pages-furShowPatches-1.png"/>](fur.html)
+[<img src = "img/pages-furShowPatches-1.png"/>](fur.html)
 
-* [Flocking Example](flocking.html) shows simple measure definition and observation in parameter space. It is the first in a series of parameter space exploration of the Flocking model.
+[Flocking Example](flocking.html) shows simple measure definition and observation in parameter space. It is the first in a series of parameter space exploration of the Flocking model.
 
 <aside>
   [![](img/pages-flockPlot2-1.png)](flocking.html)
-  [![](img/pages-flockSampPlot-1.png)](flocking_sampling.html)
+  [<img width = "80%" src = "img/pages-pFlockCatPlot-1.png"/>](flocking_categorical.html)
 </aside>
 
-* [Categorical Criteria](flocking_categorical.html) and 
+[Categorical Criteria](flocking_categorical.html) and 
 [Hyper Latinc Cube Sampling](flocking_sampling.html) examples
 demontrate how to explore parameter space with categorical 
 criteria and sampling methods.
+  [![](img/pages-flockSampPlot-1.png)](flocking_sampling.html)
 
-[<img width = "80%" src = "img/pages-pFlockCatPlot-1.png"/>](flocking_categorical.html)
 
 ## Optimization
+Parameter fitting with best-fit criterion 
+and optimization methods.
 
 * [Best-fit Criterion](flocking_bestfit.html) shows how to define 
   single criterion evaluation expression 
