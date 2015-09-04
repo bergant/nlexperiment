@@ -117,64 +117,62 @@ img {
 <div id="installation" class="section level2">
 <h2>Installation</h2>
 <pre class="r"><code>devtools::install_github(&quot;bergant/nlexperiment&quot;)</code></pre>
-<!--
-## Example
-Experiment with NetLogo Fire model^2^.
-
-<aside>
-^2^ Wilensky, U. (1997). 
-[NetLogo Fire model](http://ccl.northwestern.edu/netlogo/models/Fire). 
-Center for Connected Learning and Computer-Based Modeling, 
-Northwestern University, Evanston, IL.
-</aside>
-
-<lside><span class="glyphicon glyphicon-cog" aria-hidden="true" title = "Setup" style="color:gray"></span></lside>
-
-```r
-library(nlexperiment)
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
-```
-<aside>Set path to your NetLogo installation.
-You have to do this only once per R session.</aside>
-
-<lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title = "Define the experiment" style="color:gray"></span></lside>
-
-```r
-experiment <- nl_experiment(
-  model_file = "models/Sample Models/Earth Science/Fire.nlogo", 
-  while_condition = "any? turtles",
-  param_values = list(density = c(57, 59, 61)),
-  random_seed = 1,
-  step_measures = measures(
-    percent_burned = "(burned-trees / initial-trees) * 100"
-  )
-)
-```
-<aside>
-Note that `burned-trees` and `initial-trees` are global variables in NetLogo 
-[Fire model](https://github.com/NetLogo/models/blob/master/Sample Models/Earth Science/Fire.nlogo).
-</aside>
-
-<lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title = "Run the experiment" style="color:gray"></span></lside>
-
-```r
-result <- nl_run(experiment)
-```
-
-<lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title = "Plot observations" style="color:gray"></span></lside>
-
-```r
-nl_show_step(result, x = "step_id", y = "percent_burned", 
-             x_param = "density")
-```
-
-<aside style="margin-top:-6em"> <img src="img/pages-fireStepPlotI-1.png"><p class="caption">Percent of burned trees as a function of time</p></aside>
-
--->
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting Started</h2>
-<p>Start with examples in the <strong><a href="tutorial.html">tutorial</a></strong>.</p>
+<ul>
+<li><a href="fire.html">Fire Experiment</a> demonstrates simple experiment definition, exporting views as images, definition of temporal and “run” measures.</li>
+</ul>
+<aside>
+<a href="fire.html"><img src="img/pages-fireView-1.png" alt="Fire" /></a> <a href="fire.html"><img src="img/pages-fireRunPlot-1.png" alt="Fire" /></a> <a href="ants.html"><img src="img/pages-antsPlotViews-1.png" alt="Ants" /></a>
+</aside>
+<ul>
+<li><a href="agents.html">Agents and Patches</a> example demonstrates how to collect values from agents and patches. Specifically:
+<ul>
+<li>reading turtles and their links to recreate network as <strong>igraph</strong> object</li>
+<li>reading patches’ colors and create a raster image</li>
+</ul></li>
+</ul>
+<p><a href="agents.html"><img width = "70%" src = "img/pages-agentsGraphPlot-1.png"/></a> <asideclose> </asideclose></p>
+<ul>
+<li><a href="ants.html">Ants</a> example demonstrates simple parameter sets definition and parameter mapping.</li>
+</ul>
+</div>
+<div id="parameter-sets" class="section level2">
+<h2>Parameter Sets</h2>
+<ul>
+<li><a href="fur.html">Fur Patterns</a> demonstrates explicit definition of parameter sets and parameter mapping when parameter space is transformed.</li>
+</ul>
+<p><a href="fur.html"><img width = "70%" src = "img/pages-furShowPatches-1.png"/></a></p>
+<ul>
+<li><a href="flocking.html">Flocking Example</a> shows simple measure definition and observation in parameter space. It is the first in a series of parameter space exploration of the Flocking model.</li>
+</ul>
+<aside>
+<a href="flocking.html"><img src="img/pages-flockPlot2-1.png" /></a> <a href="flocking_sampling.html"><img src="img/pages-flockSampPlot-1.png" /></a>
+</aside>
+<ul>
+<li><a href="flocking_categorical.html">Categorical Criteria</a> and <a href="flocking_sampling.html">Hyper Latinc Cube Sampling</a> examples demontrate how to explore parameter space with categorical criteria and sampling methods.</li>
+</ul>
+<p><a href="flocking_categorical.html"><img width = "80%" src = "img/pages-pFlockCatPlot-1.png"/></a></p>
+</div>
+<div id="optimization" class="section level2">
+<h2>Optimization</h2>
+<ul>
+<li><a href="flocking_bestfit.html">Best-fit Criterion</a> shows how to define single criterion evaluation expression and evaluate parameter space with full-factor design.
+<aside>
+<a href="flocking_bestfit.html"><img src = "img/pages-flockBestFitPlot1-1.png"/></a> <a href="flocking_random.html"><img src = "img/pages-flockSampPlot1-1.png"/></a> <a href="flocking_nm.html"><img src = "img/pages-pFlockNMPlot2-1.png"/></a></li>
+</ul>
+</aside>
+<ul>
+<li><p><a href="flocking_random_search.html">Random Search</a> demonstrate searching for optimal parameters using random search.</p></li>
+<li><p><a href="flocking_bfgs.html">L-BFGS-B Optimization</a> shows how to use standard optimization functions.</p></li>
+<li><p><a href="flocking_nm.html">Nelder-Mead Optimization</a> shows how to use optimization functions from other R packages.</p></li>
+<li><p><a href="flocking_sa.html">Simulated Annealing</a> demonstrates optimization with simulated annealing.</p></li>
+<li><p><a href="flocking_ga.html">Genetic Algorithm</a> demonstrates optimization with genetic algorithm.</p></li>
+</ul>
+<aside>
+</aside>
+<p><a href="flocking_ga.html"><img src = "img/pages-flockGAPlot2-1.png"/></a></p>
 </div>
 <div id="package-documentation" class="section level2">
 <h2>Package Documentation</h2>

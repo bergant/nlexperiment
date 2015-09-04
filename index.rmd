@@ -21,54 +21,11 @@ A tool for NetLogo experiment definition,
 ```{r eval=FALSE}
 devtools::install_github("bergant/nlexperiment")
 ```
-<!--
-## Example
-Experiment with NetLogo Fire model^2^.
 
-<aside>
-^2^ Wilensky, U. (1997). 
-[NetLogo Fire model](http://ccl.northwestern.edu/netlogo/models/Fire). 
-Center for Connected Learning and Computer-Based Modeling, 
-Northwestern University, Evanston, IL.
-</aside>
 
-```{r Initialize, title = "Setup"}
-library(nlexperiment)
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
-```
-<aside>Set path to your NetLogo installation.
-You have to do this only once per R session.</aside>
-
-```{r fireStepModelIndex, title = "Define the experiment"}
-experiment <- nl_experiment(
-  model_file = "models/Sample Models/Earth Science/Fire.nlogo", 
-  while_condition = "any? turtles",
-  param_values = list(density = c(57, 59, 61)),
-  random_seed = 1,
-  step_measures = measures(
-    percent_burned = "(burned-trees / initial-trees) * 100"
-  )
-)
-```
-<aside>
-Note that `burned-trees` and `initial-trees` are global variables in NetLogo 
-[Fire model](https://github.com/NetLogo/models/blob/master/Sample Models/Earth Science/Fire.nlogo).
-</aside>
-
-```{r fireStepRunIndex, title = "Run the experiment", cache=TRUE}
-result <- nl_run(experiment)
+```{r ch_opt, child="tutorial_include.rmd", cache=FALSE}
 ```
 
-```{r fireStepPlotI, title = "Plot observations", fig.height=2.8, fig.width=4, cache=TRUE, fig.cap="Percent of burned trees as a function of time", marginfigure = TRUE}
-nl_show_step(result, x = "step_id", y = "percent_burned", 
-             x_param = "density")
-```
-
--->
-
-## Getting Started
-
-Start with examples in the __[tutorial](tutorial.html)__.
 
 ## Package Documentation
 

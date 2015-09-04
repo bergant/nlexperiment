@@ -6,91 +6,9 @@ title: "Tutorial Overview"
 ```{r ch_opt, child="include/chunk_options.rmd", cache=FALSE}
 ```
 
-## Getting Started
 
 
+```{r ch_opt, child="tutorial_include.rmd", cache=FALSE}
+```
 
-* [Fire Experiment](fire.html) demonstrates 
-simple experiment definition, 
-exporting views as images, 
-definition of temporal and "run" measures.
-
-
-<aside>
-[![Fire](img/pages-fireView-1.png)](fire.html)
-[![Fire](img/pages-fireRunPlot-1.png)](fire.html)
-[![Ants](img/pages-antsPlotViews-1.png)](ants.html)
-</aside>
-
-* [Agents and Patches](agents.html) example demonstrates how collect variables from
-agents and patches. Specifically:
-    + reading turtles and their links to recreate network as __igraph__ object
-    + reading patches' colors and create a raster image
-
-
-[<img width = "70%" src = "img/pages-agentsGraphPlot-1.png"/>](agents.html)
-<asideclose>
-</asideclose>
-
-
-
-* [Ants](ants.html) example demonstrates simple parameter sets 
-definition and parameter mapping.
-
-
-
-## Parameter Sets
-
-* [Fur Patterns](fur.html) demonstrates 
-explicit definition of parameter sets and 
-parameter mapping when parameter space is transformed. 
-
-[<img width = "70%" src = "img/pages-furShowPatches-1.png"/>](fur.html)
-
-* [Flocking Example](flocking.html) shows simple measure definition and observation in parameter space. It is the first in a series of parameter space exploration of the Flocking model.
-
-<aside>
-  [![](img/pages-flockPlot2-1.png)](flocking.html)
-  [![](img/pages-flockSampPlot-1.png)](flocking_sampling.html)
-</aside>
-
-* [Categorical Criteria](flocking_categorical.html) and 
-[Hyper Latinc Cube Sampling](flocking_sampling.html) examples
-demontrate how to explore parameter space with categorical 
-criteria and sampling methods.
-
-[<img width = "80%" src = "img/pages-pFlockCatPlot-1.png"/>](flocking_categorical.html)
-
-## Optimization
-
-* [Best-fit Criterion](flocking_bestfit.html) shows how to define 
-  single criterion evaluation expression 
-  and evaluate parameter space with full-factor design.
-<aside>
-[<img src = "img/pages-flockBestFitPlot1-1.png"/>](flocking_bestfit.html)
-[<img src = "img/pages-flockSampPlot1-1.png"/>](flocking_random.html)
-[<img src = "img/pages-pFlockNMPlot2-1.png"/>](flocking_nm.html)
-
-</aside>
-
-
-* [Random Search](flocking_random_search.html) demonstrate searching for optimal parameters
-  using random search.
-
-* [L-BFGS-B Optimization](flocking_bfgs.html) shows how to use
-  standard optimization functions.
-
-* [Nelder-Mead Optimization](flocking_nm.html) shows how to use
-  optimization functions from other R packages.
-
-* [Simulated Annealing](flocking_sa.html) demonstrates optimization
-  with simulated annealing.
-
-* [Genetic Algorithm](flocking_ga.html) demonstrates optimization
-  with genetic algorithm.
-
-<aside>
-</aside>
-
-[<img src = "img/pages-flockGAPlot2-1.png"/>](flocking_ga.html)
 
