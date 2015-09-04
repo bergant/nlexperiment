@@ -123,8 +123,9 @@ Wilensky, U. (2005). NetLogo <a href="http://ccl.northwestern.edu/netlogo/models
 <p>Element <code>agents_before</code> is analogous tp <code>agents_after</code> - it just gets the data before model runs.</p>
 <p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment(
-  model_file = file.path(nl_netlogo_path(), 
-                         &quot;models/Sample models/Networks/Preferential attachment.nlogo&quot;), 
+  model_file = 
+    file.path(nl_netlogo_path(), 
+              &quot;models/Sample models/Networks/Preferential attachment.nlogo&quot;), 
   iterations = 50,
   agents_after = list(
     vertices = agent_set(

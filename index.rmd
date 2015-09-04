@@ -6,9 +6,9 @@ title: "**<nl>nl</nl><experiment>experiment</experiment>**"
 ```
 
 
-<experiment>__R package for exploration of  NetLogo^1^ agent based models.__</experiment>
+<experiment>__R package for exploration of  NetLogo agent based models.__</experiment>
 <asideclose>
-^1^ Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 </asideclose>
 
 A tool for NetLogo experiment definition, 
@@ -69,13 +69,6 @@ nl_show_step(result, x = "step_id", y = "percent_burned",
 ## Getting Started
 
 Start with examples in the __[tutorial](tutorial.html)__.
-
-## Creating Documents
-
-All examples in the [tutorial](tutorial.html) also link to
-their rmarkdown source file (follow the last side note on each sample page).
-To learn more about creating documents with R see
-[R Markdown page](http://rmarkdown.rstudio.com/).
 
 ## Package Documentation
 
