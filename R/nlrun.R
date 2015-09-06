@@ -204,6 +204,9 @@ nl_run_wrap_results <- function(experiment, ret, start_time) {
     if(!is.null(ret[[1]]$agents_after)) {
       ret1$agents_after <- nl_run_wrap_result_agents(ret, "agents_after")
     }
+    if(!is.null(ret[[1]]$agents_step)) {
+      ret1$agents_step <- nl_run_wrap_result_agents(ret, "agents_step")
+    }
     if(!is.null(ret[[1]]$patches_before)) {
       ret1$patches_before <- nl_run_wrap_result_agents(ret, "patches_before")
     }
@@ -272,7 +275,42 @@ nl_single_run <- function(experiment, parameter_set_id, run_id,
   }
 
   # run
-  if(length(experiment$measures$step) > 0 ) {
+  agents_step <- NULL
+  report_step <- NULL
+
+  if(length(experiment$agents_step) > 0 ) {
+    #if any step agents reports are defined we have to loop and
+    # for each step get all the agents...
+    RNetLogo::NLCommand(experiment$run_options$setup_commands)
+    iter_id <- 0
+    report_step <- NULL
+    repeat {
+      iter_id <- iter_id + 1
+      RNetLogo::NLCommand(experiment$run_options$go_command)
+      agents_tmp <-
+        nl_single_agent_report(experiment$agents_step,
+                               parameter_set_id,
+                               run_id = run_id,
+                               step_id = iter_id)
+      agents_step[[iter_id]] <- agents_tmp
+      if(!is.null(experiment$while_condition) &&
+         !RNetLogo::NLReport(experiment$while_condition)) {
+          break
+      }
+      if(!is.null(experiment$iterations) &&
+         experiment$iterations <= iter_id) {
+          break
+      }
+    }
+    agents_step <-
+      setNames(
+        lapply(seq_along(agents_step[[1]]), function(i) {
+          do.call(rbind, lapply(agents_step, function(x) {x[[i]]}))
+        }),
+        names(agents_step[[1]])
+      )
+  }
+  else if(length(experiment$measures$step) > 0 ) {
     # if any step measures defined - use RNetLogo::NLDoReportWhile
     if(!is.null(experiment$while_condition)) {
       report_step <- RNetLogo::NLDoReportWhile(
@@ -340,6 +378,9 @@ nl_single_run <- function(experiment, parameter_set_id, run_id,
   }
   if(!is.null(agents_before)) {
     ret$agents_before <- agents_before
+  }
+  if(!is.null(agents_step)) {
+    ret$agents_step <- agents_step
   }
 
   # patches
@@ -473,13 +514,15 @@ nl_single_export <- function(experiment, param_set_id = NA, run_id = 1) {
 
 nl_single_agent_report <- function(agent_report,
                                    parameter_set_id = NA,
-                                   run_id = 1) {
+                                   run_id = 1,
+                                   step_id = NULL) {
 
   lapply(agent_report, function(x) {
     df1 <- RNetLogo::NLGetAgentSet(x$vars, x$agents)
     if(!is.null(names(x$vars))) names(df1) <- names(x$vars)
     df1$run_id <- run_id
     df1$param_set_id <- parameter_set_id
+    if(!is.null(step_id)) df1$step_id = step_id
     df1
   })
 }

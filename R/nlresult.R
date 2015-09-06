@@ -121,15 +121,16 @@ nl_show_patches <- function(result, x_param, y_param = NULL, fill = "pcolor",
       dat, ggplot2::aes_string(x= "pxcor", y = "pycor", fill = "pcolor")) +
     ggplot2::geom_raster() +
     ggplot2::coord_fixed(height/width) +
-    ggplot2::facet_grid(facets = paste(y_param, "~", x_param)) +
+    ggplot2::facet_grid(facets = paste(y_param, "~", x_param),
+                        labeller = ggplot2::label_both) +
     ggplot2::theme_minimal() +
     ggplot2::theme(axis.line = ggplot2::element_blank(),
           axis.text.x = ggplot2::element_blank(),
           axis.text.y = ggplot2::element_blank(),
           axis.ticks = ggplot2::element_blank(),
-          legend.position="none"
-    ) +
-    ggplot2::labs(x = x_param, y = y_param)
+          axis.title.x = ggplot2::element_blank(),
+          axis.title.y = ggplot2::element_blank(),
+          legend.position="none")
   g1
 }
 

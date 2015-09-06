@@ -1,8 +1,8 @@
 Package: nlexperiment
 Type: Package
 Title: Exploration of NetLogo Agent Based Models
-Version: 0.1.3
-Date: 2015-08-19
+Version: 0.1.4
+Date: 2015-09-07
 Author: Darko Bergant
 Maintainer: Darko Bergant <darko.bergant@gmail.com>
 BugReports: https://github.com/bergant/nlexperiment/issues

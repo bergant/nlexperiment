@@ -147,6 +147,7 @@ nl_export_path <- function(export_path = NULL) {
 #'   in named character vector.
 #'   For example: c(diffusion_rate = "diffusion-rate", population = "population")
 #' @param agents_after Agents reporters see \code{\link{nl_set_agent_reports}}
+#' @param agents_step Agents reporters see \code{\link{nl_set_agent_reports}}
 #' @param patches_after Patches reporters see \code{\link{nl_set_agent_reports}}
 #' @param export_view If set to TRUE, the views will be exported to
 #'   a png image files for each run (when running the experiment)
@@ -194,6 +195,7 @@ nl_experiment <- function(model_file,
                           mapping = NULL,
                           param_values = NULL,
                           agents_after = NULL,
+                          agents_step = NULL,
                           patches_after = NULL,
                           export_view = FALSE,
                           export_world = FALSE,
@@ -239,6 +241,7 @@ nl_experiment <- function(model_file,
   # set agent reports
   experiment <- nl_set_agent_reports(experiment,
                                      agents_after = agents_after,
+                                     agents_step = agents_step,
                                      patches_after = patches_after)
 
   # set parameter sets
@@ -437,9 +440,10 @@ nl_set_measures <- function(experiment,
 #' Set reporting of variable value(s) of one or more agent(s) as a data.frame
 #'
 #' @param experiment NetLogo experiment object
-#' @param agents_after A list of agent reports to be accessed after each run.
-#' @param patches_after A list of patches reports to be accessed after each run
 #' @param agents_before A list of agent reports to be accessed before each run.
+#' @param agents_after A list of agent reports to be accessed after each run.
+#' @param agents_step A list of agent reports to be accessed per each iteration (step).
+#' @param patches_after A list of patches reports to be accessed after each run
 #' @param patches_before A list of patches reports to be accessed before each run
 #' @seealso To create an experiment object use \code{\link{nl_experiment}}
 #' @return NetLogo experiment object
@@ -447,6 +451,7 @@ nl_set_measures <- function(experiment,
 nl_set_agent_reports <- function(experiment,
                                  agents_before = NULL,
                                  agents_after = NULL,
+                                 agents_step = NULL,
                                  patches_before = NULL,
                                  patches_after = NULL) {
   if(!inherits(experiment, nl_experiment_class))
@@ -457,6 +462,9 @@ nl_set_agent_reports <- function(experiment,
   }
   if(!missing(agents_after)) {
     experiment$agents_after <- agents_after
+  }
+  if(!missing(agents_step)) {
+    experiment$agents_step <- agents_step
   }
   if(!missing(patches_before)) {
     experiment$patches_before <- patches_before

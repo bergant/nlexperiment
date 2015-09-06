@@ -7,10 +7,10 @@
 nl_experiment(model_file, iterations = NULL, while_condition = NULL,
   repetitions = 1, random_seed = NULL, step_measures = NULL,
   run_measures = NULL, mapping = NULL, param_values = NULL,
-  agents_after = NULL, patches_after = NULL, export_view = FALSE,
-  export_world = FALSE, setup_commands = "setup", go_command = "go",
-  eval_criteria = NULL, eval_aggregate_fun = NULL, eval_mutate = NULL,
-  data_handler = NULL)
+  agents_after = NULL, agents_step = NULL, patches_after = NULL,
+  export_view = FALSE, export_world = FALSE, setup_commands = "setup",
+  go_command = "go", eval_criteria = NULL, eval_aggregate_fun = NULL,
+  eval_mutate = NULL, data_handler = NULL)
 }
 \arguments{
 \item{model_file}{An absolute path to your NetLogo model file (.nlogo)}
@@ -47,6 +47,8 @@ For example: c(diffusion_rate = "diffusion-rate", population = "population")}
 a list of values to be expanded to all combinations of values}
 
 \item{agents_after}{Agents reporters see \code{\link{nl_set_agent_reports}}}
+
+\item{agents_step}{Agents reporters see \code{\link{nl_set_agent_reports}}}
 
 \item{patches_after}{Patches reporters see \code{\link{nl_set_agent_reports}}}
 

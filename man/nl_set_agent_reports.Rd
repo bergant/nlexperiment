@@ -5,7 +5,7 @@
 \title{Set or change agent reports}
 \usage{
 nl_set_agent_reports(experiment, agents_before = NULL, agents_after = NULL,
-  patches_before = NULL, patches_after = NULL)
+  agents_step = NULL, patches_before = NULL, patches_after = NULL)
 }
 \arguments{
 \item{experiment}{NetLogo experiment object}
@@ -13,6 +13,8 @@ nl_set_agent_reports(experiment, agents_before = NULL, agents_after = NULL,
 \item{agents_before}{A list of agent reports to be accessed before each run.}
 
 \item{agents_after}{A list of agent reports to be accessed after each run.}
+
+\item{agents_step}{A list of agent reports to be accessed per each iteration (step).}
 
 \item{patches_before}{A list of patches reports to be accessed before each run}
 
