@@ -28,7 +28,7 @@ Center for Connected Learning and Computer-Based Modeling,
 Northwestern University, Evanston, IL.
 </aside>
 
-Two measures of self-organization will be defined:
+Two measures of self-organization are defined:
 
 * __converergence__ is based on variance of birds' orientations (Stonedahl, 2011)
 
