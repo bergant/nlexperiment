@@ -80,7 +80,10 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Getting started</li>
              <li><a href="fire.html">Fire Experiment</a></li>
-             <li><a href="agents.html">Agents and Patches</a></li>
+             <li><a href="segregation.html">Segregation</a></li>
+             <li><a href="network.html">Network</a></li>
+             <li><a href="traffic.html">Traffic</a></li>
+             <li><a href="dla.html">DLA</a></li>
              <li><a href="ants.html">Ants</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Parameter Sets</li>
@@ -122,8 +125,8 @@ nl_netlogo_path(&quot;c:/Program Files (x86)/NetLogo 5.2.0/&quot;) </code></pre>
 <aside>
 You have to do this only once per R session.
 </aside>
-<div id="run-model-and-export-view-image" class="section level2">
-<h2>Run model and export view image</h2>
+<div id="define-and-run-simple-experiment" class="section level2">
+<h2>Define and Run Simple Experiment</h2>
 <p>To run a NetLogo model simulation we have to create an experiment object with <code>nl_experiment</code> function. Experiment definition includes a NetLogo model file, declares how to run the model, defines parameter values and what outputs are expected from simulation runs.</p>
 <p>For example:</p>
 <p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
@@ -401,13 +404,13 @@ Distribution of final fire position at different values of forest densities
 </aside>
 </p>
 </div>
-<div id="more" class="section level2">
-<h2>More</h2>
-<p>Try other examples:</p>
-<ul>
-<li><a href="agents.html">Agents and Patches</a> to see how to observe agents and patches</li>
-<li><a href="ants.html">Ants</a> to see how to define simple parameter sets and mapping</li>
-</ul>
+<div id="related" class="section level2">
+<h2>Related</h2>
+<p><a href="segregation.html">Segregation</a> example demonstrates how to obtain data from individual NetLogo agents.</p>
+<p><a href="network.html">Network</a> example demonstrates how to collect values from turtles and their links to recreate network as <strong>igraph</strong> object</p>
+<p><a href="traffic.html">Traffic</a> example demonstrates how to collect values from turtles per each time step.</p>
+<p><a href="dla.html">DLA</a> example demonstrates how to read NetLogo patches.</p>
+<p><a href="ants.html">Ants</a> example demonstrates simple parameter sets definition and mapping.</p>
 <p><asideclose> Get <a href="fire.rmd">rmarkdown source</a> of this page. </asideclose></p>
 </div>
 

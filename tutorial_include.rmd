@@ -1,34 +1,49 @@
 ## Getting Started
 
+### Measures
 
-[Fire Experiment](fire.html) example demonstrates 
-simple experiment definition with parameters and measures. 
+[Fire Experiment](fire.html) example demonstrates
+how to setup nlexperiment session, 
+define and run experiments, export view images,
+define temporal and final run measures, 
+get and visualize observations.
 
 
 <aside>
-[![Fire](img/pages-fireView-1.png)](fire.html)
+[![Fire](img/pages-fireRunPlot-1.png)](fire.html)
 [![Fire](img/pages-fireRunPlot2-1.png)](fire.html)
 </aside>
 
-[![Fire](img/pages-fireRunPlot-1.png)](fire.html)
-<!--[<img width = "90%" src = "img/pages-fireRunPlot-1.png"/>](fire.html)-->
+[![Fire](img/pages-fireView-1.png)](fire.html)
 
 
-[Agents and Patches](agents.html) example demonstrates how to collect values from
-individual agents and patches. Specifically:
+### Agents: Turtles, Links and Patches
 
-* reading turtles and their links to recreate network as __igraph__ object
-* reading patches' colors and create a raster image
+[Segregation](segregation.html) example demonstrates how to obtain data from 
+individual NetLogo agents.
+
+[![](img/pages-segregPlot-1.png)](segregation.html)
+
+[Network](network.html) example demonstrates how to collect values from
+ turtles and their links to recreate network as __igraph__ object
+
+[![](img/pages-agentsGraphPlot-1.png)](agents.html)
+
+[Traffic](traffic.html) example demonstrates how to collect values from
+ turtles per each time step.
+
+[![](img/pages-trafficPlot-1.png)](traffic.html)
 
 
-[<img src = "img/pages-agentsGraphPlot-1.png"/>](agents.html)
-<asideclose>
-</asideclose>
+[DLA](dla.html) example demonstrates how to read NetLogo patches.
 
 
+[![](img/pages-dlaPlot-1.png)](dla.html)
+
+### Mapping Variables
 
 [Ants](ants.html) example demonstrates simple parameter sets 
-definition and parameter mapping.
+definition and mapping.
 
 
 <asideclose>
@@ -38,7 +53,6 @@ definition and parameter mapping.
 [![Ants](img/pages-antsPlotViews-1.png)](ants.html)
 
 ## Parameter Sets
-Exploring parameter space with full factorial design and sampling methods.
 
 [Fur Patterns](fur.html) demonstrates 
 explicit definition of parameter sets and 
@@ -50,14 +64,18 @@ parameter mapping when parameter space is transformed.
 
 <aside>
   [![](img/pages-flockPlot2-1.png)](flocking.html)
-  [<img width = "80%" src = "img/pages-pFlockCatPlot-1.png"/>](flocking_categorical.html)
+  [![](img/pages-pFlockCatPlot-1.png)](flocking_categorical.html)
+  [![](img/pages-flockSampPlot-1.png)](flocking_sampling.html)
 </aside>
 
+[![](img/pages-flockPlotGrid-1.png)](flocking.html)
+
+
 [Categorical Criteria](flocking_categorical.html) and 
-[Hyper Latinc Cube Sampling](flocking_sampling.html) examples
+[Hyper Latin Cube Sampling](flocking_sampling.html) examples
 demontrate how to explore parameter space with categorical 
 criteria and sampling methods.
-  [![](img/pages-flockSampPlot-1.png)](flocking_sampling.html)
+
 
 
 ## Optimization
@@ -66,7 +84,7 @@ and optimization methods.
 
 * [Best-fit Criterion](flocking_bestfit.html) shows how to define 
   single criterion evaluation expression 
-  and evaluate parameter space with full-factor design.
+  and evaluate parameter space with factorial design.
 <aside>
 [<img src = "img/pages-flockBestFitPlot1-1.png"/>](flocking_bestfit.html)
 [<img src = "img/pages-flockSampPlot1-1.png"/>](flocking_random.html)

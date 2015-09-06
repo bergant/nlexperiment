@@ -73,8 +73,8 @@ Stonedahl, F. J. (2011). Genetic algorithms for the exploration of parameter spa
 Some examples in the [tutorial](tutorial.html) follow the 
   [RNetLogo Cookbook](http://jasss.soc.surrey.ac.uk/17/3/11.html) from Thiele, 
   Kurth & Grimm (2014) and its 
-  [Supplementary Material](http://sourceforge.net/projects/calibrationsensitivityanalysis/)
-  where you can find more methods and are described in more detail. 
+  [Supplementary Material](http://sourceforge.net/projects/calibrationsensitivityanalysis/).
+   
+Experiments based on NetLogo flocking model and related measure definitions are 
+inspired by (Stonedahl, 2011).
 
-Using NetLogo flocking model and related experiment definitions are inspired by (Stonedahl, 2011),
-  

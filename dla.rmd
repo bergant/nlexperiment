@@ -1,0 +1,77 @@
+---
+title: "DLA example"
+---
+
+```{r ch_opt, child="include/chunk_options.rmd", cache=FALSE}
+```
+
+
+```{r, echo = FALSE}
+library(nlexperiment)
+# Set the path to your NetLogo instalation
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
+```
+
+
+Getting information about patches is analogous to reading agents' data.
+Example below defines experiment with `patches_after` element to 
+access position and color of all patches. 
+Example uses NetLogo diffusion-limited aggregation (DLA) model (Wilensky, 1997).
+
+<aside>
+Wilensky, U. (1997). NetLogo DLA model. 
+http://ccl.northwestern.edu/netlogo/models/DLA. 
+Center for Connected Learning and Computer-Based Modeling, 
+Northwestern University, Evanston, IL
+</aside>
+
+```{r dlaModel, title = "Define the model"}
+experiment <- nl_experiment( 
+  model_file = "models/Sample Models/Chemistry & Physics/Diffusion Limited Aggregation/DLA.nlogo", 
+
+  while_condition = "count patches with [pcolor = 55] < 1000",
+  
+  param_values = list(
+    wiggle_angle = c(60,120),
+    `max-particles` = 100,
+    `use-whole-world?` = FALSE,
+    world_size = 150
+  ),
+  mapping = c(
+    wiggle_angle = "wiggle-angle"
+  ),
+  patches_after = list(
+    patches = patch_set(
+      vars = c("pxcor", "pycor", "pcolor"),
+      patches = "patches"
+    )
+  ),
+  random_seed = 1
+)
+```
+
+```{r dlaRun, title = "Run the model", cache=TRUE}
+result <- nl_run(experiment)
+```
+
+<aside>
+Function `nl_show_patches` uses `ggplot2::geom_raster` to plot patches.
+The color palette must be provided by user.
+</aside>
+
+
+```{r dlaPlot, title = "Plot results"}
+library(ggplot2)
+nl_show_patches(result, x_param = "wiggle_angle") +
+  scale_fill_manual(values = c("#CCDDFF","darkred"))
+
+```
+
+## See also
+
+[Ants](ants.html) example demonstrates simple parameter sets 
+definition and parameter mapping.
+
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>

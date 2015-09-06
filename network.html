@@ -10,7 +10,7 @@
 
 
 
-<title>Agents and Patches</title>
+<title>Network</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -80,7 +80,10 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Getting started</li>
              <li><a href="fire.html">Fire Experiment</a></li>
-             <li><a href="agents.html">Agents and Patches</a></li>
+             <li><a href="segregation.html">Segregation</a></li>
+             <li><a href="network.html">Network</a></li>
+             <li><a href="traffic.html">Traffic</a></li>
+             <li><a href="dla.html">DLA</a></li>
              <li><a href="ants.html">Ants</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Parameter Sets</li>
@@ -108,13 +111,10 @@ img {
 </div><!--/.navbar -->
 
 <div id="header">
-<h1 class="title">Agents and Patches</h1>
+<h1 class="title">Network</h1>
 </div>
 
 
-<p>While <code>step_measures</code> and <code>run_measures</code> (see <a href="fire.html">Fire experiments</a>) is good enough for aggregate measures, sometimes we need to measure values for each agent individually.</p>
-<div id="turtles-and-links" class="section level2">
-<h2>Turtles and Links</h2>
 <p>Example below shows usage of <code>agents_after</code> element to read the network structure from Netlogo Preferential attachment model (Wilensky, 2005).</p>
 <aside>
 Wilensky, U. (2005). NetLogo <a href="http://ccl.northwestern.edu/netlogo/models/PreferentialAttachment">Preferential Attachment model</a> . Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
@@ -181,59 +181,12 @@ for(g1 in glist) {
 <aside>
 </aside>
 </p>
-</div>
-<div id="patches" class="section level2">
-<h2>Patches</h2>
-<p>Getting patches information is analogous to reading agents’ data. Example below shows usage of <code>patches_after</code> element to read the fur patterns from Netlogo Fur model (Wilensky, 2003).</p>
-<aside>
-Wilensky, U. (2003). NetLogo <a href="http://ccl.northwestern.edu/netlogo/models/Fur">Fur model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
-</aside>
-<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the model" style="color:gray"></span></lside></p>
-<pre class="r"><code>experiment2 &lt;- nl_experiment( 
-  model_file = file.path(nl_netlogo_path(), 
-                         &quot;models/Sample Models/Biology/Fur.nlogo&quot;), 
-  iterations = 20,                                     
-  
-  param_values = list(
-    ratio = c(0.3, 0.35, 0.4, 0.45)
-  ),
-  patches_after = list(
-    patches = patch_set(
-      vars = c(&quot;pxcor&quot;, &quot;pycor&quot;, &quot;pcolor&quot;),
-      patches = &quot;patches&quot;
-    )
-  ),
-  random_seed = 2
-)</code></pre>
-<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the model" style="color:gray"></span></lside></p>
-<pre class="r"><code>result2 &lt;- nl_run(experiment2)</code></pre>
-<p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Get data" style="color:gray"></span></lside></p>
-<pre class="r"><code>dat &lt;- nl_get_result(result2, type = &quot;patches_after&quot;, sub_type = &quot;patches&quot;)
-str(dat, vec.len = 2)
-#&gt; &#39;data.frame&#39;:    14884 obs. of  6 variables:
-#&gt;  $ ratio       : num  0.3 0.3 0.3 0.3 0.3 ...
-#&gt;  $ param_set_id: int  1 1 1 1 1 ...
-#&gt;  $ pxcor       : num  -30 -29 -28 -27 -26 ...
-#&gt;  $ pycor       : num  30 30 30 30 30 ...
-#&gt;  $ pcolor      : num  0 9.9 9.9 9.9 9.9 ...
-#&gt;  $ run_id      : int  1 1 1 1 1 ...</code></pre>
-<aside>
-Function <code>nl_show_patches</code> uses <code>ggplot2::geom_raster</code> to plot patches. The color palette must be provided by user.
-</aside>
-<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot results" style="color:gray"></span></lside></p>
-<pre class="r"><code>library(ggplot2)
-nl_show_patches(result2, x_param = &quot;ratio&quot;) +
-  ggplot2::scale_fill_manual(values = c(&quot;black&quot;,&quot;white&quot;))</code></pre>
-<p>
-<img src="img/pages-agentsFurPlot-1.png">
-<aside>
-</aside>
-</p>
-</div>
-<div id="see-also" class="section level2">
-<h2>See also</h2>
+<div id="related" class="section level2">
+<h2>Related</h2>
+<p><a href="traffic.html">Traffic</a> example demonstrates how to collect values from turtles per each time step.</p>
+<p><a href="dla.html">DLA</a> example demonstrates how to read NetLogo patches.</p>
 <p><a href="ants.html">Ants</a> example demonstrates simple parameter sets definition and parameter mapping.</p>
-<p><asideclose> Get <a href="agents.rmd">rmarkdown source</a> of this page. </asideclose></p>
+<p><asideclose> Get <a href="network.rmd">rmarkdown source</a> of this page. </asideclose></p>
 </div>
 
 

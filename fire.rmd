@@ -26,7 +26,7 @@ nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/")
 <aside>You have to do this only once per R session.</aside>
 
 
-## Run model and export view image
+## Define and Run Simple Experiment
 To run a NetLogo model simulation we have to create an experiment object
 with `nl_experiment` function.
 Experiment definition includes a NetLogo model file, 
@@ -196,11 +196,22 @@ ggplot(dat, mapping = aes(x = factor(density), y = progress/250 + 0.5) ) +
 ```
 
 
-## More
-Try other examples:
+## Related
 
-* [Agents and Patches](agents.html) to see how to observe agents and patches
-* [Ants](ants.html) to see how to define simple parameter sets and mapping
+[Segregation](segregation.html) example demonstrates how to obtain data from 
+individual NetLogo agents.
+
+[Network](network.html) example demonstrates how to collect values from
+ turtles and their links to recreate network as __igraph__ object
+
+[Traffic](traffic.html) example demonstrates how to collect values from
+ turtles per each time step.
+
+[DLA](dla.html) example demonstrates how to read NetLogo patches.
+
+[Ants](ants.html) example demonstrates simple parameter sets 
+definition and mapping.
+
 
 <asideclose>
 Get [rmarkdown source](`r knitr::current_input()`) of this page.

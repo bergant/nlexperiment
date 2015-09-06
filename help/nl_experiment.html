@@ -80,7 +80,10 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Getting started</li>
              <li><a href="../fire.html">Fire Experiment</a></li>
-             <li><a href="../agents.html">Agents and Patches</a></li>
+             <li><a href="../segregation.html">Segregation</a></li>
+             <li><a href="../network.html">Network</a></li>
+             <li><a href="../traffic.html">Traffic</a></li>
+             <li><a href="../dla.html">DLA</a></li>
              <li><a href="../ants.html">Ants</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Parameter Sets</li>
@@ -122,10 +125,10 @@ img {
 nl_experiment(model_file, iterations = NULL, while_condition = NULL,
   repetitions = 1, random_seed = NULL, step_measures = NULL,
   run_measures = NULL, mapping = NULL, param_values = NULL,
-  agents_after = NULL, patches_after = NULL, export_view = FALSE,
-  export_world = FALSE, setup_commands = "setup", go_command = "go",
-  eval_criteria = NULL, eval_aggregate_fun = NULL, eval_mutate = NULL,
-  data_handler = NULL)
+  agents_after = NULL, agents_step = NULL, patches_after = NULL,
+  export_view = FALSE, export_world = FALSE, setup_commands = "setup",
+  go_command = "go", eval_criteria = NULL, eval_aggregate_fun = NULL,
+  eval_mutate = NULL, data_handler = NULL)
 </pre>
   <h3>Arguments</h3>
   <table summary="R argblock">
@@ -219,6 +222,14 @@ a list of values to be expanded to all combinations of values</p>
     <tr valign="top">
       <td>
         <code>agents_after</code>
+      </td>
+      <td>
+        <p>Agents reporters see <code>nl_set_agent_reports</code></p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>agents_step</code>
       </td>
       <td>
         <p>Agents reporters see <code>nl_set_agent_reports</code></p>

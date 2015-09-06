@@ -80,7 +80,10 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Getting started</li>
              <li><a href="../fire.html">Fire Experiment</a></li>
-             <li><a href="../agents.html">Agents and Patches</a></li>
+             <li><a href="../segregation.html">Segregation</a></li>
+             <li><a href="../network.html">Network</a></li>
+             <li><a href="../traffic.html">Traffic</a></li>
+             <li><a href="../dla.html">DLA</a></li>
              <li><a href="../ants.html">Ants</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Parameter Sets</li>
@@ -120,7 +123,7 @@ img {
   <h3>Usage</h3>
   <pre>
 nl_set_agent_reports(experiment, agents_before = NULL, agents_after = NULL,
-  patches_before = NULL, patches_after = NULL)
+  agents_step = NULL, patches_before = NULL, patches_after = NULL)
 </pre>
   <h3>Arguments</h3>
   <table summary="R argblock">
@@ -146,6 +149,14 @@ nl_set_agent_reports(experiment, agents_before = NULL, agents_after = NULL,
       </td>
       <td>
         <p>A list of agent reports to be accessed after each run.</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>agents_step</code>
+      </td>
+      <td>
+        <p>A list of agent reports to be accessed per each iteration (step).</p>
       </td>
     </tr>
     <tr valign="top">

@@ -80,7 +80,10 @@ img {
              <li class="divider"></li>
              <li class="dropdown-header">Getting started</li>
              <li><a href="fire.html">Fire Experiment</a></li>
-             <li><a href="agents.html">Agents and Patches</a></li>
+             <li><a href="segregation.html">Segregation</a></li>
+             <li><a href="network.html">Network</a></li>
+             <li><a href="traffic.html">Traffic</a></li>
+             <li><a href="dla.html">DLA</a></li>
              <li><a href="ants.html">Ants</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Parameter Sets</li>
@@ -114,37 +117,48 @@ img {
 
 <div id="getting-started" class="section level2">
 <h2>Getting Started</h2>
-<p><a href="fire.html">Fire Experiment</a> example demonstrates simple experiment definition with parameters and measures.</p>
+<div id="measures" class="section level3">
+<h3>Measures</h3>
+<p><a href="fire.html">Fire Experiment</a> example demonstrates how to setup nlexperiment session, define and run experiments, export view images, define temporal and final run measures, get and visualize observations.</p>
 <aside>
-<a href="fire.html"><img src="img/pages-fireView-1.png" alt="Fire" /></a> <a href="fire.html"><img src="img/pages-fireRunPlot2-1.png" alt="Fire" /></a>
+<a href="fire.html"><img src="img/pages-fireRunPlot-1.png" alt="Fire" /></a> <a href="fire.html"><img src="img/pages-fireRunPlot2-1.png" alt="Fire" /></a>
 </aside>
-<p><a href="fire.html"><img src="img/pages-fireRunPlot-1.png" alt="Fire" /></a> <!--[<img width = "90%" src = "img/pages-fireRunPlot-1.png"/>](fire.html)--></p>
-<p><a href="agents.html">Agents and Patches</a> example demonstrates how to collect values from individual agents and patches. Specifically:</p>
-<ul>
-<li>reading turtles and their links to recreate network as <strong>igraph</strong> object</li>
-<li>reading patches’ colors and create a raster image</li>
-</ul>
-<p><a href="agents.html"><img src = "img/pages-agentsGraphPlot-1.png"/></a> <asideclose> </asideclose></p>
-<p><a href="ants.html">Ants</a> example demonstrates simple parameter sets definition and parameter mapping.</p>
+<p><a href="fire.html"><img src="img/pages-fireView-1.png" alt="Fire" /></a></p>
+</div>
+<div id="agents-turtles-links-and-patches" class="section level3">
+<h3>Agents: Turtles, Links and Patches</h3>
+<p><a href="segregation.html">Segregation</a> example demonstrates how to obtain data from individual NetLogo agents.</p>
+<p><a href="segregation.html"><img src="img/pages-segregPlot-1.png" /></a></p>
+<p><a href="network.html">Network</a> example demonstrates how to collect values from turtles and their links to recreate network as <strong>igraph</strong> object</p>
+<p><a href="agents.html"><img src="img/pages-agentsGraphPlot-1.png" /></a></p>
+<p><a href="traffic.html">Traffic</a> example demonstrates how to collect values from turtles per each time step.</p>
+<p><a href="traffic.html"><img src="img/pages-trafficPlot-1.png" /></a></p>
+<p><a href="dla.html">DLA</a> example demonstrates how to read NetLogo patches.</p>
+<p><a href="dla.html"><img src="img/pages-dlaPlot-1.png" /></a></p>
+</div>
+<div id="mapping-variables" class="section level3">
+<h3>Mapping Variables</h3>
+<p><a href="ants.html">Ants</a> example demonstrates simple parameter sets definition and mapping.</p>
 <p><asideclose> <a href="ants.html"><img src="img/pages-antsPlotStep-1.png" alt="Ants" /></a> </asideclose></p>
 <p><a href="ants.html"><img src="img/pages-antsPlotViews-1.png" alt="Ants" /></a></p>
 </div>
+</div>
 <div id="parameter-sets" class="section level2">
 <h2>Parameter Sets</h2>
-<p>Exploring parameter space with full factorial design and sampling methods.</p>
 <p><a href="fur.html">Fur Patterns</a> demonstrates explicit definition of parameter sets and parameter mapping when parameter space is transformed.</p>
 <p><a href="fur.html"><img src = "img/pages-furShowPatches-1.png"/></a></p>
 <p><a href="flocking.html">Flocking Example</a> shows simple measure definition and observation in parameter space. It is the first in a series of parameter space exploration of the Flocking model.</p>
 <aside>
-<a href="flocking.html"><img src="img/pages-flockPlot2-1.png" /></a> <a href="flocking_categorical.html"><img width = "80%" src = "img/pages-pFlockCatPlot-1.png"/></a>
+<a href="flocking.html"><img src="img/pages-flockPlot2-1.png" /></a> <a href="flocking_categorical.html"><img src="img/pages-pFlockCatPlot-1.png" /></a> <a href="flocking_sampling.html"><img src="img/pages-flockSampPlot-1.png" /></a>
 </aside>
-<p><a href="flocking_categorical.html">Categorical Criteria</a> and <a href="flocking_sampling.html">Hyper Latinc Cube Sampling</a> examples demontrate how to explore parameter space with categorical criteria and sampling methods. <a href="flocking_sampling.html"><img src="img/pages-flockSampPlot-1.png" /></a></p>
+<p><a href="flocking.html"><img src="img/pages-flockPlotGrid-1.png" /></a></p>
+<p><a href="flocking_categorical.html">Categorical Criteria</a> and <a href="flocking_sampling.html">Hyper Latin Cube Sampling</a> examples demontrate how to explore parameter space with categorical criteria and sampling methods.</p>
 </div>
 <div id="optimization" class="section level2">
 <h2>Optimization</h2>
 <p>Parameter fitting with best-fit criterion and optimization methods.</p>
 <ul>
-<li><a href="flocking_bestfit.html">Best-fit Criterion</a> shows how to define single criterion evaluation expression and evaluate parameter space with full-factor design.
+<li><a href="flocking_bestfit.html">Best-fit Criterion</a> shows how to define single criterion evaluation expression and evaluate parameter space with factorial design.
 <aside>
 <a href="flocking_bestfit.html"><img src = "img/pages-flockBestFitPlot1-1.png"/></a> <a href="flocking_random.html"><img src = "img/pages-flockSampPlot1-1.png"/></a> <a href="flocking_nm.html"><img src = "img/pages-pFlockNMPlot2-1.png"/></a></li>
 </ul>

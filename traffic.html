@@ -10,7 +10,7 @@
 
 
 
-<title>Authors</title>
+<title>Traffic</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -111,28 +111,63 @@ img {
 </div><!--/.navbar -->
 
 <div id="header">
-<h1 class="title">Authors</h1>
+<h1 class="title">Traffic</h1>
 </div>
 
 
-<p>Author: <strong>Darko Bergant</strong><br />Version: <strong>0.1.4</strong><br />Date: <strong>2015-09-07</strong><br />License: <strong>GPL-2</strong><br />URL: <a href="https://github.com/bergant/nlexperiment" class="uri">https://github.com/bergant/nlexperiment</a><br />Issues: <a href="https://github.com/bergant/nlexperiment/issues" class="uri">https://github.com/bergant/nlexperiment/issues</a></p>
-<p>For <a href="http://ccl.northwestern.edu/netlogo">NetLogo</a> see their <a href="http://ccl.northwestern.edu/netlogo/docs/copyright.html">copyright information</a>.</p>
-<p>Authors of NetLogo models used in examples are referenced in examples.</p>
-<p>Other packages utilised to create these pages:</p>
-<ul>
-<li><p><strong> RNetLogo </strong> 1.0-1 , GPL-2 <br/> Provides an Interface to the Agent-Based Modelling Platform NetLogo <br/> <a href="http://rnetlogo.r-forge.r-project.org/" class="uri">http://rnetlogo.r-forge.r-project.org/</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/RNetLogo/index.html ">CRAN</a></p></li>
-<li><p><strong> igraph </strong> 1.0.1 , GPL (&gt;= 2) <br/> Network Analysis and Visualization <br/> <a href="http://igraph.org" class="uri">http://igraph.org</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/igraph/index.html ">CRAN</a></p></li>
-<li><p><strong> ggplot2 </strong> 1.0.1 , GPL-2 <br/> An Implementation of the Grammar of Graphics <br/> <a href="http://ggplot2.org" class="uri">http://ggplot2.org</a>, <a href="https://github.com/hadley/ggplot2" class="uri">https://github.com/hadley/ggplot2</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/ggplot2/index.html ">CRAN</a></p></li>
-<li><p><strong> knitr </strong> 1.10.5 , GPL <br/> A General-Purpose Package for Dynamic Report Generation in R <br/> <a href="http://yihui.name/knitr/" class="uri">http://yihui.name/knitr/</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/knitr/index.html ">CRAN</a></p></li>
-<li><p><strong> rmarkdown </strong> 0.7 , GPL-3 <br/> Dynamic Documents for R <br/> <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/rmarkdown/index.html ">CRAN</a></p></li>
-<li><p><strong> tufterhandout </strong> 1.2.2 , MIT + file LICENSE <br/> Tufte-style HTML Document Format for rmarkdown <br/> <a href="http://sachsmc.github.io/tufterhandout" class="uri">http://sachsmc.github.io/tufterhandout</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/tufterhandout/index.html ">CRAN</a></p></li>
-<li><p><strong> tidyr </strong> 0.2.0 , MIT + file LICENSE <br/> Easily Tidy Data with spread() and gather() Functions. <br/> <a href="https://github.com/hadley/tidyr" class="uri">https://github.com/hadley/tidyr</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/tidyr/index.html ">CRAN</a></p></li>
-<li><p><strong> tgp </strong> 2.4-11 , LGPL <br/> Bayesian treed Gaussian process models <br/> <a href="http://www.ams.ucsc.edu/~rbgramacy/tgp.html" class="uri">http://www.ams.ucsc.edu/~rbgramacy/tgp.html</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/tgp/index.html ">CRAN</a></p></li>
-<li><p><strong> dfoptim </strong> 2011.8-1 , GPL (&gt;= 2) <br/> Derivative-free Optimization <br/> <a href="http://www.jhsph.edu/agingandhealth/People/Faculty_personal_pages/Varadhan.html" class="uri">http://www.jhsph.edu/agingandhealth/People/Faculty_personal_pages/Varadhan.html</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/dfoptim/index.html ">CRAN</a></p></li>
-<li><p><strong> GenSA </strong> 1.1.5 , GPL-2 <br/> Functions for Generalized Simulated Annealing <br/> See description on <a href=" https://cran.rstudio.com/web/packages/GenSA/index.html ">CRAN</a></p></li>
-<li><p><strong> genalg </strong> 0.2.0 , GPL-2 <br/> R Based Genetic Algorithm <br/> <a href="https://github.com/egonw/genalg" class="uri">https://github.com/egonw/genalg</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/genalg/index.html ">CRAN</a></p></li>
-<li><p><strong> digest </strong> 0.6.8 , GPL-2 <br/> Create Cryptographic Hash Digests of R Objects <br/> <a href="http://dirk.eddelbuettel.com/code/digest.html" class="uri">http://dirk.eddelbuettel.com/code/digest.html</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/digest/index.html ">CRAN</a></p></li>
-</ul>
+<p>The <code>agents_after</code> element (see <a href="segregation.html">Segregation</a> example) provides the individual agents’ variables but only at the end of simulation. With <code>agents_step</code> it is possible to measure all agents individually per each time step.</p>
+<p>Example below shows how to read the position of each car on every time step from Netlogo Traffic Basic model (Wilensky, 1997).</p>
+<aside>
+Wilensky, U. (1997). NetLogo <a href="http://ccl.northwestern.edu/netlogo/models/TrafficBasic">Traffic Basic model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+</aside>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
+<pre class="r"><code>experiment &lt;- nl_experiment(
+  model_file = &quot;models/Sample Models/Social Science/Traffic Basic.nlogo&quot;,
+  iterations = 350,
+  param_values = list(
+    acceleration = 0.0045,
+    deceleration = 0.026
+  ),
+  agents_step = list(
+    cars = agent_set(
+      vars = c(&quot;who&quot;, &quot;xcor&quot;, &quot;speed&quot;), 
+      agents = &quot;turtles&quot;)
+  ),
+  random_seed = 1
+)</code></pre>
+<aside>
+<code>agents_step</code> defines temporal dis-aggreted measure (all agents per each step)
+</aside>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
+<pre class="r"><code>result &lt;- nl_run(experiment)</code></pre>
+<p>The data about individual agents are now stored in <code>result$agents_step$cars</code>. To join the data with the values from parameter sets use <code>nl_get_result</code> function.</p>
+<p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Get data" style="color:gray"></span></lside></p>
+<pre class="r"><code>dat &lt;- nl_get_result(result, type = &quot;agents_step&quot;, sub_type = &quot;cars&quot;)</code></pre>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot cars" style="color:gray"></span></lside></p>
+<pre class="r"><code>library(ggplot2)
+
+ggplot(dat, aes(x = step_id, y = xcor - speed, dx = 1, dy = speed)) +
+  geom_segment(aes(xend = step_id + 1, yend = xcor )) +
+  geom_segment(aes(xend = step_id + 1, yend = xcor ), 
+               dat[dat$who == 0,], color = &quot;red&quot;, size = 1.1) +
+  labs(x = &quot;time&quot;, y = &quot;position&quot;) +
+  theme_minimal() </code></pre>
+<p>
+<img src="img/pages-trafficPlot-1.png">
+<aside>
+<p class="caption">
+Position of <em>n</em> cars in time. Trajectory of selected car is marked by red.
+</p>
+</aside>
+</p>
+<div id="see-also" class="section level2">
+<h2>See also</h2>
+<p><a href="segregation.html">Segregation</a> example demonstrates how to obtain data from individual NetLogo agents.</p>
+<p><a href="network.html">Network</a> example demonstrates how to read a network structure from NetLogo turtles and links.</p>
+<p><a href="dla.html">DLA</a> example demonstrates how to read patches and their variables.</p>
+<p><a href="ants.html">Ants</a> example demonstrates simple parameter sets definition and parameter mapping.</p>
+<p><asideclose> Get <a href="traffic.rmd">rmarkdown source</a> of this page. </asideclose></p>
+</div>
 
 
 <footer>
