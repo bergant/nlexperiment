@@ -130,7 +130,7 @@ Wilensky, U. (2003). <a href="http://ccl.northwestern.edu/netlogo/models/Fur">Ne
 <p>But considering constraints and model symmetry we can reduce the parameters to:</p>
 <ul>
 <li><code>ratio</code> (the inhibitor concentration parameter)</li>
-<li><code>radius_diff</code> (the difference between x and y radius) and</li>
+<li><code>rdiff</code> (the difference between x and y radius) and</li>
 <li><code>gap</code> (distance between inner and outer ellipse)</li>
 </ul>
 <aside>
@@ -141,15 +141,15 @@ See also <a href="http://classes.yale.edu/fractals/Panorama/Biology/Leopard/Leop
 <pre class="r"><code>#All combinations of ratio x radius_diff 
 param_sets &lt;- expand.grid(
   gap = 3,
-  radius_diff = seq(0, 2, by = 0.5),
+  rdiff = seq(0, 2, by = 0.5),
   ratio = seq(0.30, 0.65, by = 0.05)
 )
 # Add NetLogo variables
 param_sets &lt;- transform(param_sets,
   inner_radius_x = 3,                         
   outer_radius_x = 3 + gap,
-  inner_radius_y = 3 + radius_diff,
-  outer_radius_y = 3 + radius_diff + gap
+  inner_radius_y = 3 + rdiff,
+  outer_radius_y = 3 + rdiff + gap
 )</code></pre>
 <aside>
 <p><code>expand.grid</code> from R base package creates a data frame from all combinations of factors</p>
@@ -165,7 +165,7 @@ param_sets &lt;- transform(param_sets,
   
   mapping = c(
     gap = &quot;&quot;,
-    radius_diff = &quot;&quot;,
+    rdiff = &quot;&quot;,
     inner_radius_x = &quot;inner-radius-x&quot;,
     outer_radius_x = &quot;outer-radius-x&quot;,
     inner_radius_y = &quot;inner-radius-y&quot;,
@@ -183,13 +183,13 @@ param_sets &lt;- transform(param_sets,
 Note that variables <code>gap</code> and <code>radius_diff</code> must be mapped to empty string (since they are not NetLogo model variables).
 </aside>
 <p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
-<pre class="r"><code>result &lt;- nl_run(experiment, parallel = TRUE, max_cores = 3)</code></pre>
+<pre class="r"><code>result &lt;- nl_run(experiment, parallel = TRUE, max_cores = 3) </code></pre>
 <aside>
 Parallel execution is limited to 3 cores since there will be only <span class="math">\(5 \times 8 = 40\)</span> simulation runs.
 </aside>
 <p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Show fur patterns" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(ggplot2)
-nl_show_patches(result, x_param = &quot;ratio&quot;, y_param = &quot;radius_diff&quot;) +
+nl_show_patches(result, x_param = &quot;ratio&quot;, y_param = &quot;rdiff&quot;) +
   scale_fill_manual(values = c(&quot;black&quot;,&quot;white&quot;)) +
   labs(y=expression(radius[y] - radius[x]), title = &quot;Fur patterns (gap = 3)&quot;)</code></pre>
 <p>

@@ -34,7 +34,7 @@ But considering constraints and model symmetry
 we can reduce the parameters to:
 
 * `ratio` (the inhibitor concentration parameter)
-* `radius_diff` (the difference between x and y radius) and
+* `rdiff` (the difference between x and y radius) and
 * `gap` (distance between inner and outer ellipse)
 
 <aside>
@@ -50,15 +50,15 @@ Example below still uses factorial design but on transformed parameter space
 #All combinations of ratio x radius_diff 
 param_sets <- expand.grid(
   gap = 3,
-  radius_diff = seq(0, 2, by = 0.5),
+  rdiff = seq(0, 2, by = 0.5),
   ratio = seq(0.30, 0.65, by = 0.05)
 )
 # Add NetLogo variables
 param_sets <- transform(param_sets,
   inner_radius_x = 3,                         
   outer_radius_x = 3 + gap,
-  inner_radius_y = 3 + radius_diff,
-  outer_radius_y = 3 + radius_diff + gap
+  inner_radius_y = 3 + rdiff,
+  outer_radius_y = 3 + rdiff + gap
 )
 ```
 <aside>
@@ -80,7 +80,7 @@ experiment <- nl_experiment(
   
   mapping = c(
     gap = "",
-    radius_diff = "",
+    rdiff = "",
     inner_radius_x = "inner-radius-x",
     outer_radius_x = "outer-radius-x",
     inner_radius_y = "inner-radius-y",
@@ -103,7 +103,7 @@ they are not NetLogo model variables).
 
 
 ```{r furRun, title = "Run the experiment", cache=TRUE}
-result <- nl_run(experiment, parallel = TRUE, max_cores = 3)
+result <- nl_run(experiment, parallel = TRUE, max_cores = 3) 
 ```
 <aside>
 Parallel execution is limited to 3 cores since there will be
@@ -113,7 +113,7 @@ only $5 \times 8 = 40$ simulation runs.
 
 ```{r title = "Show fur patterns", furShowPatches}
 library(ggplot2)
-nl_show_patches(result, x_param = "ratio", y_param = "radius_diff") +
+nl_show_patches(result, x_param = "ratio", y_param = "rdiff") +
   scale_fill_manual(values = c("black","white")) +
   labs(y=expression(radius[y] - radius[x]), title = "Fur patterns (gap = 3)")
 ```

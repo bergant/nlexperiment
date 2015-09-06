@@ -15,8 +15,11 @@ nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0")
 While using `step_measures` and `run_measures` 
 (see [Fire experiments](fire.html)) 
 is good enough for aggregate measures, there are occasions when we need to measure 
-values for each agent individually. Example below is using 
-Netlogo Segregation model (Wilensky, 1997) from NetLogo model library.
+values for each agent individually. 
+
+Example below is using 
+Netlogo Segregation model (Wilensky, 1997) from NetLogo model library to
+show how to obtain individual agents' data.
 
 <aside>
 Wilensky, U. (1997). NetLogo
@@ -69,7 +72,7 @@ library(ggplot2)
 ggplot(dat, aes(x = xcor, y = ycor, fill = group)) +
   geom_raster() +
   facet_grid( ~ percent_similar_wanted, labeller = label_both) +
-  scale_fill_manual(values = c("brown", "gray" )) +
+  scale_fill_manual(values = c("cadetblue4", "gray" )) +
   theme_minimal() 
 ```
 

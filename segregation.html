@@ -115,7 +115,8 @@ img {
 </div>
 
 
-<p>While using <code>step_measures</code> and <code>run_measures</code> (see <a href="fire.html">Fire experiments</a>) is good enough for aggregate measures, there are occasions when we need to measure values for each agent individually. Example below is using Netlogo Segregation model (Wilensky, 1997) from NetLogo model library.</p>
+<p>While using <code>step_measures</code> and <code>run_measures</code> (see <a href="fire.html">Fire experiments</a>) is good enough for aggregate measures, there are occasions when we need to measure values for each agent individually.</p>
+<p>Example below is using Netlogo Segregation model (Wilensky, 1997) from NetLogo model library to show how to obtain individual agents’ data.</p>
 <aside>
 Wilensky, U. (1997). NetLogo <a href="http://ccl.northwestern.edu/netlogo/models/Segregation">Segregation model</a>. Center for Connected Learning and Computer
 </aside>
@@ -151,7 +152,7 @@ dat$group &lt;- factor(dat$group, labels = c(&quot;A&quot;, &quot;B&quot;))</cod
 ggplot(dat, aes(x = xcor, y = ycor, fill = group)) +
   geom_raster() +
   facet_grid( ~ percent_similar_wanted, labeller = label_both) +
-  scale_fill_manual(values = c(&quot;brown&quot;, &quot;gray&quot; )) +
+  scale_fill_manual(values = c(&quot;cadetblue4&quot;, &quot;gray&quot; )) +
   theme_minimal() </code></pre>
 <p>
 <img src="img/pages-segregPlot-1.png">

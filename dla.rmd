@@ -63,7 +63,7 @@ The color palette must be provided by user.
 ```{r dlaPlot, title = "Plot results"}
 library(ggplot2)
 nl_show_patches(result, x_param = "wiggle_angle") +
-  scale_fill_manual(values = c("#CCDDFF","darkred"))
+  scale_fill_manual(values = c("white","darkred"))
 
 ```
 
