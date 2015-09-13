@@ -74,7 +74,7 @@ img {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Parameters & Measures<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
              <li><a href="tutorial.html">Overview</a></li>
              <li class="divider"></li>
@@ -86,11 +86,20 @@ img {
              <li><a href="dla.html">DLA</a></li>
              <li><a href="ants.html">Ants</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Parameter Sets</li>
+             <li class="dropdown-header">Parameter Value Sets</li>
              <li><a href="fur.html">Fur Patterns</a></li>
              <li><a href="flocking.html">Flocking</a></li>
              <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
              <li><a href="flocking_sampling.html">Latin Hypercube Sampling</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="sensitivity" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Sensitivity Analysis & Optimization<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Sensitivity Analysis</li>
+             <li><a href="flocking_sens_lhs.html">Random Sampling</a></li>
+             <li><a href="flocking_sens_oat.html">One-at-a-time</a></li>
+             <li><a href="flocking_fast.html">FAST method</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Optimization</li>
              <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
@@ -101,10 +110,10 @@ img {
              <li><a href="flocking_ga.html">Genetic Algorithm</a></li>
           </ul>
         </li>
-        <li><a href="help/index.html">Package documentation</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+        <li><a href="help/index.html">Docs</a></li>
+        <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -115,7 +124,7 @@ img {
 </div>
 
 
-<p>The following example is using NetLogo Fur model (Wilensky 2003) to show explicit definition of parameter sets and parameter mapping.</p>
+<p>The following example is using NetLogo Fur model (Wilensky 2003) to show explicit parameter values definition.</p>
 <aside>
 Wilensky, U. (2003). <a href="http://ccl.northwestern.edu/netlogo/models/Fur">NetLogo Fur model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 </aside>
@@ -136,9 +145,9 @@ Wilensky, U. (2003). <a href="http://ccl.northwestern.edu/netlogo/models/Fur">Ne
 <aside>
 See also <a href="http://classes.yale.edu/fractals/Panorama/Biology/Leopard/Leopard.html">this site</a> for model description.
 </aside>
-<p>Example below still uses factorial design but on transformed parameter space <code>ratio</code> x <code>radius_diff</code> while keeping the <code>gap</code> between the circles constant.</p>
+<p>Example below still uses factorial design but on transformed parameter space <code>ratio * rdiff</code> while keeping the <code>gap</code> between the circles constant.</p>
 <p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Prepare parameter sets" style="color:gray"></span></lside></p>
-<pre class="r"><code>#All combinations of ratio x radius_diff 
+<pre class="r"><code>#All combinations of ratio x rdiff 
 param_sets &lt;- expand.grid(
   gap = 3,
   rdiff = seq(0, 2, by = 0.5),
@@ -152,7 +161,7 @@ param_sets &lt;- transform(param_sets,
   outer_radius_y = 3 + rdiff + gap
 )</code></pre>
 <aside>
-<p><code>expand.grid</code> from R base package creates a data frame from all combinations of factors</p>
+<p>R function <code>expand.grid</code> creates a data frame from all combinations of factors</p>
 <code>transform</code> adds new columns to the data frame as defined by expressions
 </aside>
 <p>Instead of list with parameter values as in previous examples, we can use this data frame with explicit parameter sets to define <code>param_values</code>:</p>

@@ -74,7 +74,7 @@ img {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Parameters & Measures<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
              <li><a href="tutorial.html">Overview</a></li>
              <li class="divider"></li>
@@ -86,11 +86,20 @@ img {
              <li><a href="dla.html">DLA</a></li>
              <li><a href="ants.html">Ants</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Parameter Sets</li>
+             <li class="dropdown-header">Parameter Value Sets</li>
              <li><a href="fur.html">Fur Patterns</a></li>
              <li><a href="flocking.html">Flocking</a></li>
              <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
              <li><a href="flocking_sampling.html">Latin Hypercube Sampling</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="sensitivity" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Sensitivity Analysis & Optimization<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Sensitivity Analysis</li>
+             <li><a href="flocking_sens_lhs.html">Random Sampling</a></li>
+             <li><a href="flocking_sens_oat.html">One-at-a-time</a></li>
+             <li><a href="flocking_fast.html">FAST method</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Optimization</li>
              <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
@@ -101,10 +110,10 @@ img {
              <li><a href="flocking_ga.html">Genetic Algorithm</a></li>
           </ul>
         </li>
-        <li><a href="help/index.html">Package documentation</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+        <li><a href="help/index.html">Docs</a></li>
+        <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -115,7 +124,7 @@ img {
 </div>
 
 
-<p>Author: <strong>Darko Bergant</strong><br />Version: <strong>0.1.4</strong><br />Date: <strong>2015-09-07</strong><br />License: <strong>GPL-2</strong><br />URL: <a href="https://github.com/bergant/nlexperiment" class="uri">https://github.com/bergant/nlexperiment</a><br />Issues: <a href="https://github.com/bergant/nlexperiment/issues" class="uri">https://github.com/bergant/nlexperiment/issues</a></p>
+<p>Author: <strong>Darko Bergant</strong><br />Version: <strong>0.1.5</strong><br />Date: <strong>2015-09-14</strong><br />License: <strong>GPL-2</strong><br />URL: <a href="http://bergant.github.io/nlexperiment/" class="uri">http://bergant.github.io/nlexperiment/</a><br />Issues: <a href="https://github.com/bergant/nlexperiment/issues" class="uri">https://github.com/bergant/nlexperiment/issues</a></p>
 <p>For <a href="http://ccl.northwestern.edu/netlogo">NetLogo</a> see their <a href="http://ccl.northwestern.edu/netlogo/docs/copyright.html">copyright information</a>.</p>
 <p>Authors of NetLogo models used in examples are referenced in examples.</p>
 <p>Other packages utilised to create these pages:</p>
@@ -123,10 +132,10 @@ img {
 <li><p><strong> RNetLogo </strong> 1.0-1 , GPL-2 <br/> Provides an Interface to the Agent-Based Modelling Platform NetLogo <br/> <a href="http://rnetlogo.r-forge.r-project.org/" class="uri">http://rnetlogo.r-forge.r-project.org/</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/RNetLogo/index.html ">CRAN</a></p></li>
 <li><p><strong> igraph </strong> 1.0.1 , GPL (&gt;= 2) <br/> Network Analysis and Visualization <br/> <a href="http://igraph.org" class="uri">http://igraph.org</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/igraph/index.html ">CRAN</a></p></li>
 <li><p><strong> ggplot2 </strong> 1.0.1 , GPL-2 <br/> An Implementation of the Grammar of Graphics <br/> <a href="http://ggplot2.org" class="uri">http://ggplot2.org</a>, <a href="https://github.com/hadley/ggplot2" class="uri">https://github.com/hadley/ggplot2</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/ggplot2/index.html ">CRAN</a></p></li>
-<li><p><strong> knitr </strong> 1.10.5 , GPL <br/> A General-Purpose Package for Dynamic Report Generation in R <br/> <a href="http://yihui.name/knitr/" class="uri">http://yihui.name/knitr/</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/knitr/index.html ">CRAN</a></p></li>
-<li><p><strong> rmarkdown </strong> 0.7 , GPL-3 <br/> Dynamic Documents for R <br/> <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/rmarkdown/index.html ">CRAN</a></p></li>
+<li><p><strong> knitr </strong> 1.11 , GPL <br/> A General-Purpose Package for Dynamic Report Generation in R <br/> <a href="http://yihui.name/knitr/" class="uri">http://yihui.name/knitr/</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/knitr/index.html ">CRAN</a></p></li>
+<li><p><strong> rmarkdown </strong> 0.8 , GPL-3 <br/> Dynamic Documents for R <br/> <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/rmarkdown/index.html ">CRAN</a></p></li>
 <li><p><strong> tufterhandout </strong> 1.2.2 , MIT + file LICENSE <br/> Tufte-style HTML Document Format for rmarkdown <br/> <a href="http://sachsmc.github.io/tufterhandout" class="uri">http://sachsmc.github.io/tufterhandout</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/tufterhandout/index.html ">CRAN</a></p></li>
-<li><p><strong> tidyr </strong> 0.2.0 , MIT + file LICENSE <br/> Easily Tidy Data with spread() and gather() Functions. <br/> <a href="https://github.com/hadley/tidyr" class="uri">https://github.com/hadley/tidyr</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/tidyr/index.html ">CRAN</a></p></li>
+<li><p><strong> tidyr </strong> 0.3.1 , MIT + file LICENSE <br/> Easily Tidy Data with <code>spread()</code> and <code>gather()</code> Functions <br/> <a href="https://github.com/hadley/tidyr" class="uri">https://github.com/hadley/tidyr</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/tidyr/index.html ">CRAN</a></p></li>
 <li><p><strong> tgp </strong> 2.4-11 , LGPL <br/> Bayesian treed Gaussian process models <br/> <a href="http://www.ams.ucsc.edu/~rbgramacy/tgp.html" class="uri">http://www.ams.ucsc.edu/~rbgramacy/tgp.html</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/tgp/index.html ">CRAN</a></p></li>
 <li><p><strong> dfoptim </strong> 2011.8-1 , GPL (&gt;= 2) <br/> Derivative-free Optimization <br/> <a href="http://www.jhsph.edu/agingandhealth/People/Faculty_personal_pages/Varadhan.html" class="uri">http://www.jhsph.edu/agingandhealth/People/Faculty_personal_pages/Varadhan.html</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/dfoptim/index.html ">CRAN</a></p></li>
 <li><p><strong> GenSA </strong> 1.1.5 , GPL-2 <br/> Functions for Generalized Simulated Annealing <br/> See description on <a href=" https://cran.rstudio.com/web/packages/GenSA/index.html ">CRAN</a></p></li>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>One-at-a-time (OAT) Method</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="libs/highlight/default.css"
+      type="text/css" />
+<script src="libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header navbar-left">
+      <!--a class="navbar-brand" href="index.html">nlexperiment</a-->
+      <a class="navbar-brand" href="index.html">
+        <!--img class="img-responsive" src="img/logo.png"-->
+        <strong><nl>nl</nl><experiment>experiment</experiment></strong>
+      </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Parameters & Measures<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="tutorial.html">Overview</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Getting started</li>
+             <li><a href="fire.html">Fire Experiment</a></li>
+             <li><a href="segregation.html">Segregation</a></li>
+             <li><a href="network.html">Network</a></li>
+             <li><a href="traffic.html">Traffic</a></li>
+             <li><a href="dla.html">DLA</a></li>
+             <li><a href="ants.html">Ants</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Parameter Value Sets</li>
+             <li><a href="fur.html">Fur Patterns</a></li>
+             <li><a href="flocking.html">Flocking</a></li>
+             <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
+             <li><a href="flocking_sampling.html">Latin Hypercube Sampling</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="sensitivity" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Sensitivity Analysis & Optimization<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Sensitivity Analysis</li>
+             <li><a href="flocking_sens_lhs.html">Random Sampling</a></li>
+             <li><a href="flocking_sens_oat.html">One-at-a-time</a></li>
+             <li><a href="flocking_fast.html">FAST method</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Optimization</li>
+             <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
+             <li><a href="flocking_random_search.html">Random Search</a></li>
+             <li><a href="flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+             <li><a href="flocking_nm.html">Nelder-Mead Optimization</a></li>
+             <li><a href="flocking_sa.html">Simulated Annealing</a></li>
+             <li><a href="flocking_ga.html">Genetic Algorithm</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="help/index.html">Docs</a></li>
+        <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+<h1 class="title">One-at-a-time (OAT) Method</h1>
+</div>
+
+
+<p>This example is using NetLogo Flocking model (Wilensky, 1998) to demonstrate sensitivity analysis with OAT method.</p>
+<aside>
+<p>Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flocking">NetLogo Flocking model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.</p>
+</aside>
+<p>As in <a href="flocking.html">Flocking example</a> two measures of self-organization are defined:</p>
+<ul>
+<li><strong>converergence</strong> is based on variance of birds’ orientations and</li>
+<li><strong>mean crowding</strong> is average group size as experienced by individual.</li>
+</ul>
+<p>Additionaly (because these measures are temporal):</p>
+<ul>
+<li><em>criteria evaluation expressions</em> are aggregating those measures over time (note the <code>eval_criteria</code> element).</li>
+</ul>
+<aside>
+See <a href="flocking.html">Flocking example</a> for formal definitions of the measures.
+</aside>
+<p>Instead of using a list of parameter values (which would be interpreted in nlexperiment as all combinations of parameter values), parameter value sets are defined with <code>nl_param_oat</code> function.</p>
+<p>It takes minimum and maximum values as a parameter range and median value as default value. Each parameter is sampled over its range (with <span class="math">\(n\)</span> values) while other parameters are fixed to default value. Default value is calculated from parameter values with <code>median</code> so three values are enough for each parameter (min, median and max). Parameters with only one value are treated as constants.</p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
+<pre class="r"><code>experiment &lt;- nl_experiment( 
+  model_file = &quot;models/Sample Models/Biology/Flocking.nlogo&quot;,
+  setup_commands = c(&quot;setup&quot;, &quot;repeat 100 [go]&quot;),
+  iterations = 5,
+
+  param_values = nl_param_oat(
+    n = 25,
+    world_size = 50,
+    population = 80,
+    max_align_turn = c(0, 5, 20),
+    max_cohere_turn = c(0, 3, 20),
+    max_separate_turn = c(0, 1.5, 20),
+    vision = c(1, 6, 10),
+    minimum_separation = c(0, 2, 10),
+    .dummy = c(1:0) 
+  ),
+  mapping = nl_default_mapping,
+
+  step_measures = measures(
+    converged = &quot;1 - 
+      (standard-deviation [dx] of turtles + 
+       standard-deviation [dy] of turtles) / 2&quot;,
+    mean_crowding = 
+      &quot;mean [count flockmates + 1] of turtles&quot;
+  ),
+  eval_criteria = criteria(
+    c_converged = mean(step$converged),
+    c_mcrowding = mean(step$mean_crowding)
+  ),
+
+  repetitions = 10,                        # repeat simulations 10 times
+  random_seed = 1:10
+
+)</code></pre>
+<p>To see the experiment design with scatter plots use <code>nl_show_params</code> function:</p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot the experiment design" style="color:gray"></span></lside></p>
+<pre class="r"><code>nl_show_params(experiment) </code></pre>
+<p>
+<img src="img/pages-flockSensOatPairs-1.png">
+<aside>
+<p class="caption">
+Experiment design: parameter value sets shown with scatter plots.
+</p>
+</aside>
+</p>
+<p>Run the experiment:</p>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run experiment" style="color:gray"></span></lside></p>
+<pre class="r"><code>result &lt;- nl_run(experiment, parallel = TRUE) </code></pre>
+<aside>
+<p>Parameter value sets: 150<br />Total simulations: 1500<br />Experiment duration: 1.63 mins</p>
+</aside>
+<pre class="r"><code>dat &lt;- nl_get_result(result, type = &quot;criteria&quot;)
+
+library(tidyr)
+dat_long &lt;- gather_(dat, key = &quot;parameter&quot;, value = &quot;value&quot;, 
+                c(&quot;max_align_turn&quot;, &quot;max_cohere_turn&quot;, &quot;max_separate_turn&quot;, 
+                  &quot;vision&quot;, &quot;minimum_separation&quot;, &quot;.dummy&quot;))</code></pre>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot converged" style="color:gray"></span></lside></p>
+<pre class="r"><code>library(ggplot2)
+ggplot(dat_long, aes(x = value, y = c_converged)) +
+  geom_point(alpha = 0.3) +
+  stat_smooth(method = &quot;lm&quot;, color = &quot;red&quot;) +
+  facet_wrap(~ parameter, scales = &quot;free_x&quot;) + 
+  theme_bw()</code></pre>
+<p>
+<img src="img/pages-flockSensOatPlot1-1.png">
+<aside>
+<p class="caption">
+Converged value by model parameters
+</p>
+</aside>
+</p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot crowding" style="color:gray"></span></lside></p>
+<pre class="r"><code>ggplot(dat_long, aes(x = value, y = c_mcrowding)) +
+  geom_point(alpha = 0.2) +
+  stat_smooth(method = &quot;lm&quot;, color = &quot;red&quot;) +
+  facet_wrap(~ parameter, scales = &quot;free_x&quot;) + 
+  theme_bw() </code></pre>
+<p>
+<img src="img/pages-flockSensOatPlot2-1.png">
+<aside>
+<p class="caption">
+Mean crowding by model parameters
+</p>
+</aside>
+</p>
+<div id="related" class="section level2">
+<h2>Related</h2>
+<p>Example <a href="flocking_fast.html">FAST</a> demonstrates sensitivity analysis with Fourier Amplitude Sensitivity Test (FAST).</p>
+<p><a href="flocking_bestfit.html">Best-fit Criterion</a> shows how to define single criterion evaluation expression and evaluate parameter space with full-factor design.</p>
+<p><a href="flocking_random_search.html">Random Search</a> demonstrate searching for optimal parameters using random search.</p>
+<p><asideclose> Get <a href="flocking_sens_oat.rmd">rmarkdown source</a> of this page. </asideclose></p>
+</div>
+
+
+<footer>
+  <a href="about.html">Authors</a> |
+  View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
+  Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
+</footer>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

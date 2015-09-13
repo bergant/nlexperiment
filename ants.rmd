@@ -78,7 +78,6 @@ NetLogo variables `diffusion-rate` and `evaporation-rate`.
 </aside>
 
 
-
 ```{r antsRun, title = "Run experiment", cache=TRUE}
 results <- nl_run(experiment)    
 ```

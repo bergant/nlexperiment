@@ -13,7 +13,7 @@ nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/")
 ```
 
 The following example is using NetLogo Fur model (Wilensky 2003) to show
-explicit definition of parameter sets and parameter mapping.
+explicit parameter values definition.
 
 <aside>
 Wilensky, U. (2003). 
@@ -44,10 +44,10 @@ for model description.
 </aside>
 
 Example below still uses factorial design but on transformed parameter space
-`ratio` x `radius_diff` while keeping the `gap` between the circles constant.
+`ratio * rdiff` while keeping the `gap` between the circles constant.
 
 ```{r furParamSets, title = "Prepare parameter sets"}
-#All combinations of ratio x radius_diff 
+#All combinations of ratio x rdiff 
 param_sets <- expand.grid(
   gap = 3,
   rdiff = seq(0, 2, by = 0.5),
@@ -62,7 +62,7 @@ param_sets <- transform(param_sets,
 )
 ```
 <aside>
-`expand.grid` from R base package creates a data frame from all combinations of factors
+R function `expand.grid` creates a data frame from all combinations of factors
 
 `transform` adds new columns to the data frame as defined by expressions
 </aside>

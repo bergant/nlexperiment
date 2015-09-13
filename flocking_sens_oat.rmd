@@ -1,0 +1,155 @@
+
+---
+title: "One-at-a-time (OAT) Method"
+---
+
+```{r ch_opt, child="include/chunk_options.rmd", cache=FALSE}
+```
+
+```{r, echo = FALSE}
+library(nlexperiment)
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0") 
+```
+
+This example is using NetLogo Flocking model (Wilensky, 1998) to 
+demonstrate sensitivity analysis with OAT method.
+
+
+<aside>
+Wilensky, U. (1998). 
+[NetLogo Flocking model](http://ccl.northwestern.edu/netlogo/models/Flocking). 
+Center for Connected Learning and Computer-Based Modeling, 
+Northwestern University, Evanston, IL.
+
+
+</aside>
+
+As in [Flocking example](flocking.html) two measures of self-organization are defined:
+
+* __converergence__ is based on variance of birds' orientations and
+* __mean crowding__ is average group size as experienced by individual.
+
+Additionaly (because these measures are temporal):
+
+* _criteria evaluation expressions_ are aggregating those measures over time 
+  (note the `eval_criteria` element). 
+
+<aside>
+See [Flocking example](flocking.html) for formal definitions of the measures.
+</aside>
+
+Instead of using a list of parameter values (which would be interpreted in 
+nlexperiment as all combinations of parameter values), 
+parameter value sets are defined with `nl_param_oat` function. 
+
+It takes minimum and maximum values as a parameter range and median value
+as default value. Each parameter is sampled over its range (with $n$ values)
+while other parameters are fixed to default value. 
+Default value is calculated from parameter values with `median` so 
+three values are enough for each parameter (min, median and max).
+Parameters with only one value are treated as constants.
+
+
+
+```{r flockSensOatModel, title = "Define the experiment"}
+experiment <- nl_experiment( 
+  model_file = "models/Sample Models/Biology/Flocking.nlogo",
+  setup_commands = c("setup", "repeat 100 [go]"),
+  iterations = 5,
+
+  param_values = nl_param_oat(
+    n = 25,
+    world_size = 50,
+    population = 80,
+    max_align_turn = c(0, 5, 20),
+    max_cohere_turn = c(0, 3, 20),
+    max_separate_turn = c(0, 1.5, 20),
+    vision = c(1, 6, 10),
+    minimum_separation = c(0, 2, 10),
+    .dummy = c(1:0) 
+  ),
+  mapping = nl_default_mapping,
+
+  step_measures = measures(
+    converged = "1 - 
+      (standard-deviation [dx] of turtles + 
+       standard-deviation [dy] of turtles) / 2",
+    mean_crowding = 
+      "mean [count flockmates + 1] of turtles"
+  ),
+  eval_criteria = criteria(
+    c_converged = mean(step$converged),
+    c_mcrowding = mean(step$mean_crowding)
+  ),
+
+  repetitions = 10,                        # repeat simulations 10 times
+  random_seed = 1:10
+
+)
+```
+
+To see the experiment design with scatter plots use `nl_show_params` function: 
+
+```{r flockSensOatPairs, title = "Plot the experiment design", fig.cap="Experiment design: parameter value sets shown with scatter plots."}
+nl_show_params(experiment) 
+```
+
+Run the experiment:
+
+```{r flockSensOatRun, title = "Run experiment", cache=TRUE}
+result <- nl_run(experiment, parallel = TRUE) 
+```
+<aside>
+
+| Parameter value sets: `r nrow(experiment$param_sets)`
+| Total simulations: `r nrow(experiment$param_sets) * experiment$run_options$repetitions`
+| Experiment duration: `r round(result$duration,2)` `r attr(result$duration, "units")` 
+
+</aside>
+
+```{r flockSensOatData, message=FALSE, warning=FALSE}
+dat <- nl_get_result(result, type = "criteria")
+
+library(tidyr)
+dat_long <- gather_(dat, key = "parameter", value = "value", 
+                c("max_align_turn", "max_cohere_turn", "max_separate_turn", 
+                  "vision", "minimum_separation", ".dummy"))
+```
+
+
+```{r flockSensOatPlot1, title = "Plot converged", fig.height=5,  fig.cap="Converged value by model parameters"}
+library(ggplot2)
+ggplot(dat_long, aes(x = value, y = c_converged)) +
+  geom_point(alpha = 0.3) +
+  stat_smooth(method = "lm", color = "red") +
+  facet_wrap(~ parameter, scales = "free_x") + 
+  theme_bw()
+
+```
+
+
+```{r flockSensOatPlot2, title = "Plot crowding", fig.height=5, fig.cap="Mean crowding by model parameters"}
+ggplot(dat_long, aes(x = value, y = c_mcrowding)) +
+  geom_point(alpha = 0.2) +
+  stat_smooth(method = "lm", color = "red") +
+  facet_wrap(~ parameter, scales = "free_x") + 
+  theme_bw() 
+```
+
+
+## Related
+
+Example [FAST](flocking_fast.html) demonstrates
+sensitivity analysis with Fourier Amplitude Sensitivity Test (FAST).
+
+[Best-fit Criterion](flocking_bestfit.html) shows how to define 
+  single criterion evaluation expression 
+  and evaluate parameter space with full-factor design.
+  
+[Random Search](flocking_random_search.html) demonstrate searching for optimal parameters
+  using random search.  
+
+
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>

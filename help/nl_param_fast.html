@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<title>Help</title>
+
+<script src="../libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="../libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
+<script src="../libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="../libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="../libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="../libs/highlight/default.css"
+      type="text/css" />
+<script src="../libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="../tufterhandout2.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
+</style>
+<div class="container-fluid main-container">
+
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header navbar-left">
+      <!--a class="navbar-brand" href="../index.html">nlexperiment</a-->
+      <a class="navbar-brand" href="../index.html">
+        <!--img class="img-responsive" src="img/logo.png"-->
+        <strong><nl>nl</nl><experiment>experiment</experiment></strong>
+      </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="../tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Parameters & Measures<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li><a href="../tutorial.html">Overview</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Getting started</li>
+             <li><a href="../fire.html">Fire Experiment</a></li>
+             <li><a href="../segregation.html">Segregation</a></li>
+             <li><a href="../network.html">Network</a></li>
+             <li><a href="../traffic.html">Traffic</a></li>
+             <li><a href="../dla.html">DLA</a></li>
+             <li><a href="../ants.html">Ants</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Parameter Value Sets</li>
+             <li><a href="../fur.html">Fur Patterns</a></li>
+             <li><a href="../flocking.html">Flocking</a></li>
+             <li><a href="../flocking_categorical.html">Categorical Criteria</a></li>
+             <li><a href="../flocking_sampling.html">Latin Hypercube Sampling</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="../sensitivity" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Sensitivity Analysis & Optimization<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Sensitivity Analysis</li>
+             <li><a href="../flocking_sens_lhs.html">Random Sampling</a></li>
+             <li><a href="../flocking_sens_oat.html">One-at-a-time</a></li>
+             <li><a href="../flocking_fast.html">FAST method</a></li>
+             <li class="divider"></li>
+             <li class="dropdown-header">Optimization</li>
+             <li><a href="../flocking_bestfit.html">Best-fit Criterion</a></li>
+             <li><a href="../flocking_random_search.html">Random Search</a></li>
+             <li><a href="../flocking_bfgs.html">Optimization with L-BFGS-B</a></li>
+             <li><a href="../flocking_nm.html">Nelder-Mead Optimization</a></li>
+             <li><a href="../flocking_sa.html">Simulated Annealing</a></li>
+             <li><a href="../flocking_ga.html">Genetic Algorithm</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="../help/index.html">Docs</a></li>
+        <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+  <table width="100%" summary="page for nl_param_fast">
+    <tr>
+      <td>nl_param_fast</td>
+      <td style="text-align: right;">R Documentation</td>
+    </tr>
+  </table>
+  <h2>Generate a parameter value sets for the FAST method</h2>
+  <h3>Description</h3>
+  <p>Uses <code>fast_parameters</code> from <span class="pkg">fast</span> package to create
+parameter sets for Fourier Amplitute Sensitivity Test (FAST).
+</p>
+  <h3>Usage</h3>
+  <pre>
+nl_param_fast(...)
+</pre>
+  <h3>Arguments</h3>
+  <table summary="R argblock">
+    <tr valign="top">
+      <td>
+        <code>...</code>
+      </td>
+      <td>
+        <p>Named list of parameter ranges (numeric vectors)</p>
+      </td>
+    </tr>
+  </table>
+  <h3>Details</h3>
+  <p>Uses only parameters with min != max values to create parameter sets.
+Adds dummy variable.
+</p>
+  <h3>Value</h3>
+  <p>A data frame with parameter value sets.
+</p>
+  <h3>See Also</h3>
+  <p>Use <code>nl_get_fast_sensitivity</code> to get sensitivity data.
+See fast package documentation for FAST algorithm details.
+from the simulation results.
+See <code>nl_param_lhs</code> for latin hypercube sampling.
+</p>
+  <h3>Examples</h3>
+  <pre>
+param_values &lt;- nl_param_fast(
+  world_size = 50,
+  population = 80,
+  max_align_turn = c(1, 5, 20),
+  max_cohere_turn = c(1, 3, 20),
+  max_separate_turn = c(1, 1.5, 20),
+  vision = c(1, 3, 10),
+  minimum_separation = c(1, 3, 10)
+)
+</pre>
+</body>
+<footer>
+  <a href="../about.html">Authors</a> |
+  View project on <a href="https://github.com/bergant/nlexperiment">GitHub</a> |
+  Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
+</footer>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

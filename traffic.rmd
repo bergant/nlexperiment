@@ -47,7 +47,7 @@ experiment <- nl_experiment(
 )
 ```
 <aside>
-`agents_step` defines temporal dis-aggreted measure (all agents per each step)
+`agents_step` defines temporal disaggregated measure (all agents per each step)
 </aside>
 
 ```{r trafficRun, title = "Run the experiment", cache=TRUE}
@@ -63,7 +63,7 @@ dat <- nl_get_result(result, type = "agents_step", sub_type = "cars")
 ```
 
 
-```{r trafficPlot, title = "Plot cars", fig.cap="Position of _n_ cars in time. Trajectory of selected car is marked by red."}
+```{r trafficPlot, title = "Plot cars", fig.cap="Position of _n_ cars in time. Position of selected car is marked by red."}
 library(ggplot2)
 
 ggplot(dat, aes(x = step_id, y = xcor - speed, dx = 1, dy = speed)) +
@@ -71,6 +71,17 @@ ggplot(dat, aes(x = step_id, y = xcor - speed, dx = 1, dy = speed)) +
   geom_segment(aes(xend = step_id + 1, yend = xcor ), 
                dat[dat$who == 0,], color = "red", size = 1.1) +
   labs(x = "time", y = "position") +
+  theme_minimal() 
+
+```
+
+```{r trafficPlot2, title = "Plot cars", fig.cap="Speed of _n_ cars in time. Speed of selected car is marked by red."}
+library(ggplot2)
+
+ggplot(dat, aes(x = step_id, y = speed, z = factor(who))) +
+  geom_line(alpha = 0.3) +
+  geom_line(data = dat[dat$who == 0,], color = "red", size = 1) +
+  labs(x = "time", y = "speed") +
   theme_minimal() 
 
 ```

@@ -74,7 +74,7 @@ img {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Parameters & Measures<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
              <li><a href="tutorial.html">Overview</a></li>
              <li class="divider"></li>
@@ -86,11 +86,20 @@ img {
              <li><a href="dla.html">DLA</a></li>
              <li><a href="ants.html">Ants</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Parameter Sets</li>
+             <li class="dropdown-header">Parameter Value Sets</li>
              <li><a href="fur.html">Fur Patterns</a></li>
              <li><a href="flocking.html">Flocking</a></li>
              <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
              <li><a href="flocking_sampling.html">Latin Hypercube Sampling</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="sensitivity" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Sensitivity Analysis & Optimization<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Sensitivity Analysis</li>
+             <li><a href="flocking_sens_lhs.html">Random Sampling</a></li>
+             <li><a href="flocking_sens_oat.html">One-at-a-time</a></li>
+             <li><a href="flocking_fast.html">FAST method</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Optimization</li>
              <li><a href="flocking_bestfit.html">Best-fit Criterion</a></li>
@@ -101,10 +110,10 @@ img {
              <li><a href="flocking_ga.html">Genetic Algorithm</a></li>
           </ul>
         </li>
-        <li><a href="help/index.html">Package documentation</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+        <li><a href="help/index.html">Docs</a></li>
+        <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -127,7 +136,7 @@ img {
 <p><a href="segregation.html">Segregation</a> example demonstrates how to obtain data from individual NetLogo agents.</p>
 <p><a href="segregation.html"><img src="img/pages-segregPlot-1.png" /></a></p>
 <p><a href="network.html">Network</a> example demonstrates how to collect values from turtles and their links to recreate network as <strong>igraph</strong> object</p>
-<p><a href="agents.html"><img src="img/pages-agentsGraphPlot-1.png" /></a></p>
+<p><a href="network.html"><img src="img/pages-agentsGraphPlot-1.png" /></a></p>
 <p><a href="traffic.html">Traffic</a> example demonstrates how to collect values from turtles per each time step.</p>
 <p><a href="traffic.html"><img src="img/pages-trafficPlot-1.png" /></a></p>
 <p><a href="dla.html">DLA</a> example demonstrates how to read NetLogo patches.</p>
@@ -150,6 +159,17 @@ img {
 </aside>
 <p><a href="flocking.html"><img src="img/pages-flockPlotGrid-1.png" /></a></p>
 <p><a href="flocking_categorical.html">Categorical Criteria</a> and <a href="flocking_sampling.html">Hyper Latin Cube Sampling</a> examples demontrate how to explore parameter space with categorical criteria and sampling methods.</p>
+</div>
+<div id="sensitivity-analysis" class="section level2">
+<h2>Sensitivity Analysis</h2>
+<p>Example <a href="flocking_sens_lhs.html">Random sampling</a> explores 5-dimensional parameter space of NetLogo Flocking model with random sampling and scatter plots.</p>
+<aside>
+<p><a href="flocking_sens_lhs.html"><img src="img/pages-flockSensLhsPlot1-1.png" /></a></p>
+<p><a href="flocking_sens_lhs.html"><img src="img/pages-flockFastPlot-1.png" /></a></p>
+</aside>
+<p><a href="flocking_sens_lhs.html">One-at-a-time</a> example demonstrates sensitivity analysis with OAT method.</p>
+<p>Example <a href="flocking_fast.html">FAST</a> demonstrates sensitivity analysis with Fourier Amplitude Sensitivity Test (FAST).</p>
+<p><a href="flocking_fast.html"><img src="img/pages-flockFastPairs-1.png" /></a></p>
 </div>
 <div id="optimization" class="section level2">
 <h2>Optimization</h2>

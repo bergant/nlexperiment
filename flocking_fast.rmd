@@ -1,0 +1,127 @@
+
+---
+title: "Fourier Amplitude Sensitivity Test (FAST)"
+---
+
+```{r ch_opt, child="include/chunk_options.rmd", cache=FALSE}
+```
+
+```{r, echo = FALSE}
+library(nlexperiment)
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0") 
+```
+
+This example is using NetLogo Flocking model (Wilensky, 1998) to 
+demonstrate sensitivity analysis with the Fourier amplitude sensitivity test.
+
+To test sensitivity with FAST method experiment parameter value sets
+have to be defined with `nl_param_fast` and the results
+must be interpreted with `nl_get_fast_sensitivity` function.
+
+<aside>
+Wilensky, U. (1998). 
+[NetLogo Flocking model](http://ccl.northwestern.edu/netlogo/models/Flocking). 
+Center for Connected Learning and Computer-Based Modeling, 
+Northwestern University, Evanston, IL.
+
+Reusser, D. E., Buytaert, W., & Zehe, E. (2011). Temporal dynamics of model parameter sensitivity for computationally expensive models with the Fourier amplitude sensitivity test. Water Resources Research, 47(7), W07551. 
+</aside>
+
+Functions `nl_param_fast` and `nl_get_fast_sensitivity` use
+[fast](https://cran.rstudio.com/web/packages/fast) package 
+(Reusser et al. 2011) to create parameter value sets and analyse results. 
+
+
+```{r flockFastModel, title = "Define the experiment"}
+experiment <- nl_experiment( 
+  model_file = "models/Sample Models/Biology/Flocking.nlogo",
+  setup_commands = c("setup", "repeat 100 [go]"),
+  iterations = 5,
+
+  param_values = nl_param_fast(
+    world_size = 50,
+    population = 80,
+    max_align_turn = c(1, 20),
+    max_cohere_turn = c(1, 20),
+    max_separate_turn = c(1, 20),
+    vision = c(1, 10),
+    minimum_separation = c(1, 10),
+    .dummy = c(0,1) 
+  ),
+  mapping = nl_default_mapping,
+
+  step_measures = measures(
+    converged = "1 - 
+      (standard-deviation [dx] of turtles + 
+       standard-deviation [dy] of turtles) / 2",
+    mean_crowding = 
+      "mean [count flockmates + 1] of turtles"
+  ),
+  eval_criteria = criteria(
+    c_converged = mean(step$converged),
+    c_mcrowding = mean(step$mean_crowding)
+  ),
+
+  repetitions = 10,                        # repeat simulations 10 times
+  random_seed = 1:10
+
+)
+```
+
+To see the experiment design with scatter plots use `nl_show_params` function: 
+
+```{r flockFastPairs, title = "Plot the experiment design", fig.cap="Experiment design: parameter value sets shown with scatter plots."}
+nl_show_params(experiment)
+```
+
+
+Run the experiment:
+
+```{r flockFastRun, title = "Run experiment", cache=TRUE}
+result <- nl_run(experiment, parallel = TRUE) 
+```
+
+<aside>
+
+| __Experiment run statistics:__
+| Parameter value sets: `r nrow(experiment$param_sets)`
+| Total simulations: `r nrow(experiment$param_sets) * experiment$run_options$repetitions`
+| Experiment duration: `r round(result$duration,2)` `r attr(result$duration, "units")` 
+
+</aside>
+
+
+```{r flockFastData, title = "Add categorical criteria"}
+sensitivity_converged <- nl_get_fast_sensitivity(result, "c_converged")
+sensitivity_mcrowding <- nl_get_fast_sensitivity(result, "c_mcrowding")
+```
+<aside>
+Get sensitivity results.
+</aside>
+
+
+```{r flockFastPlot, title = "Plot FAST", fig.cap="Fourier amplitude sensitivity test repeated for each simulation run."}
+library(ggplot2)
+ggplot(sensitivity_converged, aes(x = param, y = param_sensitivity)) +
+  geom_boxplot(alpha = 0.2, color = "gray") + 
+  geom_jitter(alpha = 0.7, position = position_jitter(width = 0.1)) + 
+  coord_flip() +
+  theme_minimal() +
+  labs(x = "Parameter name", y = "Sensitivity")
+```
+
+
+
+
+## Related
+
+[Best-fit Criterion](flocking_bestfit.html) shows how to define 
+  single criterion evaluation expression 
+  and evaluate parameter space with full-factor design.
+  
+[Random Search](flocking_random_search.html) demonstrate searching for optimal parameters
+  using random search.  
+
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>

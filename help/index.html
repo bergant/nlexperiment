@@ -74,7 +74,7 @@ img {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a href="../tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tutorial <span class="caret"></span></a>
+          <a href="../tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Parameters & Measures<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
              <li><a href="../tutorial.html">Overview</a></li>
              <li class="divider"></li>
@@ -86,11 +86,20 @@ img {
              <li><a href="../dla.html">DLA</a></li>
              <li><a href="../ants.html">Ants</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Parameter Sets</li>
+             <li class="dropdown-header">Parameter Value Sets</li>
              <li><a href="../fur.html">Fur Patterns</a></li>
              <li><a href="../flocking.html">Flocking</a></li>
              <li><a href="../flocking_categorical.html">Categorical Criteria</a></li>
              <li><a href="../flocking_sampling.html">Latin Hypercube Sampling</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="../sensitivity" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Sensitivity Analysis & Optimization<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">Sensitivity Analysis</li>
+             <li><a href="../flocking_sens_lhs.html">Random Sampling</a></li>
+             <li><a href="../flocking_sens_oat.html">One-at-a-time</a></li>
+             <li><a href="../flocking_fast.html">FAST method</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Optimization</li>
              <li><a href="../flocking_bestfit.html">Best-fit Criterion</a></li>
@@ -101,26 +110,32 @@ img {
              <li><a href="../flocking_ga.html">Genetic Algorithm</a></li>
           </ul>
         </li>
-        <li><a href="../help/index.html">Package documentation</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-         <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
+        <li><a href="../help/index.html">Docs</a></li>
+        <li><a href="https://github.com/bergant/nlexperiment">GitHub</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
 <p> <div><a href="nlexperiment-package.html">nlexperiment-package</a></div> nlexperiment: NetLogo experiments </p>
+<p> <div><a href="nl_default_mapping.html">nl_default_mapping</a></div> Default mapping from R names to NetLogo variables </p>
 <p> <div><a href="nl_experiment.html">nl_experiment</a></div> Create NetLogo experiment object </p>
+<p> <div><a href="nl_map_parameter.html">nl_map_parameter</a></div> Internal: maps parameter </p>
 <p> <div><a href="nl_netlogo_path.html">nl_netlogo_path</a></div> Get and set netlogo path </p>
+<p> <div><a href="nl_param_fast.html">nl_param_fast</a></div> Generate a parameter value sets for the FAST method </p>
 <p> <div><a href="nl_param_lhs.html">nl_param_lhs</a></div> Create parameter sets with latin hypercube sampling </p>
+<p> <div><a href="nl_param_oat.html">nl_param_oat</a></div> Create parameter sets with "one-at-a-time" (OAT) approach </p>
 <p> <div><a href="nl_run.html">nl_run</a></div> Run NetLogo experiment </p>
 <p> <div><a href="print.nl_experiment.html">print.nl_experiment</a></div> Print NetLogo experiment object </p>
+<p> <div><a href="nl_get_fast_sensitivity.html">nl_get_fast_sensitivity</a></div> Calculate sensitivity according to the FAST algorithm </p>
 <p> <div><a href="nl_get_param_range.html">nl_get_param_range</a></div> Get ranges of experiment parameter sets </p>
 <p> <div><a href="nl_get_result.html">nl_get_criteria_result</a></div> Get observations joined with parameter values </p>
 <p> <div><a href="nl_get_result.html">nl_get_result</a></div> Get observations joined with parameter values </p>
 <p> <div><a href="nl_get_result.html">nl_get_run_result</a></div> Get observations joined with parameter values </p>
 <p> <div><a href="nl_get_result.html">nl_get_step_result</a></div> Get observations joined with parameter values </p>
+<p> <div><a href="nl_show_params.html">nl_show_params</a></div> Plots parameters with scatter plots </p>
 <p> <div><a href="nl_show_patches.html">nl_show_patches</a></div> Plot multiple patches result </p>
 <p> <div><a href="nl_show_step.html">nl_show_step</a></div> Plot step measure observations </p>
 <p> <div><a href="nl_show_views_grid.html">nl_show_views_grid</a></div> Show exported views images in a grid </p>

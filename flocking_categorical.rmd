@@ -111,7 +111,7 @@ like this:
 
 Crowding criteria: 
 
-$$ 5 <= crowding < 11 $$
+$$ 5 \leq crowding < 11 $$
 
 Alignment criteria:
 
@@ -149,6 +149,11 @@ ggplot( dat, aes(x = min_separation, y = max_align_turn) ) +
 [Hyper Latin Cube Sampling](flocking_sampling.html) examples
 demontrate how to explore parameter space with categorical 
 criteria and sampling methods.
+
+Example [Random sampling](flocking_sens_lhs.html) explores 5-dimensional 
+parameter space of NetLogo Flocking model
+with random sampling and scatter plots.
+
 
 <asideclose>
 Get [rmarkdown source](`r knitr::current_input()`) of this page.

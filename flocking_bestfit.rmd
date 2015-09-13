@@ -105,11 +105,21 @@ ggplot( dat, aes(x = min_separation, y = max_align_turn, z = eval_value) ) +
 
 ## Related
 
-[Random Search](flocking_random_search.html) example demonstrates searching for optimal parameters
+[Random Search](flocking_random_search.html) demonstrate searching for optimal parameters
   using random search.
 
 [L-BFGS-B Optimization](flocking_bfgs.html) shows how to use
+  standard optimization functions.
+
+[Nelder-Mead Optimization](flocking_nm.html) shows how to use
   optimization functions from other R packages.
+
+[Simulated Annealing](flocking_sa.html) demonstrates optimization
+  with simulated annealing.
+
+[Genetic Algorithm](flocking_ga.html) demonstrates optimization
+  with genetic algorithm.
+  
 
 <asideclose>
 Get [rmarkdown source](`r knitr::current_input()`) of this page.

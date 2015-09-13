@@ -67,6 +67,7 @@ Thiele, J. C., Kurth, W., & Grimm, V. (2014). Facilitating Parameter Estimation 
 
 Stonedahl, F. J. (2011). Genetic algorithms for the exploration of parameter spaces in agent-based models. PhD Thesis, Northwestern University of Illinois
 
+Alden, K., Read, M., Timmis, J., Andrews, P. S., Veiga-Fernandes, H., & Coles, M. (2013). Spartan: A Comprehensive Tool for Understanding Uncertainty in Simulations of Biological Systems. PLoS Comput Biol, 9(2), e1002916. http://doi.org/10.1371/journal.pcbi.1002916
 </aside>
 
 
@@ -77,4 +78,8 @@ Some examples in the [tutorial](tutorial.html) follow the
    
 Experiments based on NetLogo flocking model and related measure definitions are 
 inspired by (Stonedahl, 2011).
+
+See also [spartan](https://www.york.ac.uk/computational-immunology/software/spartan/)
+(Alden et al., 2013), an R package with statistical techniques for robustness and sensitivity analysis which can be used with NetLogo. 
+
 

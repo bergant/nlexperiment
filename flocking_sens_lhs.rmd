@@ -1,0 +1,177 @@
+
+---
+title: "Random Sampling"
+---
+
+```{r ch_opt, child="include/chunk_options.rmd", cache=FALSE}
+```
+
+```{r, echo = FALSE}
+library(nlexperiment)
+nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0") 
+```
+
+This example is using NetLogo Flocking model (Wilensky, 1998) to 
+demonstrate sensitivity analysis with random sampling
+and scatter plots.
+
+
+<aside>
+Wilensky, U. (1998). 
+[NetLogo Flocking model](http://ccl.northwestern.edu/netlogo/models/Flocking). 
+Center for Connected Learning and Computer-Based Modeling, 
+Northwestern University, Evanston, IL.
+
+
+</aside>
+
+
+As in [flocking example](flocking.html) two measures of self-organization are defined:
+
+* __converergence__ is based on variance of birds' orientations and
+* __mean crowding__ is average group size as experienced by individual.
+
+Additionaly (because these measures are temporal):
+
+* _criteria evaluation expressions_ are aggregating those measures over time 
+  (note the `eval_criteria` element). 
+  
+<aside>
+See [Flocking example](flocking.html) for formal definitions of the measures.
+</aside>
+
+A list of parameter values in the `param_values` argument 
+would be interpreted as all combinations of parameter values.
+In this example parameter values are defined with `nl_param_lhs` function. 
+It uses Latin Hypercube sampling to create $n$ random parameter value sets.
+
+<aside>
+Note that two values are sufficient to define a parameter value range.
+
+Parameters with only one value (population and world_size in this example) are treated as constants.
+
+
+
+The NetLogo Flocking model is non-deterministic (birds are oriented randomly at setup)
+and simulation repeats several times (10 in this example) for each
+parameter value set (set by `repetitions` argument). 
+
+With `random_seed`
+argument we gain reproducibility but it must be set with different values
+for every repetition (in this example it is a vector of size 10).
+</aside>
+
+```{r flockSensLhsModel, title = "Define the experiment"}
+experiment <- nl_experiment( 
+  model_file = "models/Sample Models/Biology/Flocking.nlogo",
+  setup_commands = c("setup", "repeat 100 [go]"),
+  iterations = 5,
+
+  param_values = nl_param_lhs(   # create 100 parameter value sets with LHS
+    n = 100,
+    world_size = 50,
+    population = 80,
+    max_align_turn = c(0, 20),
+    max_cohere_turn = c(0, 20),
+    max_separate_turn = c(0, 20),
+    vision = c(1, 10),
+    minimum_separation = c(0, 10),
+    .dummy = c(0, 1) 
+  ),
+  mapping = nl_default_mapping, 
+
+  step_measures = measures(
+    converged = "1 - 
+      (standard-deviation [dx] of turtles + 
+       standard-deviation [dy] of turtles) / 2",
+    mean_crowding = 
+      "mean [count flockmates + 1] of turtles"
+  ),
+  eval_criteria = criteria(
+    c_converged = mean(step$converged),
+    c_mcrowding = mean(step$mean_crowding)
+  ),
+
+  repetitions = 10,                        # repeat simulations 10 times
+  random_seed = 1:10
+
+)
+```
+
+
+
+To see the experiment design with scatter plots use `nl_show_params` function: 
+
+```{r flockSensLhsPairs, title = "Plot the experiment design", fig.cap="Experiment design shown with scatterplots"}
+nl_show_params(experiment)
+```
+
+Run the experiment:
+
+```{r flockSensLhsRun, title = "Run experiment", cache=TRUE}
+result <- nl_run(experiment, parallel = TRUE)  
+```
+
+<aside>
+
+| __Experiment run statistics:__
+| Parameter value sets: `r nrow(experiment$param_sets)`
+| Total simulations: `r nrow(experiment$param_sets) * experiment$run_options$repetitions`
+| Experiment duration: `r round(result$duration,2)` `r attr(result$duration, "units")` 
+
+</aside>
+
+```{r flockSensLhsData, message=FALSE, warning=FALSE}
+dat <- nl_get_result(result, type = "criteria")
+
+library(tidyr)
+dat_long <- gather_(dat, key = "parameter", value = "value", 
+                c("max_align_turn", "max_cohere_turn", "max_separate_turn", 
+                  "vision", "minimum_separation", ".dummy"))
+```
+
+Convergence sensitivity:
+
+```{r flockSensLhsPlot1, title = "Plot converged", fig.height=7,  fig.cap="Convergence sensitivity on different parameters. Points are the results of individual simulation runs, red line represents fitted linear model, blue line shows loess smoothing."}
+library(ggplot2)
+ggplot(dat_long, aes(x = value, y = c_converged)) +
+  geom_point(alpha = 0.3) +
+  stat_smooth(method = "loess") +
+  stat_smooth(method = "lm", color = "red") +
+  facet_wrap(~ parameter, scales = "free_x") + 
+  theme_bw()
+
+```
+
+
+
+Mean crowding sensitivity:
+
+```{r flockSensLhsPlot2, title = "Plot crowding", fig.height=7, fig.cap="Mean crowding sensitivity"}
+ggplot(dat_long, aes(x = value, y = c_mcrowding)) +
+  geom_point(alpha = 0.2) +
+  stat_smooth(method = "loess") +
+  stat_smooth(method = "lm", color = "red") +
+  facet_wrap(~ parameter, scales = "free_x") + 
+  theme_bw() 
+```
+
+
+## Related
+
+Example [One-at-a-time](flocking_sens_lhs.html) demonstrates
+sensitivity analysis with OAT method.
+
+Example [FAST](flocking_fast.html) demonstrates
+sensitivity analysis with Fourier Amplitude Sensitivity Test (FAST).
+
+[Best-fit Criterion](flocking_bestfit.html) shows how to define 
+  single criterion evaluation expression from two measures
+  and evaluate parameter space with full-factor design.
+  
+[Random Search](flocking_random_search.html) demonstrate searching for optimal parameters
+  using random search.  
+
+<asideclose>
+Get [rmarkdown source](`r knitr::current_input()`) of this page.
+</asideclose>

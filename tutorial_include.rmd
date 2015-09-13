@@ -27,7 +27,7 @@ individual NetLogo agents.
 [Network](network.html) example demonstrates how to collect values from
  turtles and their links to recreate network as __igraph__ object
 
-[![](img/pages-agentsGraphPlot-1.png)](agents.html)
+[![](img/pages-agentsGraphPlot-1.png)](network.html)
 
 [Traffic](traffic.html) example demonstrates how to collect values from
  turtles per each time step.
@@ -76,7 +76,27 @@ parameter mapping when parameter space is transformed.
 demontrate how to explore parameter space with categorical 
 criteria and sampling methods.
 
+## Sensitivity Analysis
 
+Example [Random sampling](flocking_sens_lhs.html) explores 5-dimensional 
+parameter space of NetLogo Flocking model
+with random sampling and scatter plots.
+
+<aside>
+[![](img/pages-flockSensLhsPlot1-1.png)](flocking_sens_lhs.html)
+
+[![](img/pages-flockFastPlot-1.png)](flocking_sens_lhs.html)
+
+</aside>
+
+[One-at-a-time](flocking_sens_lhs.html) example demonstrates
+sensitivity analysis with OAT method.
+
+
+Example [FAST](flocking_fast.html) demonstrates
+sensitivity analysis with Fourier Amplitude Sensitivity Test (FAST).
+
+[![](img/pages-flockFastPairs-1.png)](flocking_fast.html)
 
 ## Optimization
 Parameter fitting with best-fit criterion 
