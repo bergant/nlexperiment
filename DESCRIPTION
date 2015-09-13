@@ -1,12 +1,12 @@
 Package: nlexperiment
 Type: Package
 Title: Exploration of NetLogo Agent Based Models
-Version: 0.1.4
-Date: 2015-09-07
+Version: 0.1.5
+Date: 2015-09-14
 Author: Darko Bergant
 Maintainer: Darko Bergant <darko.bergant@gmail.com>
 BugReports: https://github.com/bergant/nlexperiment/issues
-URL: https://github.com/bergant/nlexperiment
+URL: http://bergant.github.io/nlexperiment/
 Description: A tool for NetLogo experiment definition,
   exploring simulation results and model optimization.
   Makes it easy to turn the cycle of experiment definition,
@@ -23,5 +23,6 @@ Suggests:
     png,
     ggplot2,
     testthat,
-    tgp
+    tgp,
+    fast
 LazyData: TRUE

@@ -462,6 +462,11 @@ nl_single_run_setup <- function(experiment, parameter_set_id = NULL, run_id = NU
   }
 }
 
+#' Internal: maps parameter
+#'
+#' @param experiment Experiment object
+#' @param parameter_name Parameter name to map
+#' @return NetLogo variable name
 nl_map_parameter <- function(experiment, parameter_name) {
   nl_param <- experiment$mapping[parameter_name]
   if(is.null(nl_param) || is.na(nl_param)) {

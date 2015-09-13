@@ -503,7 +503,11 @@ nl_set_param_values <- function(experiment, param_values = NULL, mapping = NULL 
   experiment$param_sets <- param_sets
 
   if(!missing(mapping)) {
-    experiment$mapping <- mapping
+    if(mode(mapping) == "function") {
+      experiment$mapping <- mapping(experiment$param_sets)
+    } else {
+      experiment$mapping <- mapping
+    }
   }
   experiment
 }
@@ -534,7 +538,8 @@ print.nl_experiment <- function(x, ...) {
     if(!is.null(param_sets) && nrow(param_sets) > 0) {
       cat("(", nrow(param_sets), ")\n")
       cat(
-        paste("   ",capture.output(nl_get_param_range(x, as.data.frame = T))[-1],
+        paste("   ",capture.output(
+          nl_get_param_range(x, diff_only = FALSE, as.data.frame = TRUE))[-1],
                 collapse = "\n" )
       )
 
@@ -580,8 +585,8 @@ nl_get_param_range <- function(experiment, diff_only = TRUE, as.data.frame = FAL
   max_values <- sapply(experiment$param_sets, max)
 
   ret <- list(
-    lower = min_values[min_values != max_values],
-    upper = max_values[min_values != max_values]
+    lower = min_values[min_values != max_values | !diff_only],
+    upper = max_values[min_values != max_values | !diff_only]
   )
   if(as.data.frame) {
     ret <- data.frame(ret)
@@ -595,6 +600,7 @@ nl_get_param_range <- function(experiment, diff_only = TRUE, as.data.frame = FAL
 #'
 #' @param n Number of parameter sets
 #' @param ... Named list of parameter ranges (numeric vectors)
+#' @return A data frame with parameter value sets
 #' @export
 #' @examples
 #' experiment <- nl_experiment(
@@ -603,7 +609,7 @@ nl_get_param_range <- function(experiment, diff_only = TRUE, as.data.frame = FAL
 #'   iterations = 5,
 #'
 #'   param_values = nl_param_lhs(
-#'     n = 100,
+#'     n = 100,                           # create 100 parameter value sets
 #'     world_size = 50,
 #'     population = 80,
 #'     vision = 6,
@@ -642,5 +648,215 @@ nl_param_lhs <- function(n, ...) {
   params <- lapply(p_list, range)
   params <- tgp::lhs(n = n, rect = t(data.frame(params)))
   setNames(as.data.frame(params), names(p_list))
+}
+
+#' Create parameter sets with "one-at-a-time" (OAT) approach
+#'
+#' @param n Number of parameter sets per parameter
+#' @param ... Named list of parameter ranges (numeric vectors)
+#'   Minimum and maximum values are used as a range and
+#'   median as the default value. Parameters with only 1 value
+#'   are treated as constants.
+#' @return A data frame with parameter value sets
+#' @seealso See also \code{\link{nl_param_lhs}} for latin cube and
+#'   \code{\link{nl_param_fast}} for FAST parameter sampling.
+#' @export
+#' @examples
+#'
+#' # create 5 values for every parameter:
+#' nl_param_oat(n = 5, P1 = c(1, 4, 10), P2 = c(4, 11, 20))
+#'
+#' # using constant parameters:
+#' nl_param_oat(n = 5, P1 = c(1, 4, 10), P2 = c(4, 11, 20), P3 = 6)
+#'
+#' # define NetLogo experiment with OAT design:
+#' experiment <- nl_experiment(
+#'   model_file = "models/Sample Models/Biology/Flocking.nlogo",
+#'   setup_commands = c("setup", "repeat 100 [go]"),
+#'   iterations = 5,
+#'
+#'   param_values = nl_param_oat(
+#'     n = 25,                           # create 25 value sets per parameter
+#'     max_align_turn = c(0, 5, 20),
+#'     max_cohere_turn = c(0, 3, 20),
+#'     max_separate_turn = c(0, 1.5, 20),
+#'     vision = c(1, 3, 10),
+#'     minimum_separation = c(0, 3, 10),
+#'     .dummy = c(0,0.5,1),
+#'     world_size = 50,
+#'     population = 80
+#'   ),
+#'   mapping = nl_default_mapping,
+#'
+#'   step_measures = measures(
+#'     converged = "1 -
+#'     (standard-deviation [dx] of turtles +
+#'     standard-deviation [dy] of turtles) / 2",
+#'     mean_crowding =
+#'       "mean [count flockmates + 1] of turtles"
+#'   ),
+#'   eval_criteria = criteria(
+#'     c_converged = mean(step$converged),
+#'     c_mcrowding = mean(step$mean_crowding)
+#'   ),
+#'
+#'   repetitions = 10,                        # repeat simulations 10 times
+#'   random_seed = 1:10
+#'
+#' )
+nl_param_oat <- function(n, ...) {
+
+  if(mode(n) != "numeric") {
+    stop("Parameter n has to be a number.")
+  }
+
+  param_values <- list(...)
+
+  if(length(param_values) == 1 &&
+     inherits(param_values[[1]], c("list", "data.frame"))) {
+    param_values <- param_values[[1]]
+  }
+
+  range_pv <- param_values[sapply(param_values, function(x) min(x) < max(x))]
+  range_pv <- lapply(range_pv, function(x) {
+    rand_x <- (order(runif(n)) - 1 + runif(n))/n
+    p_start <- min(x)
+    p_width <- max(x) - p_start
+    rand_x * p_width + p_start
+  })
+
+  param_sets <-
+    lapply(names(range_pv), function(r) {
+      param_values2 <- lapply(param_values, function(x) median(x))
+      param_values2[[r]] <- range_pv[[r]]
+      expand.grid(param_values2)
+    })
+
+  do.call(rbind, param_sets)
+}
+
+#' Generate a parameter value sets for the FAST method
+#'
+#' Uses \code{\link[fast]{fast_parameters}} from \pkg{fast} package to create
+#' parameter sets for Fourier Amplitute Sensitivity Test (FAST).
+#' @details
+#' Uses only parameters with min != max values to create parameter sets.
+#' Adds dummy variable.
+#' @param ... Named list of parameter ranges (numeric vectors)
+#' @return A data frame with parameter value sets.
+#' @seealso
+#'   Use \code{\link{nl_get_fast_sensitivity}} to get sensitivity data.
+#'   See \link[fast]{fast} package documentation for FAST algorithm details.
+#'   from the simulation results.
+#'   See \code{\link{nl_param_lhs}} for latin hypercube sampling.
+#' @examples
+#' param_values <- nl_param_fast(
+#'   world_size = 50,
+#'   population = 80,
+#'   max_align_turn = c(1, 5, 20),
+#'   max_cohere_turn = c(1, 3, 20),
+#'   max_separate_turn = c(1, 1.5, 20),
+#'   vision = c(1, 3, 10),
+#'   minimum_separation = c(1, 3, 10)
+#' )
+#' @export
+nl_param_fast <- function(...) {
+
+  if( !requireNamespace("fast", quietly = TRUE)) {
+    stop("fast package needed for nl_param_fast. Please install it",
+         call. = FALSE)
+  }
+
+  param_values <- list(...)
+  if(length(param_values) == 1 && inherits(param_values[[1]], "list"))
+    param_values <- param_values[[1]]
+
+  ranges_min <- sapply(param_values, min)
+  ranges_max <- sapply(param_values, max)
+  ranges_const <- ranges_min == ranges_max
+
+  # create parameter with fast
+  fast_param_values <- fast::fast_parameters(
+    minimum = ranges_min[!ranges_const],
+    maximum = ranges_max[!ranges_const])
+
+  names(fast_param_values) <- names(param_values)[!ranges_const]
+
+  for(const_param in names(param_values[ranges_const])) {
+    fast_param_values[[const_param]] <- param_values[[const_param]][1]
+  }
+  fast_param_values
+}
+
+#' Default mapping from R names to NetLogo variables
+#'
+#' Creates mapping with simple rule:
+#' changes every character
+#'   \code{_.} to \code{?} and
+#'   \code{_} to \code{-}.
+#'
+#' @param param_values Parameter values in list or data frame
+#' @return Named vector with default mapping.
+#'   Use as function argument in \code{\link{nl_experiment}} mapping.
+#' @examples
+#'
+#' param_values = list(
+#'   world_size = 50,
+#'   population = 80,
+#'   max_align_turn = c(1, 5, 20),
+#'   max_cohere_turn = c(1, 3, 20),
+#'   max_separate_turn = c(1, 1.5, 20),
+#'   vision = c(1, 3, 10),
+#'   minimum_separation = c(1, 3, 10),
+#'   .dummy = c(1:0)
+#' )
+#'
+#' nl_default_mapping(param_values)
+#'
+#' # Define experiment mapping with a function instead of named vector:
+#' experiment <- nl_experiment(
+#'   model_file = "models/Sample Models/Biology/Flocking.nlogo",
+#'
+#'   param_values = list(
+#'     world_size = 50,
+#'     population = 80,
+#'     max_align_turn = c(1, 5, 20),
+#'     max_cohere_turn = c(1, 3, 20),
+#'     max_separate_turn = c(1, 1.5, 20),
+#'     vision = c(1, 3, 10),
+#'     minimum_separation = c(1, 3, 10),
+#'     .dummy = c(1:0)
+#'   ),
+#'   mapping = nl_default_mapping
+#' )
+#'
+#' # check experiment parameter names mapping
+#' cbind(experiment$mapping)
+#'
+#' @export
+nl_default_mapping <- function(param_values) {
+  mapping <- names(param_values)
+  mapping <- gsub("_\\.", "?", mapping)
+  mapping <- gsub("_", "-", mapping)
+  mapping <- ifelse(substr(mapping, 1, 1) == ".", "" , mapping)
+  setNames(mapping, names(param_values))
+}
+
+#' Plots parameters with scatter plots
+#'
+#' @param experiment Experiment object
+#' @param cex Parameter passed to pairs function
+#' @param col Parameter passed to pairs function
+#' @param lower.panel Parameter passed to pairs function
+#' @param ... Parameters passed to pairs function
+#' @export
+nl_show_params <- function(experiment, cex = 0.7, col = "#000000CC",
+                           lower.panel = NULL, ...) {
+
+  variable_params <-
+    sapply(experiment$param_sets, function(x) min(x) != max(x))
+
+  pairs(experiment$param_sets[variable_params],
+        cex = 0.7, col = "#000000CC", lower.panel = NULL, ...)
 }
 

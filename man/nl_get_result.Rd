@@ -17,7 +17,7 @@ nl_get_step_result(result, add_parameters = TRUE, ...)
 nl_get_criteria_result(result, add_parameters = TRUE, ...)
 }
 \arguments{
-\item{result}{NetLogo result object}
+\item{result}{A nlexperiment result object}
 
 \item{add_parameters}{Add parameter values from parameter space to the results}
 

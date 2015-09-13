@@ -22,6 +22,7 @@ Imports parameter names and ranges from sliders defined in
   NetLogo model file.
   Based on information from
     https://github.com/NetLogo/NetLogo/wiki/Model-file-format
+    and
     https://github.com/NetLogo/NetLogo/wiki/Widget-Format
 }
 

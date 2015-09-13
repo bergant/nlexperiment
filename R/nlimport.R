@@ -7,6 +7,7 @@
 #'   NetLogo model file.
 #'   Based on information from
 #'     https://github.com/NetLogo/NetLogo/wiki/Model-file-format
+#'     and
 #'     https://github.com/NetLogo/NetLogo/wiki/Widget-Format
 #'
 #' @param experiment NetLogo experiment object

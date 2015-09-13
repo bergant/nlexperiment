@@ -223,7 +223,7 @@ nl_show_views_grid <- function(result,
 #' parameter sets (param_set_id). \code{nl_get_result} joins the data
 #' with actual parameters used for each observation.
 #'
-#' @param  result NetLogo result object
+#' @param  result A nlexperiment result object
 #' @param  add_parameters Add parameter values from parameter space to the results
 #' @param  type Observation type: "run", "step", "criteria", "agents_after", "patches_after"
 #'   See \code{\link{nl_run}} for simulations result structure.
@@ -290,4 +290,88 @@ nl_get_criteria_result <- function(result, add_parameters = TRUE, ...) {
   nl_get_result(result, add_parameters, "criteria", ...)
 }
 
+#' Calculate sensitivity according to the FAST algorithm
+#'
+#' Uses \code{\link[fast]{sensitivity}} from \pkg{fast} package to calculate
+#' a series of model outputs according to the FAST alogrithm
+#' @details
+#' Only works when parameter value sets are defined with
+#' \code{\link{nl_param_fast}} function.
+#' Criteria must be defined in experiment (see \code{\link{nl_experiment}},
+#' \code{eval_criteria} argument).
+#' Sensitivity is callculated for every simulation iteration (run_id).
+#' @param result A nlexperiment result object
+#' @param criteria Name of evaluation criteria
+#' @return A data frame with sensitivity from simulation results for every
+#'   simulation repetition (run_id)
+#' @export
+#' @examples
+#' \dontrun{
+#'
+#' experiment <- nl_experiment(
+#'   model_file = "models/Sample Models/Biology/Flocking.nlogo",
+#'   setup_commands = c("setup", "repeat 100 [go]"),
+#'   iterations = 5,
+#'
+#'   param_values = nl_param_fast(
+#'     world_size = 50,
+#'     population = 80,
+#'     max_align_turn = c(1, 5, 20),
+#'     max_cohere_turn = c(1, 3, 20),
+#'     max_separate_turn = c(1, 1.5, 20),
+#'     vision = c(1, 3, 10),
+#'     minimum_separation = c(1, 3, 10)
+#'   ),
+#'   mapping = c(
+#'     max_align_turn = "max-align-turn",
+#'     max_cohere_turn = "max-cohere-turn",
+#'     max_separate_turn = "max-separate-turn",
+#'     minimum_separation = "minimum-separation",
+#'     world_size = "world-size",
+#'   ),
+#'   step_measures = measures(
+#'     converged = "1 -
+#'       (standard-deviation [dx] of turtles +
+#'        standard-deviation [dy] of turtles) / 2",
+#'     mean_crowding =
+#'       "mean [count flockmates + 1] of turtles"
+#'   ),
+#'   eval_criteria = criteria(                # aggregate over iterations
+#'     c_converged = mean(step$converged),
+#'     c_mcrowding = mean(step$mean_crowding)
+#'   ),
+#'
+#'   repetitions = 10,                        # repeat simulations 10 times
+#'   random_seed = 1:10
+#' )
+#'
+#' #run experiment
+#' result <- nl_run(experiment, parallel = TRUE)
+#'
+#' #get sensitivity data
+#' sensitivity_data <- nl_get_fast_sensitivity(result, "c_converged")
+#' }
+nl_get_fast_sensitivity <- function(result, criteria) {
 
+  if( !requireNamespace("fast", quietly = TRUE)) {
+    stop("fast package needed for nl_param_fast. Please install it",
+         call. = FALSE)
+  }
+
+  dat <- nl_get_result(result, type = "criteria")
+  if(is.null(dat[[criteria]]))
+    stop("No criteria data in the result. Check experiment/criteria definition.")
+
+  par_names <- names(nl_get_param_range(result$experiment)$lower)[1:6]
+  sensitivity_data <- lapply(
+    split(dat[[criteria]], dat$run_id ),
+    fast::sensitivity, numberf = length(par_names),
+    make.plot = FALSE, names = par_names)
+
+  do.call(rbind,
+          lapply( seq_along(sensitivity_data), function(i) {
+            data.frame(param_sensitivity = sensitivity_data[[i]],
+                       run_id = i, param = par_names)
+          })
+  )
+}

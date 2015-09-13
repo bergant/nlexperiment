@@ -11,6 +11,9 @@ nl_param_lhs(n, ...)
 
 \item{...}{Named list of parameter ranges (numeric vectors)}
 }
+\value{
+A data frame with parameter value sets
+}
 \description{
 Parameter sets are created with \code{lhs} function from \pkg{tgp} package
 }
@@ -21,7 +24,7 @@ experiment <- nl_experiment(
   iterations = 5,
 
   param_values = nl_param_lhs(
-    n = 100,
+    n = 100,                           # create 100 parameter value sets
     world_size = 50,
     population = 80,
     vision = 6,
