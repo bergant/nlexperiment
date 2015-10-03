@@ -40,6 +40,7 @@ si <- sessionInfo(
     "dfoptim",
     "GenSA",
     "genalg",
+    "fast",
     "digest"
   )
 )

@@ -74,19 +74,19 @@ img {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Parameters & Measures<span class="caret"></span></a>
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Getting Started<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
              <li><a href="tutorial.html">Overview</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Getting started</li>
+             <li class="dropdown-header">Measures</li>
              <li><a href="fire.html">Fire Experiment</a></li>
              <li><a href="segregation.html">Segregation</a></li>
              <li><a href="network.html">Network</a></li>
              <li><a href="traffic.html">Traffic</a></li>
              <li><a href="dla.html">DLA</a></li>
-             <li><a href="ants.html">Ants</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Parameter Value Sets</li>
+             <li><a href="ants.html">Ants</a></li>
              <li><a href="fur.html">Fur Patterns</a></li>
              <li><a href="flocking.html">Flocking</a></li>
              <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
@@ -128,40 +128,109 @@ img {
 <h2>Getting Started</h2>
 <div id="measures" class="section level3">
 <h3>Measures</h3>
-<p><a href="fire.html">Fire Experiment</a> example demonstrates how to setup nlexperiment session, define and run experiments, export view images, define temporal and final run measures, get and visualize observations.</p>
+<p><a href="fire.html">Fire Experiment</a> example demonstrates how to:</p>
 <aside>
-<a href="fire.html"><img src="img/pages-fireRunPlot-1.png" alt="Fire" /></a> <a href="fire.html"><img src="img/pages-fireRunPlot2-1.png" alt="Fire" /></a>
+<a href="fire.html"><img src="img/pages-fireView-1.png" alt="Fire" /></a>
 </aside>
-<p><a href="fire.html"><img src="img/pages-fireView-1.png" alt="Fire" /></a></p>
-</div>
-<div id="agents-turtles-links-and-patches" class="section level3">
-<h3>Agents: Turtles, Links and Patches</h3>
-<p><a href="segregation.html">Segregation</a> example demonstrates how to obtain data from individual NetLogo agents.</p>
-<p><a href="segregation.html"><img src="img/pages-segregPlot-1.png" /></a></p>
-<p><a href="network.html">Network</a> example demonstrates how to collect values from turtles and their links to recreate network as <strong>igraph</strong> object</p>
-<p><a href="network.html"><img src="img/pages-agentsGraphPlot-1.png" /></a></p>
-<p><a href="traffic.html">Traffic</a> example demonstrates how to collect values from turtles per each time step.</p>
-<p><a href="traffic.html"><img src="img/pages-trafficPlot-1.png" /></a></p>
-<p><a href="dla.html">DLA</a> example demonstrates how to read NetLogo patches.</p>
-<p><a href="dla.html"><img src="img/pages-dlaPlot-1.png" /></a></p>
-</div>
-<div id="mapping-variables" class="section level3">
-<h3>Mapping Variables</h3>
-<p><a href="ants.html">Ants</a> example demonstrates simple parameter sets definition and mapping.</p>
-<p><asideclose> <a href="ants.html"><img src="img/pages-antsPlotStep-1.png" alt="Ants" /></a> </asideclose></p>
-<p><a href="ants.html"><img src="img/pages-antsPlotViews-1.png" alt="Ants" /></a></p>
-</div>
-</div>
-<div id="parameter-sets" class="section level2">
-<h2>Parameter Sets</h2>
-<p><a href="fur.html">Fur Patterns</a> demonstrates explicit definition of parameter sets and parameter mapping when parameter space is transformed.</p>
-<p><a href="fur.html"><img src = "img/pages-furShowPatches-1.png"/></a></p>
-<p><a href="flocking.html">Flocking Example</a> shows simple measure definition and observation in parameter space. It is the first in a series of parameter space exploration of the Flocking model.</p>
+<ul>
+<li>define and run experiments, export view images,</li>
+<li>define temporal measures (step measures),</li>
+<li>define final measures (simulation run measures),</li>
+<li>aggregate temporal measures over time.</li>
+</ul>
+<hr />
+<p><a href="segregation.html">Segregation</a> example shows how to obtain data from individual NetLogo agents:</p>
 <aside>
-<a href="flocking.html"><img src="img/pages-flockPlot2-1.png" /></a> <a href="flocking_categorical.html"><img src="img/pages-pFlockCatPlot-1.png" /></a> <a href="flocking_sampling.html"><img src="img/pages-flockSampPlot-1.png" /></a>
+<a href="segregation.html"><img src="img/pages-segregPlot-1.png" /></a>
 </aside>
-<p><a href="flocking.html"><img src="img/pages-flockPlotGrid-1.png" /></a></p>
-<p><a href="flocking_categorical.html">Categorical Criteria</a> and <a href="flocking_sampling.html">Hyper Latin Cube Sampling</a> examples demontrate how to explore parameter space with categorical criteria and sampling methods.</p>
+<ul>
+<li>define and run experiment with “agents-after” measure,</li>
+<li>visualize position of agents from different groups.</li>
+</ul>
+<hr />
+<p><a href="network.html">Network</a> example collects values from turtles and their links:</p>
+<aside>
+<a href="network.html"><img src="img/pages-agentsGraphPlot-1.png" /></a>
+</aside>
+<ul>
+<li>define experiment to get data about network structure (turtles, links),</li>
+<li>recreate network as igraph object,</li>
+<li>map turtle variables to igraph vertices,</li>
+<li>aggregate network measures (<em>example in construction</em>).</li>
+</ul>
+<hr />
+<p><a href="traffic.html">Traffic</a> example collects values from individual turtles per each time step:</p>
+<aside>
+<a href="traffic.html"><img src="img/pages-trafficPlot-1.png" /></a>
+</aside>
+<ul>
+<li>definition of “agents step” measure,</li>
+<li>visualizing several agents’ position and speed in time.</li>
+</ul>
+<hr />
+<p><a href="dla.html">DLA</a> (diffusion-limited aggregation) example demonstrates how to read position and other variables from NetLogo patches (after simulation run).</p>
+<aside>
+<a href="dla.html"><img src="img/pages-dlaPlot-1.png" /></a>
+</aside>
+<ul>
+<li>definition of “patches_after”&quot; measure,</li>
+<li>visualizing patches.</li>
+</ul>
+<hr />
+</div>
+<div id="parameter-sets" class="section level3">
+<h3>Parameter Sets</h3>
+<p>The following examples show how to define parameter value sets. See also examples in <a href="#Sensitivity%20Analysis">Sensitivity Analysis</a> for other parameter space exploring methods.</p>
+<aside>
+<a href="ants.html"><img src="img/pages-antsPlotViews-1.png" alt="Ants" /></a>
+</aside>
+<p><a href="ants.html">Ants</a> example demonstrates experiment definition with full factorial design and mapping parameters to NetLogo variables.</p>
+<ul>
+<li>Define parameter value sets as a combination from a list of values</li>
+<li>Map parameter names to NetLogo variables</li>
+<li>Visualize several temporal measures with 2D parameter space</li>
+</ul>
+<hr />
+<p><a href="fur.html">Fur Patterns</a> demonstrates explicit definition of parameter value sets with transformed parameter space.</p>
+<aside>
+<a href="fur.html"><img src="img/pages-furShowPatches-1.png" /></a>
+</aside>
+<ul>
+<li>Create parameter values</li>
+<li>Transform values to NetLogo model variables</li>
+<li>Define experiment with a data frame of parameter sets</li>
+</ul>
+<hr />
+<p><a href="flocking.html">Flocking Example</a> demonstrates temporal measure definition and visualization of temporal measures in the parameter space:</p>
+<aside>
+<a href="flocking.html"><img src="img/pages-flockPlotGrid-1.png" /></a>
+</aside>
+<ul>
+<li>temporal measure with custom step definition (one step includes several <em>ticks</em> in NetLogo)</li>
+<li>simulation repetitions of stochastic model with predefined random seeds</li>
+</ul>
+<p>It is the first in a series of parameter space exploration of the Flocking model</p>
+<hr />
+<p><a href="flocking_categorical.html">Categorical Criteria</a> example explores parameter space with full factorial design and categorical criteria:</p>
+<aside>
+<a href="flocking_categorical.html"><img src="img/pages-pFlockCatPlot-1.png" /></a>
+</aside>
+<ul>
+<li>Parameter sets are defined as all combination of values,</li>
+<li>temporal measures are aggregated in time and used to define a categorical criteria,</li>
+<li>parameter space is visualized with categorical criteria.</li>
+</ul>
+<hr />
+<p><a href="flocking_sampling.html">Hyper Latin Cube Sampling</a> examples demontrate how to explore parameter space with categorical criteria and sampling methods.</p>
+<aside>
+<a href="flocking_sampling.html"><img src="img/pages-flockSampPlot-1.png" /></a>
+</aside>
+<p><a name="Sensitivity Analysis"> </a></p>
+<ul>
+<li>Explore parameter space with categorical criteria (how to define categorical measures from temporal measures)</li>
+<li>Full factor design and LHC random sampling</li>
+</ul>
+</div>
 </div>
 <div id="sensitivity-analysis" class="section level2">
 <h2>Sensitivity Analysis</h2>

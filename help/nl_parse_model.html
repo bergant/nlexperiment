@@ -119,45 +119,82 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-  <table width="100%" summary="page for nl_single_run_setup">
+  <table width="100%" summary="page for nl_parse_model">
     <tr>
-      <td>nl_single_run_setup</td>
+      <td>nl_parse_model</td>
       <td style="text-align: right;">R Documentation</td>
     </tr>
   </table>
-  <h2>Set up parameters and setup commands before run</h2>
+  <h2>Parse NetLogo model file</h2>
   <h3>Description</h3>
-  <p>Internal function - called from nl_single_run
+  <p>Gets information about widgets (e.g. sliders, monitors, plots) from from NetLogo model file
 </p>
   <h3>Usage</h3>
   <pre>
-nl_single_run_setup(experiment, parameter_set_id = NULL, run_id = NULL,
-  param_set, print_progress = FALSE)
+nl_parse_model(model_file)
 </pre>
   <h3>Arguments</h3>
   <table summary="R argblock">
     <tr valign="top">
       <td>
-        <code>experiment</code>
+        <code>model_file</code>
       </td>
       <td>
-        <p>see nl_single_run</p>
+        <p>NetLogo model file</p>
+      </td>
+    </tr>
+  </table>
+  <h3>Details</h3>
+  <p>Imports attributes from sliders defined in
+NetLogo model file.
+Based on information from
+<a href="https://github.com/NetLogo/NetLogo/wiki/Model-file-format">https://github.com/NetLogo/NetLogo/wiki/Model-file-format</a>
+and
+<a href="https://github.com/NetLogo/NetLogo/wiki/Widget-Format">https://github.com/NetLogo/NetLogo/wiki/Widget-Format</a>
+</p>
+  <h3>Value</h3>
+  <p>Returns an object of class <code>nl_model</code>.
+It is a list containing at most the following components:
+</p>
+  <table summary="R valueblock">
+    <tr valign="top">
+      <td>
+        <code> view </code>
+      </td>
+      <td>
+        <p>a data frame with NetLogo model view attributes</p>
       </td>
     </tr>
     <tr valign="top">
       <td>
-        <code>parameter_set_id</code>
+        <code> sliders </code>
       </td>
       <td>
-        <p>see nl_single_run</p>
+        <p>a data frame with NetLogo model sliders attributes</p>
       </td>
     </tr>
     <tr valign="top">
       <td>
-        <code>run_id</code>
+        <code> switches </code>
       </td>
       <td>
-        <p>see nl_single_run</p>
+        <p>a data frame with NetLogo model switches attributes</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code> monitors </code>
+      </td>
+      <td>
+        <p>a data frame with NetLogo model monitors attributes</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code> plots </code>
+      </td>
+      <td>
+        <p>a data frame with NetLogo model plots attributes</p>
       </td>
     </tr>
   </table>

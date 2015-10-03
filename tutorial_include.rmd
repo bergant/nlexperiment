@@ -3,78 +3,148 @@
 ### Measures
 
 [Fire Experiment](fire.html) example demonstrates
-how to setup nlexperiment session, 
-define and run experiments, export view images,
-define temporal and final run measures, 
-get and visualize observations.
-
+how to:
 
 <aside>
-[![Fire](img/pages-fireRunPlot-1.png)](fire.html)
-[![Fire](img/pages-fireRunPlot2-1.png)](fire.html)
+[![Fire](img/pages-fireView-1.png)](fire.html)
 </aside>
 
-[![Fire](img/pages-fireView-1.png)](fire.html)
+* define and run experiments, export view images,
+* define temporal measures (step measures),
+* define final measures (simulation run measures),
+* aggregate temporal measures over time.
 
+---
 
-### Agents: Turtles, Links and Patches
+[Segregation](segregation.html) example shows how to obtain data from 
+individual NetLogo agents:
 
-[Segregation](segregation.html) example demonstrates how to obtain data from 
-individual NetLogo agents.
-
+<aside>
 [![](img/pages-segregPlot-1.png)](segregation.html)
+</aside>
 
-[Network](network.html) example demonstrates how to collect values from
- turtles and their links to recreate network as __igraph__ object
+* define and run experiment with "agents-after" measure,
+* visualize position of agents from different groups.
 
+---
+
+[Network](network.html) example collects values from
+ turtles and their links:
+
+<aside>
 [![](img/pages-agentsGraphPlot-1.png)](network.html)
+</aside>
 
-[Traffic](traffic.html) example demonstrates how to collect values from
- turtles per each time step.
+* define experiment to get data about network structure (turtles, links),
+* recreate network as igraph object,
+* map turtle variables to igraph vertices,
+* aggregate network measures (_example in construction_).
 
+---
+
+[Traffic](traffic.html) example collects values from 
+individual turtles per each time step:
+
+<aside>
 [![](img/pages-trafficPlot-1.png)](traffic.html)
+</aside>
+
+* definition of "agents step" measure,
+* visualizing several agents' position and speed in time.
 
 
-[DLA](dla.html) example demonstrates how to read NetLogo patches.
+---
 
+[DLA](dla.html) (diffusion-limited aggregation) example demonstrates 
+how to read position and other variables from NetLogo patches 
+(after simulation run).
 
+<aside>
 [![](img/pages-dlaPlot-1.png)](dla.html)
+</aside>
 
-### Mapping Variables
+* definition of "patches_after"" measure,
+* visualizing patches.
 
-[Ants](ants.html) example demonstrates simple parameter sets 
-definition and mapping.
+---
 
+### Parameter Sets
+The following examples show how to define parameter value sets.
+See also examples in [Sensitivity Analysis](#Sensitivity Analysis) for 
+other parameter space exploring methods.
 
-<asideclose>
-[![Ants](img/pages-antsPlotStep-1.png)](ants.html)
-</asideclose>
-
+<aside>
 [![Ants](img/pages-antsPlotViews-1.png)](ants.html)
+</aside>
 
-## Parameter Sets
+[Ants](ants.html) example demonstrates experiment 
+definition with full factorial design and mapping parameters 
+to NetLogo variables.
+
+
+* Define parameter value sets as a combination from a list of values
+* Map parameter names to NetLogo variables
+* Visualize several temporal measures with 2D parameter space 
+
+---
 
 [Fur Patterns](fur.html) demonstrates 
-explicit definition of parameter sets and 
-parameter mapping when parameter space is transformed. 
-
-[<img src = "img/pages-furShowPatches-1.png"/>](fur.html)
-
-[Flocking Example](flocking.html) shows simple measure definition and observation in parameter space. It is the first in a series of parameter space exploration of the Flocking model.
+explicit definition of parameter value sets 
+with transformed parameter space. 
 
 <aside>
-  [![](img/pages-flockPlot2-1.png)](flocking.html)
-  [![](img/pages-pFlockCatPlot-1.png)](flocking_categorical.html)
-  [![](img/pages-flockSampPlot-1.png)](flocking_sampling.html)
+[![](img/pages-furShowPatches-1.png)](fur.html)
 </aside>
 
+* Create parameter values
+* Transform values to NetLogo model variables
+* Define experiment with a data frame of parameter sets 
+
+---
+
+[Flocking Example](flocking.html) demonstrates temporal measure definition
+and visualization of temporal measures in the parameter space:
+
+<aside>
 [![](img/pages-flockPlotGrid-1.png)](flocking.html)
+</aside>
 
+* temporal measure with custom step definition (one step includes several _ticks_ in NetLogo)
+* simulation repetitions of stochastic model with predefined random seeds
 
-[Categorical Criteria](flocking_categorical.html) and 
+It is the first in a series of parameter space exploration of the Flocking model
+
+---
+
+[Categorical Criteria](flocking_categorical.html) example 
+explores parameter space with full factorial design
+and categorical criteria:
+
+<aside>
+[![](img/pages-pFlockCatPlot-1.png)](flocking_categorical.html)
+</aside>
+
+* Parameter sets are defined as all combination of values,
+* temporal measures are aggregated in time and used to define a categorical criteria,
+* parameter space is visualized with categorical criteria.
+
+---
+
 [Hyper Latin Cube Sampling](flocking_sampling.html) examples
 demontrate how to explore parameter space with categorical 
 criteria and sampling methods.
+
+<aside>
+  [![](img/pages-flockSampPlot-1.png)](flocking_sampling.html)
+</aside>
+
+<a name="Sensitivity Analysis"> 
+</a>
+
+* Explore parameter space with categorical criteria (how to define categorical
+measures from temporal measures)
+* Full factor design and LHC random sampling
+
 
 ## Sensitivity Analysis
 

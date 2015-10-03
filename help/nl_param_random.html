@@ -119,48 +119,110 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-  <table width="100%" summary="page for nl_single_run_setup">
+  <table width="100%" summary="page for nl_param_random">
     <tr>
-      <td>nl_single_run_setup</td>
+      <td>nl_param_random</td>
       <td style="text-align: right;">R Documentation</td>
     </tr>
   </table>
-  <h2>Set up parameters and setup commands before run</h2>
+  <h2>Create random parameter sets within parameter ranges</h2>
   <h3>Description</h3>
-  <p>Internal function - called from nl_single_run
+  <p>Create parameter sets with Latin Hypercube sampling or monte carlo
 </p>
   <h3>Usage</h3>
   <pre>
-nl_single_run_setup(experiment, parameter_set_id = NULL, run_id = NULL,
-  param_set, print_progress = FALSE)
+nl_param_random(n, ..., FUN)
+
+nl_param_mc(n, ...)
+
+nl_param_lhs(n, ...)
 </pre>
   <h3>Arguments</h3>
   <table summary="R argblock">
     <tr valign="top">
       <td>
-        <code>experiment</code>
+        <code>n</code>
       </td>
       <td>
-        <p>see nl_single_run</p>
-      </td>
-    </tr>
-    <tr valign="top">
-      <td>
-        <code>parameter_set_id</code>
-      </td>
-      <td>
-        <p>see nl_single_run</p>
+        <p>Number of parameter sets</p>
       </td>
     </tr>
     <tr valign="top">
       <td>
-        <code>run_id</code>
+        <code>...</code>
       </td>
       <td>
-        <p>see nl_single_run</p>
+        <p>Parameters with ranges (numeric vectors) or a data frame with
+parameters as columns or a list of parameter values</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>
+        <code>FUN</code>
+      </td>
+      <td>
+        <p>A function with parameters n and k, returns a matrix with k columns
+and numeric double values in range from 0 to 1</p>
       </td>
     </tr>
   </table>
+  <h3>Details</h3>
+  <p><code>nl_param_lhs</code> returns n parameter value sets with LHC sampling.
+It uses <code>lhs::randomLHS</code> function and requires <span class="pkg">lhs</span> package.
+</p>
+  <p><code>nl_param_mc</code> returns n parameter value sets with random parameters.
+</p>
+  <p><code>nl_param_random</code> returns n parameter value sets with custom defined method.
+</p>
+  <h3>Value</h3>
+  <p>A data frame with parameter value sets
+</p>
+  <h3>Examples</h3>
+  <pre>
+experiment &lt;- nl_experiment(
+  model_file = "models/Sample Models/Biology/Flocking.nlogo",
+  setup_commands = c("setup", "repeat 100 [go]"),
+  iterations = 5,
+
+  param_values = nl_param_lhs(
+    n = 100,                           # create 100 parameter value sets
+    world_size = 50,
+    population = 80,
+    vision = 6,
+    min_separation = c(0, 4),
+    max_align_turn = c(0, 20)
+  ),
+  mapping = c(
+    min_separation = "minimum-separation",
+    max_align_turn = "max-align-turn"),
+
+  step_measures = measures(
+    converged = "1 -
+    (standard-deviation [dx] of turtles +
+    standard-deviation [dy] of turtles) / 2",
+    mean_crowding =
+      "mean [count flockmates + 1] of turtles"
+  ),
+  eval_criteria = criteria(
+    c_converged = mean(step$converged),
+    c_mcrowding = mean(step$mean_crowding)
+  ),
+
+  repetitions = 10,                        # repeat simulations 10 times
+  random_seed = 1:10,
+
+  eval_aggregate_fun = mean                # aggregate over repetitions
+)
+
+# custom sampling method must return a n x k matrix:
+nl_param_random(
+ n = 5,
+ foo = c(1, 2),
+ bar = c(100, 200),
+ baz = 4,
+ FUN = function(n, k) matrix(runif(n*k), ncol = k)
+)
+</pre>
 </body>
 <footer>
   <a href="../about.html">Authors</a> |

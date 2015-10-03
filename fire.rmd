@@ -83,7 +83,8 @@ experiment <- nl_experiment(
   param_values = list(density = c(57, 59, 61)),
   random_seed = 1,
   step_measures = measures(
-    percent_burned = "(burned-trees / initial-trees) * 100"
+    percent_burned = "(burned-trees / initial-trees) * 100",
+    fire_size = "count turtles"
   )
 )
 ```
@@ -94,7 +95,7 @@ Note that `burned-trees` and `initial-trees` are global variables in NetLogo
 
 
 ```{r fireStepRun, title = "Run the experiment", cache=TRUE}
-result <- nl_run(experiment)  
+result <- nl_run(experiment)
 ```
 
 To get the observations from the result object
@@ -111,10 +112,6 @@ Parameter values are included only by reference to `parameter_set_id`. The
 function `nl_get_result` joins parameter sets with observation data.
 </aside>
 
-
-```{r fireShowTable}
-htmlTable::htmlTable(head(dat))
-```
 <aside>
 Table: first 6 observations. 
 </aside>
@@ -123,7 +120,11 @@ Table: first 6 observations.
 
 
 ```{r fireStepPlot, title = "Plot observations", fig.height=4, fig.cap="Percent of burned trees as a function of time"}
-nl_show_step(result, x_param = "density")
+nl_show_step(result, y = "percent_burned", x_param = "density")
+```
+
+```{r fireStep2Plot, title = "Plot observations", fig.height=4, fig.cap="Fire size as a function of time"}
+nl_show_step(result, y = "fire_size", x_param = "density")
 ```
 
 
@@ -192,6 +193,68 @@ ggplot(dat, mapping = aes(x = factor(density), y = progress/250 + 0.5) ) +
   geom_boxplot()  +
   #geom_jitter(position = position_jitter(width = .1), alpha = 0.3)  +
   labs(x = "Forest density", y = "Fire progress") +
+  theme_minimal()
+```
+
+
+## Aggregation Over Time
+
+Sometimes a model does not have enough information at the end of simulation
+and can be measured only by aggregating some temporal measures over time.
+
+One way to get aggregated data (e.g. maximum, mean or variance) is to report
+temporal measure and apply aggregation at the end of experiment run.
+But in case of long simulations it would require a lot of memory and
+aggregating measure at the and of each simulation run is more efficent.
+
+Use `eval_criteria` argument to define the aggreation of 
+temporal measures. The following example define median and standard deviation 
+of fire size (defined as _number of trees with active fire in time_ $t$):
+
+
+```{r FireEvalModel, title = "Define the experiment"}
+experiment <- nl_experiment( 
+  model_file = "models/Sample Models/Earth Science/Fire.nlogo", 
+  while_condition = "any? turtles",
+  param_values = list(
+    density = seq(from = 55, to = 62, by = 1)
+  ),
+  step_measures = measures(                                
+    fire_size = "count turtles"                 # temporal measure
+  ),
+  eval_criteria = criteria (
+    median_fire_size = median(step$fire_size),  # aggregate over iterations
+    stdev_fire_size = sd(step$fire_size)
+  ),
+  repetitions = 30,                             # run simulation several times
+  random_seed = 1:30                            # random seeds for repetitions
+)
+```
+
+
+```{r FireEvalRun, title = "Run the experiment", cache=TRUE}
+result <- nl_run(experiment, parallel = TRUE) 
+```
+
+
+```{r FireEvalPlotM, title = "Plot results", fig.cap="Median of fire size. Each point represents one simulation."}
+dat <- nl_get_result(result, type = "criteria")
+dat$density <- factor(dat$density)
+
+ggplot(dat, aes(x = density, y = median_fire_size)) +
+  geom_jitter(position = position_jitter(width = 0.2), alpha = 0.3) +
+  stat_smooth(aes(group = 1), method = "loess") +
+  theme_minimal()
+
+```
+
+```{r FireEvalPlotSD, title = "Plot results", fig.cap="Standard deviation of fire size. Each point represents one simulation."}
+dat <- nl_get_result(result, type = "criteria")
+dat$density <- factor(dat$density)
+
+ggplot(dat, aes(x = density, y = stdev_fire_size)) +
+  geom_jitter(position = position_jitter(width = 0.2), alpha = 0.3) +
+  stat_smooth(aes(group = 1), method = "loess") +
   theme_minimal()
 ```
 

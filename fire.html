@@ -74,19 +74,19 @@ img {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Parameters & Measures<span class="caret"></span></a>
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Getting Started<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
              <li><a href="tutorial.html">Overview</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Getting started</li>
+             <li class="dropdown-header">Measures</li>
              <li><a href="fire.html">Fire Experiment</a></li>
              <li><a href="segregation.html">Segregation</a></li>
              <li><a href="network.html">Network</a></li>
              <li><a href="traffic.html">Traffic</a></li>
              <li><a href="dla.html">DLA</a></li>
-             <li><a href="ants.html">Ants</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Parameter Value Sets</li>
+             <li><a href="ants.html">Ants</a></li>
              <li><a href="fur.html">Fur Patterns</a></li>
              <li><a href="flocking.html">Flocking</a></li>
              <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
@@ -177,14 +177,15 @@ Images taken at the end of each simulation
   param_values = list(density = c(57, 59, 61)),
   random_seed = 1,
   step_measures = measures(
-    percent_burned = &quot;(burned-trees / initial-trees) * 100&quot;
+    percent_burned = &quot;(burned-trees / initial-trees) * 100&quot;,
+    fire_size = &quot;count turtles&quot;
   )
 )</code></pre>
 <aside>
 Note that <code>burned-trees</code> and <code>initial-trees</code> are global variables in NetLogo <a href="https://github.com/NetLogo/models/blob/master/Sample%20Models/Earth%20Science/Fire.nlogo">Fire model</a>.
 </aside>
 <p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
-<pre class="r"><code>result &lt;- nl_run(experiment)  </code></pre>
+<pre class="r"><code>result &lt;- nl_run(experiment)</code></pre>
 <p>To get the observations from the result object use <code>nl_get_step_result</code>:</p>
 <p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Get observations" style="color:gray"></span></lside></p>
 <pre class="r"><code>dat &lt;- nl_get_step_result(result)</code></pre>
@@ -192,163 +193,27 @@ Note that <code>burned-trees</code> and <code>initial-trees</code> are global va
 <p>Values <code>run_id</code> and <code>step_id</code> are included in the <code>result$step</code> by default.</p>
 Parameter values are included only by reference to <code>parameter_set_id</code>. The function <code>nl_get_result</code> joins parameter sets with observation data.
 </aside>
-<pre class="r"><code>htmlTable::htmlTable(head(dat))</code></pre>
-<table class="gmisc_table" style="border-collapse: collapse;">
-<thead>
-<tr>
-<th style="border-bottom: 1px solid grey; border-top: 2px solid grey;">
-</th>
-<th style="border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
-density
-</th>
-<th style="border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
-param_set_id
-</th>
-<th style="border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
-percent_burned
-</th>
-<th style="border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
-step_id
-</th>
-<th style="border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
-run_id
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">
-1
-</td>
-<td style="text-align: center;">
-57
-</td>
-<td style="text-align: center;">
-1
-</td>
-<td style="text-align: center;">
-0.403033950012595
-</td>
-<td style="text-align: center;">
-1
-</td>
-<td style="text-align: center;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-2
-</td>
-<td style="text-align: center;">
-57
-</td>
-<td style="text-align: center;">
-1
-</td>
-<td style="text-align: center;">
-0.643734781270117
-</td>
-<td style="text-align: center;">
-2
-</td>
-<td style="text-align: center;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-3
-</td>
-<td style="text-align: center;">
-57
-</td>
-<td style="text-align: center;">
-1
-</td>
-<td style="text-align: center;">
-0.878837918777464
-</td>
-<td style="text-align: center;">
-3
-</td>
-<td style="text-align: center;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-4
-</td>
-<td style="text-align: center;">
-57
-</td>
-<td style="text-align: center;">
-1
-</td>
-<td style="text-align: center;">
-1.08595258753394
-</td>
-<td style="text-align: center;">
-4
-</td>
-<td style="text-align: center;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align: left;">
-5
-</td>
-<td style="text-align: center;">
-57
-</td>
-<td style="text-align: center;">
-1
-</td>
-<td style="text-align: center;">
-1.30706149066585
-</td>
-<td style="text-align: center;">
-5
-</td>
-<td style="text-align: center;">
-1
-</td>
-</tr>
-<tr>
-<td style="border-bottom: 2px solid grey; text-align: left;">
-6
-</td>
-<td style="border-bottom: 2px solid grey; text-align: center;">
-57
-</td>
-<td style="border-bottom: 2px solid grey; text-align: center;">
-1
-</td>
-<td style="border-bottom: 2px solid grey; text-align: center;">
-1.51137731254723
-</td>
-<td style="border-bottom: 2px solid grey; text-align: center;">
-6
-</td>
-<td style="border-bottom: 2px solid grey; text-align: center;">
-1
-</td>
-</tr>
-</tbody>
-</table>
 <aside>
 Table: first 6 observations.
 </aside>
 <p> </p>
 <p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot observations" style="color:gray"></span></lside></p>
-<pre class="r"><code>nl_show_step(result, x_param = &quot;density&quot;)</code></pre>
+<pre class="r"><code>nl_show_step(result, y = &quot;percent_burned&quot;, x_param = &quot;density&quot;)</code></pre>
 <p>
 <img src="img/pages-fireStepPlot-1.png">
 <aside>
 <p class="caption">
 Percent of burned trees as a function of time
+</p>
+</aside>
+</p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot observations" style="color:gray"></span></lside></p>
+<pre class="r"><code>nl_show_step(result, y = &quot;fire_size&quot;, x_param = &quot;density&quot;)</code></pre>
+<p>
+<img src="img/pages-fireStep2Plot-1.png">
+<aside>
+<p class="caption">
+Fire size as a function of time
 </p>
 </aside>
 </p>
@@ -409,6 +274,63 @@ Distribution of final percent of burned trees at different values of forest dens
 <aside>
 <p class="caption">
 Distribution of final fire position at different values of forest densities
+</p>
+</aside>
+</p>
+</div>
+<div id="aggregation-over-time" class="section level2">
+<h2>Aggregation Over Time</h2>
+<p>Sometimes a model does not have enough information at the end of simulation and can be measured only by aggregating some temporal measures over time.</p>
+<p>One way to get aggregated data (e.g. maximum, mean or variance) is to report temporal measure and apply aggregation at the end of experiment run. But in case of long simulations it would require a lot of memory and aggregating measure at the and of each simulation run is more efficent.</p>
+<p>Use <code>eval_criteria</code> argument to define the aggreation of temporal measures. The following example define median and standard deviation of fire size (defined as <em>number of trees with active fire in time</em> <span class="math">\(t\)</span>):</p>
+<p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
+<pre class="r"><code>experiment &lt;- nl_experiment( 
+  model_file = &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;, 
+  while_condition = &quot;any? turtles&quot;,
+  param_values = list(
+    density = seq(from = 55, to = 62, by = 1)
+  ),
+  step_measures = measures(                                
+    fire_size = &quot;count turtles&quot;                 # temporal measure
+  ),
+  eval_criteria = criteria (
+    median_fire_size = median(step$fire_size),  # aggregate over iterations
+    stdev_fire_size = sd(step$fire_size)
+  ),
+  repetitions = 30,                             # run simulation several times
+  random_seed = 1:30                            # random seeds for repetitions
+)</code></pre>
+<p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
+<pre class="r"><code>result &lt;- nl_run(experiment, parallel = TRUE) </code></pre>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot results" style="color:gray"></span></lside></p>
+<pre class="r"><code>dat &lt;- nl_get_result(result, type = &quot;criteria&quot;)
+dat$density &lt;- factor(dat$density)
+
+ggplot(dat, aes(x = density, y = median_fire_size)) +
+  geom_jitter(position = position_jitter(width = 0.2), alpha = 0.3) +
+  stat_smooth(aes(group = 1), method = &quot;loess&quot;) +
+  theme_minimal()</code></pre>
+<p>
+<img src="img/pages-FireEvalPlotM-1.png">
+<aside>
+<p class="caption">
+Median of fire size. Each point represents one simulation.
+</p>
+</aside>
+</p>
+<p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot results" style="color:gray"></span></lside></p>
+<pre class="r"><code>dat &lt;- nl_get_result(result, type = &quot;criteria&quot;)
+dat$density &lt;- factor(dat$density)
+
+ggplot(dat, aes(x = density, y = stdev_fire_size)) +
+  geom_jitter(position = position_jitter(width = 0.2), alpha = 0.3) +
+  stat_smooth(aes(group = 1), method = &quot;loess&quot;) +
+  theme_minimal()</code></pre>
+<p>
+<img src="img/pages-FireEvalPlotSD-1.png">
+<aside>
+<p class="caption">
+Standard deviation of fire size. Each point represents one simulation.
 </p>
 </aside>
 </p>

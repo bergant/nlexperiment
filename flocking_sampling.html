@@ -74,19 +74,19 @@ img {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Parameters & Measures<span class="caret"></span></a>
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Getting Started<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
              <li><a href="tutorial.html">Overview</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Getting started</li>
+             <li class="dropdown-header">Measures</li>
              <li><a href="fire.html">Fire Experiment</a></li>
              <li><a href="segregation.html">Segregation</a></li>
              <li><a href="network.html">Network</a></li>
              <li><a href="traffic.html">Traffic</a></li>
              <li><a href="dla.html">DLA</a></li>
-             <li><a href="ants.html">Ants</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Parameter Value Sets</li>
+             <li><a href="ants.html">Ants</a></li>
              <li><a href="fur.html">Fur Patterns</a></li>
              <li><a href="flocking.html">Flocking</a></li>
              <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
@@ -128,11 +128,9 @@ img {
 <aside>
 Wilensky, U. (1998). <a href="http://ccl.northwestern.edu/netlogo/models/Flocking">NetLogo Flocking model</a>. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
 </aside>
-<p>Like in <a href="flocking_categorical.html">previous example</a> we are using categorical evaluation criteria but instead of exploring parameter space with (full) factorial design we use Latin hypercube sampling method from <strong>tgp</strong> package.</p>
+<p>Like in <a href="flocking_categorical.html">previous example</a> we are using categorical evaluation criteria but instead of exploring parameter space with (full) factorial design we use Latin hypercube sampling method from <strong>lhs</strong> package.</p>
 <p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
-<pre class="r"><code>library(tgp)
-
-experiment &lt;- nl_experiment( 
+<pre class="r"><code>experiment &lt;- nl_experiment( 
   model_file = &quot;models/Sample Models/Biology/Flocking.nlogo&quot;,
   setup_commands = c(&quot;setup&quot;, &quot;repeat 100 [go]&quot;),
   iterations = 5,
@@ -167,14 +165,14 @@ experiment &lt;- nl_experiment(
   eval_aggregate_fun = mean                # aggregate over repetitions
 )  </code></pre>
 <aside>
-<p>Function <code>nl_param_lhs</code> is using <code>lhs</code> function from <strong>tgp</strong> package to create random parameter sets. Argument <code>n</code> defines the size of the LH sample.</p>
-Instead of using <code>nl_param_lhs</code> one can put any data frame in param_values. The columns of a data frame are interpreted as parameter names and rows should represent parameter sets.
+<p>Function <code>nl_param_lhs</code> is using <code>randomLHS</code> function from <strong>lhs</strong> package to create random parameter sets. Argument <code>n</code> defines the size of the LH sample.</p>
+Instead of <code>nl_param_lhs</code> one can use <code>nl_param_mc</code> to get simple Monte Carlo experiment or put any data frame in param_values. The columns of a data frame are interpreted as parameter names and rows as parameter value sets.
 </aside>
 <p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run experiment" style="color:gray"></span></lside></p>
-<pre class="r"><code>result4 &lt;- nl_run(experiment, parallel = TRUE)</code></pre>
+<pre class="r"><code>result &lt;- nl_run(experiment, parallel = TRUE)</code></pre>
 <p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Add categorical criteria" style="color:gray"></span></lside></p>
 <pre class="r"><code>dat &lt;- nl_get_criteria_result( 
-  result4,
+  result,
   are_grouped = c_mcrowding &gt;= 5 &amp; c_mcrowding &lt; 11,
   are_aligned = c_converged &gt; 0.7
 )</code></pre>
@@ -199,6 +197,7 @@ Categorical criteria “aligned” (red triangle) and “grouped” (blue cross)
 </p>
 <div id="related" class="section level2">
 <h2>Related</h2>
+<p>Example <a href="flocking_sens_lhs.html">Random sampling</a> explores 5-dimensional parameter space of NetLogo Flocking model with random sampling and scatter plots.</p>
 <p><a href="flocking_bestfit.html">Best-fit Criterion</a> shows how to define single criterion evaluation expression and evaluate parameter space with full-factor design.</p>
 <p><a href="flocking_random_search.html">Random Search</a> demonstrate searching for optimal parameters using random search.</p>
 <p><asideclose> Get <a href="flocking_sampling.rmd">rmarkdown source</a> of this page. </asideclose></p>

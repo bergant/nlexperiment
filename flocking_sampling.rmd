@@ -25,11 +25,9 @@ Northwestern University, Evanston, IL.
 Like in [previous example](flocking_categorical.html) we are using
 categorical evaluation criteria but
 instead of exploring parameter space with (full) factorial design we use 
-Latin hypercube sampling method from **tgp** package. 
+Latin hypercube sampling method from **lhs** package. 
 
 ```{r flockSampModel, title = "Define the experiment"}
-library(tgp)
-
 experiment <- nl_experiment( 
   model_file = "models/Sample Models/Biology/Flocking.nlogo",
   setup_commands = c("setup", "repeat 100 [go]"),
@@ -67,22 +65,23 @@ experiment <- nl_experiment(
 ```
 
 <aside>
-Function `nl_param_lhs` is using `lhs` function from **tgp** package to create
+Function `nl_param_lhs` is using `randomLHS` function from **lhs** package to create
   random parameter sets. Argument `n` defines the size of the LH sample.
 
-Instead of using `nl_param_lhs` one can put any data frame in param_values.
-  The columns of a data frame are interpreted as parameter names and rows should
-  represent parameter sets.
+Instead of `nl_param_lhs` one can use `nl_param_mc` to get simple Monte Carlo
+ experiment or put any data frame in param_values.
+ The columns of a data frame are interpreted as parameter names and rows as
+ parameter value sets.
 </aside>
 
 
 ```{r flockSampRun, title = "Run experiment", cache=TRUE}
-result4 <- nl_run(experiment, parallel = TRUE)
+result <- nl_run(experiment, parallel = TRUE)
 ```
 
 ```{r flockSampData, title = "Add categorical criteria"}
 dat <- nl_get_criteria_result( 
-  result4,
+  result,
   are_grouped = c_mcrowding >= 5 & c_mcrowding < 11,
   are_aligned = c_converged > 0.7
 )
@@ -104,6 +103,11 @@ ggplot( dat, aes(x = min_separation, y = max_align_turn) ) +
 ```
 
 ## Related
+
+Example [Random sampling](flocking_sens_lhs.html) explores 5-dimensional 
+parameter space of NetLogo Flocking model
+with random sampling and scatter plots.
+
 
 [Best-fit Criterion](flocking_bestfit.html) shows how to define 
   single criterion evaluation expression 

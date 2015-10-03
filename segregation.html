@@ -74,19 +74,19 @@ img {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li class="dropdown">
-          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Parameters & Measures<span class="caret"></span></a>
+          <a href="tutorial" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Getting Started<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
              <li><a href="tutorial.html">Overview</a></li>
              <li class="divider"></li>
-             <li class="dropdown-header">Getting started</li>
+             <li class="dropdown-header">Measures</li>
              <li><a href="fire.html">Fire Experiment</a></li>
              <li><a href="segregation.html">Segregation</a></li>
              <li><a href="network.html">Network</a></li>
              <li><a href="traffic.html">Traffic</a></li>
              <li><a href="dla.html">DLA</a></li>
-             <li><a href="ants.html">Ants</a></li>
              <li class="divider"></li>
              <li class="dropdown-header">Parameter Value Sets</li>
+             <li><a href="ants.html">Ants</a></li>
              <li><a href="fur.html">Fur Patterns</a></li>
              <li><a href="flocking.html">Flocking</a></li>
              <li><a href="flocking_categorical.html">Categorical Criteria</a></li>
@@ -124,8 +124,8 @@ img {
 </div>
 
 
-<p>While using <code>step_measures</code> and <code>run_measures</code> (see <a href="fire.html">Fire experiments</a>) is good enough for aggregate measures, there are occasions when we need to measure values for each agent individually.</p>
-<p>Example below is using Netlogo Segregation model (Wilensky, 1997) from NetLogo model library to show how to obtain individual agents’ data.</p>
+<p>While using <code>step_measures</code> and <code>run_measures</code> (see <a href="fire.html">Fire experiments</a>) is good enough for aggregate measures, there are cases when we need to “measure” each agent individually.</p>
+<p>Example below is using Netlogo Segregation model (Wilensky, 1997) from NetLogo model library to demonstrate “agents” measures.</p>
 <aside>
 Wilensky, U. (1997). NetLogo <a href="http://ccl.northwestern.edu/netlogo/models/Segregation">Segregation model</a>. Center for Connected Learning and Computer
 </aside>
@@ -154,10 +154,10 @@ Note that turtle variable “color” is mapped to group variable
 <pre class="r"><code>result &lt;- nl_run(experiment)</code></pre>
 <p>The data about individual agents are now stored in <code>result$agents_after$individuals</code>. To join the data with the values from parameter sets use <code>nl_get_result</code> function.</p>
 <p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Get data" style="color:gray"></span></lside></p>
-<pre class="r"><code>dat &lt;- nl_get_result(result, type = &quot;agents_after&quot;, sub_type = &quot;individuals&quot;)
-dat$group &lt;- factor(dat$group, labels = c(&quot;A&quot;, &quot;B&quot;))</code></pre>
+<pre class="r"><code>dat &lt;- nl_get_result(result, type = &quot;agents_after&quot;, sub_type = &quot;individuals&quot;)</code></pre>
 <p><lside><span class="glyphicon glyphicon-stats" aria-hidden="true" title="Plot" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(ggplot2)
+dat$group &lt;- factor(dat$group, labels = c(&quot;A&quot;, &quot;B&quot;))
 ggplot(dat, aes(x = xcor, y = ycor, fill = group)) +
   geom_raster() +
   facet_grid( ~ percent_similar_wanted, labeller = label_both) +

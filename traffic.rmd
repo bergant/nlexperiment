@@ -63,7 +63,7 @@ dat <- nl_get_result(result, type = "agents_step", sub_type = "cars")
 ```
 
 
-```{r trafficPlot, title = "Plot cars", fig.cap="Position of _n_ cars in time. Position of selected car is marked by red."}
+```{r trafficPlot, title = "Plot cars", fig.cap="Position of _n_ cars in time. Position of selected car is marked by red.", fig.height=4}
 library(ggplot2)
 
 ggplot(dat, aes(x = step_id, y = xcor - speed, dx = 1, dy = speed)) +
