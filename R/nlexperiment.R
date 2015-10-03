@@ -86,6 +86,7 @@ NULL
 # package global variables
 nl_experiment_class <- "nl_experiment"
 nl_result_class <- "nl_result"
+nl_model_class <- "nl_model"
 nl_special_params <- c("world_size")
 
 
@@ -594,12 +595,21 @@ nl_get_param_range <- function(experiment, diff_only = TRUE, as.data.frame = FAL
   ret
 }
 
-#' Create parameter sets with latin hypercube sampling
+#' Create random parameter sets within parameter ranges
 #'
-#' Parameter sets are created with \code{lhs} function from \pkg{tgp} package
+#' Create parameter sets with Latin Hypercube sampling or monte carlo
+#' @details \code{nl_param_lhs} returns n parameter value sets with LHC sampling.
+#' It uses \code{lhs::randomLHS} function and requires \pkg{lhs} package.
+#'
+#' \code{nl_param_mc} returns n parameter value sets with random parameters.
+#'
+#' \code{nl_param_random} returns n parameter value sets with custom defined method.
 #'
 #' @param n Number of parameter sets
-#' @param ... Named list of parameter ranges (numeric vectors)
+#' @param ... Parameters with ranges (numeric vectors) or a data frame with
+#'   parameters as columns or a list of parameter values
+#' @param FUN A function with parameters n and k, returns a matrix with k columns
+#'   and numeric double values in range from 0 to 1
 #' @return A data frame with parameter value sets
 #' @export
 #' @examples
@@ -637,18 +647,77 @@ nl_get_param_range <- function(experiment, diff_only = TRUE, as.data.frame = FAL
 #'
 #'   eval_aggregate_fun = mean                # aggregate over repetitions
 #' )
-nl_param_lhs <- function(n, ...) {
+#'
+#' # custom sampling method must return a n x k matrix:
+#' nl_param_random(
+#'  n = 5,
+#'  foo = c(1, 2),
+#'  bar = c(100, 200),
+#'  baz = 4,
+#'  FUN = function(n, k) matrix(runif(n*k), ncol = k)
+#' )
+nl_param_random <- function(n, ..., FUN) {
 
-  if( !requireNamespace("tgp", quietly = TRUE)) {
-    stop("tgp package needed for nl_param_lhs function to work. Please install it.",
+  if( !requireNamespace("lhs", quietly = TRUE)) {
+    stop("lhs package needed for nl_param_lhs function to work. Please install it.",
          call. = FALSE)
   }
 
-  p_list <- list(...)
-  params <- lapply(p_list, range)
-  params <- tgp::lhs(n = n, rect = t(data.frame(params)))
-  setNames(as.data.frame(params), names(p_list))
+  # expecting a list of vectors ...
+  param_values <- list(...)
+
+  # ... but accept also a single data frame
+  if(length(param_values) == 1 &&
+     inherits(param_values[[1]], c("list", "data.frame"))) {
+    param_values <- param_values[[1]]
+  }
+
+  range <- sapply(param_values, function(x) c(min(x), max(x)))
+  ranges_consts <- range[1, ] == range[2, ]
+  if( all(ranges_consts) ) {
+    stop("Parameters have no ranges (all constants). Can't create LHS.")
+  }
+  range_var <- range[, !ranges_consts, drop = FALSE]
+  range_const <- range[, ranges_consts, drop = FALSE]
+
+  # create LH sample with lhs package and transform to parameter ranges
+  k <- ncol(range_var)
+  r_sample <- FUN(n, k)
+  trans_factor <- apply(range_var, 2, function(x) rep(x[2] - x[1], n))
+  trans_addition <- apply(range_var, 2, function(x) rep(x[1], n))
+  ret <- as.data.frame(r_sample * trans_factor + trans_addition)
+
+  # bind constant parameters to the result
+  if(length(range_const) > 0  ) {
+    ret <- cbind(ret, t(range_const[1,]))
+  }
+  # sort by original parameter order
+  if(length(names(param_values)) > 1) {
+    ret <- ret[, match(names(param_values),  names(ret))]
+  }
+  ret
 }
+
+
+#' @rdname nl_param_random
+#' @export
+nl_param_mc <- function(n, ...) {
+  return(nl_param_random(n, ..., FUN =  function(n,k) matrix(runif(n*k), ncol = k)))
+}
+
+
+#' @rdname nl_param_random
+#' @export
+nl_param_lhs <- function(n, ...) {
+
+  if( !requireNamespace("lhs", quietly = TRUE)) {
+    stop("lhs package needed for nl_param_lhs function to work. Please install it.",
+         call. = FALSE)
+  }
+  return(nl_param_random(n = n, ..., FUN = lhs::randomLHS))
+}
+
+
 
 #' Create parameter sets with "one-at-a-time" (OAT) approach
 #'
@@ -768,8 +837,10 @@ nl_param_fast <- function(...) {
   }
 
   param_values <- list(...)
-  if(length(param_values) == 1 && inherits(param_values[[1]], "list"))
+  if(length(param_values) == 1 &&
+     inherits(param_values[[1]], c("list", "data.frame"))) {
     param_values <- param_values[[1]]
+  }
 
   ranges_min <- sapply(param_values, min)
   ranges_max <- sapply(param_values, max)

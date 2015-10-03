@@ -23,6 +23,6 @@ Suggests:
     png,
     ggplot2,
     testthat,
-    tgp,
+    lhs,
     fast
 LazyData: TRUE
