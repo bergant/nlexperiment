@@ -45,7 +45,7 @@ Simple experiment with NetLogo Fire model:<sup>[3](#fn3)</sup>
 
 ```{r Initialize, title = "Setup"}
 library(nlexperiment)
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0") 
+nl_netlogo_path("c:/Program Files/NetLogo 6.0.1/app") 
 ```
 
 Define the experiment:

@@ -35,7 +35,7 @@ Simple experiment with NetLogo Fire model:<sup>[3](#fn3)</sup>
 
 ```r
 library(nlexperiment)
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0") 
+nl_netlogo_path("c:/Program Files/NetLogo 6.0.1/app") 
 ```
 
 Define the experiment:
@@ -65,7 +65,7 @@ Plot the results:
 nl_show_step(result, x = "step_id", y = "percent_burned", x_param = "density")
 ```
 
-![](img/README-fireStepPlotRM-1.png) 
+![](img/README-fireStepPlotRM-1.png)<!-- -->
 
 
 See more [examples](http://bergant.github.io/nlexperiment/tutorial.html) 

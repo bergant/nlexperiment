@@ -238,7 +238,8 @@ nl_run_wrap_result_agents <- function(ret, type) {
 nl_run_init <- function(gui, nl_path, model_path) {
   #Start NetLogo and load model
   nl_options$set("wd", getwd())
-  RNetLogo::NLStart(nl_path, gui=gui)
+  nl_jarname <- list.files(nl_path, pattern = "^netlogo-.*\\.jar$", all.files = TRUE)[1]
+  RNetLogo::NLStart(nl.path = nl_path, nl.jarname = nl_jarname, gui=gui)
   RNetLogo::NLLoadModel(model_path)
 }
 
