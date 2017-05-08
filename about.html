@@ -10,20 +10,20 @@
 
 
 
+
 <title>Authors</title>
 
-<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
-<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<link href="libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="libs/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="libs/highlight/default.css"
-      type="text/css" />
-<script src="libs/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -37,6 +37,34 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 }
 </script>
 
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
 
 <link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
 
@@ -54,12 +82,34 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
 }
 </style>
+
+
+
 <div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
 
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -119,29 +169,38 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div id="header">
-<h1 class="title">Authors</h1>
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Authors</h1>
+
 </div>
 
 
-<p>Author: <strong>Darko Bergant</strong><br />Version: <strong>0.1.5</strong><br />Date: <strong>2015-09-14</strong><br />License: <strong>GPL-2</strong><br />URL: <a href="http://bergant.github.io/nlexperiment/" class="uri">http://bergant.github.io/nlexperiment/</a><br />Issues: <a href="https://github.com/bergant/nlexperiment/issues" class="uri">https://github.com/bergant/nlexperiment/issues</a></p>
+<p>Author: <strong>Darko Bergant</strong><br />
+Version: <strong>0.2.0</strong><br />
+Date: <strong>2017-05-05</strong><br />
+License: <strong>GPL-2</strong><br />
+URL: <a href="http://bergant.github.io/nlexperiment/" class="uri">http://bergant.github.io/nlexperiment/</a><br />
+Issues: <a href="https://github.com/bergant/nlexperiment/issues" class="uri">https://github.com/bergant/nlexperiment/issues</a></p>
 <p>For <a href="http://ccl.northwestern.edu/netlogo">NetLogo</a> see their <a href="http://ccl.northwestern.edu/netlogo/docs/copyright.html">copyright information</a>.</p>
 <p>Authors of NetLogo models used in examples are referenced in examples.</p>
 <p>Other packages utilised to create these pages:</p>
 <ul>
-<li><p><strong> RNetLogo </strong> 1.0-1 , GPL-2 <br/> Provides an Interface to the Agent-Based Modelling Platform NetLogo <br/> <a href="http://rnetlogo.r-forge.r-project.org/" class="uri">http://rnetlogo.r-forge.r-project.org/</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/RNetLogo/index.html ">CRAN</a></p></li>
+<li><p><strong> RNetLogo </strong> 1.0-3 , GPL-2 <br/> Provides an Interface to the Agent-Based Modelling Platform NetLogo <br/> <a href="http://rnetlogo.r-forge.r-project.org/" class="uri">http://rnetlogo.r-forge.r-project.org/</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/RNetLogo/index.html ">CRAN</a></p></li>
 <li><p><strong> igraph </strong> 1.0.1 , GPL (&gt;= 2) <br/> Network Analysis and Visualization <br/> <a href="http://igraph.org" class="uri">http://igraph.org</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/igraph/index.html ">CRAN</a></p></li>
-<li><p><strong> ggplot2 </strong> 1.0.1 , GPL-2 <br/> An Implementation of the Grammar of Graphics <br/> <a href="http://ggplot2.org" class="uri">http://ggplot2.org</a>, <a href="https://github.com/hadley/ggplot2" class="uri">https://github.com/hadley/ggplot2</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/ggplot2/index.html ">CRAN</a></p></li>
-<li><p><strong> knitr </strong> 1.11 , GPL <br/> A General-Purpose Package for Dynamic Report Generation in R <br/> <a href="http://yihui.name/knitr/" class="uri">http://yihui.name/knitr/</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/knitr/index.html ">CRAN</a></p></li>
-<li><p><strong> rmarkdown </strong> 0.8 , GPL-3 <br/> Dynamic Documents for R <br/> <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/rmarkdown/index.html ">CRAN</a></p></li>
+<li><p><strong> ggplot2 </strong> 2.2.1 , GPL-2 | file LICENSE <br/> Create Elegant Data Visualisations Using the Grammar of Graphics <br/> <a href="http://ggplot2.tidyverse.org" class="uri">http://ggplot2.tidyverse.org</a>, <a href="https://github.com/tidyverse/ggplot2" class="uri">https://github.com/tidyverse/ggplot2</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/ggplot2/index.html ">CRAN</a></p></li>
+<li><p><strong> knitr </strong> 1.15.1 , GPL <br/> A General-Purpose Package for Dynamic Report Generation in R <br/> <a href="http://yihui.name/knitr/" class="uri">http://yihui.name/knitr/</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/knitr/index.html ">CRAN</a></p></li>
+<li><p><strong> rmarkdown </strong> 1.3 , GPL-3 <br/> Dynamic Documents for R <br/> <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/rmarkdown/index.html ">CRAN</a></p></li>
 <li><p><strong> tufterhandout </strong> 1.2.2 , MIT + file LICENSE <br/> Tufte-style HTML Document Format for rmarkdown <br/> <a href="http://sachsmc.github.io/tufterhandout" class="uri">http://sachsmc.github.io/tufterhandout</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/tufterhandout/index.html ">CRAN</a></p></li>
-<li><p><strong> tidyr </strong> 0.3.1 , MIT + file LICENSE <br/> Easily Tidy Data with <code>spread()</code> and <code>gather()</code> Functions <br/> <a href="https://github.com/hadley/tidyr" class="uri">https://github.com/hadley/tidyr</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/tidyr/index.html ">CRAN</a></p></li>
-<li><p><strong> tgp </strong> 2.4-11 , LGPL <br/> Bayesian treed Gaussian process models <br/> <a href="http://www.ams.ucsc.edu/~rbgramacy/tgp.html" class="uri">http://www.ams.ucsc.edu/~rbgramacy/tgp.html</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/tgp/index.html ">CRAN</a></p></li>
-<li><p><strong> dfoptim </strong> 2011.8-1 , GPL (&gt;= 2) <br/> Derivative-free Optimization <br/> <a href="http://www.jhsph.edu/agingandhealth/People/Faculty_personal_pages/Varadhan.html" class="uri">http://www.jhsph.edu/agingandhealth/People/Faculty_personal_pages/Varadhan.html</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/dfoptim/index.html ">CRAN</a></p></li>
-<li><p><strong> GenSA </strong> 1.1.5 , GPL-2 <br/> Functions for Generalized Simulated Annealing <br/> See description on <a href=" https://cran.rstudio.com/web/packages/GenSA/index.html ">CRAN</a></p></li>
+<li><p><strong> tidyr </strong> 0.6.1 , MIT + file LICENSE <br/> Easily Tidy Data with ‘spread()’ and ‘gather()’ Functions <br/> <a href="http://tidyr.tidyverse.org" class="uri">http://tidyr.tidyverse.org</a>, <a href="https://github.com/tidyverse/tidyr" class="uri">https://github.com/tidyverse/tidyr</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/tidyr/index.html ">CRAN</a></p></li>
+<li><p><strong> tgp </strong> 2.4-14 , LGPL <br/> Bayesian Treed Gaussian Process Models <br/> <a href="http://bobby.gramacy.com/r_packages/tgp" class="uri">http://bobby.gramacy.com/r_packages/tgp</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/tgp/index.html ">CRAN</a></p></li>
+<li><p><strong> dfoptim </strong> 2016.7-1 , GPL (&gt;= 2) <br/> Derivative-Free Optimization <br/> <a href="http://www.jhsph.edu/agingandhealth/People/Faculty_personal_pages/Varadhan.html" class="uri">http://www.jhsph.edu/agingandhealth/People/Faculty_personal_pages/Varadhan.html</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/dfoptim/index.html ">CRAN</a></p></li>
+<li><p><strong> GenSA </strong> 1.1.6 , GPL-2 <br/> R Functions for Generalized Simulated Annealing <br/> See description on <a href=" https://cran.rstudio.com/web/packages/GenSA/index.html ">CRAN</a></p></li>
 <li><p><strong> genalg </strong> 0.2.0 , GPL-2 <br/> R Based Genetic Algorithm <br/> <a href="https://github.com/egonw/genalg" class="uri">https://github.com/egonw/genalg</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/genalg/index.html ">CRAN</a></p></li>
 <li><p><strong> fast </strong> 0.64 , GPL-2 <br/> Implementation of the Fourier Amplitude Sensitivity Test (FAST) <br/> See description on <a href=" https://cran.rstudio.com/web/packages/fast/index.html ">CRAN</a></p></li>
-<li><p><strong> digest </strong> 0.6.8 , GPL-2 <br/> Create Cryptographic Hash Digests of R Objects <br/> <a href="http://dirk.eddelbuettel.com/code/digest.html" class="uri">http://dirk.eddelbuettel.com/code/digest.html</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/digest/index.html ">CRAN</a></p></li>
+<li><p><strong> digest </strong> 0.6.12 , GPL (&gt;= 2) <br/> Create Compact Hash Digests of R Objects <br/> <a href="http://dirk.eddelbuettel.com/code/digest.html" class="uri">http://dirk.eddelbuettel.com/code/digest.html</a> <br/> See description on <a href=" https://cran.rstudio.com/web/packages/digest/index.html ">CRAN</a></p></li>
 </ul>
 
 
@@ -151,14 +210,20 @@ img {
   Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
 </footer>
 
+
+
 </div>
 
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

@@ -10,20 +10,20 @@
 
 
 
+
 <title>Fire Experiment</title>
 
-<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
-<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<link href="libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="libs/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="libs/highlight/default.css"
-      type="text/css" />
-<script src="libs/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -37,6 +37,34 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 }
 </script>
 
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
 
 <link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
 
@@ -54,12 +82,34 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
 }
 </style>
+
+
+
 <div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
 
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -119,8 +169,12 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div id="header">
-<h1 class="title">Fire Experiment</h1>
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Fire Experiment</h1>
+
 </div>
 
 
@@ -130,7 +184,7 @@ Wilensky, U. (1997). NetLogo Fire model. <a href="http://ccl.northwestern.edu/ne
 </aside>
 <p><lside><span class="glyphicon glyphicon-cog" aria-hidden="true" title="Setup" style="color:gray"></span></lside></p>
 <pre class="r"><code>library(nlexperiment)
-nl_netlogo_path(&quot;c:/Program Files (x86)/NetLogo 5.2.0/&quot;) </code></pre>
+nl_netlogo_path(&quot;c:/Program Files/NetLogo 6.0.1/app&quot;) </code></pre>
 <aside>
 You have to do this only once per R session.
 </aside>
@@ -168,7 +222,7 @@ Images taken at the end of each simulation
 <div id="temporal-measures" class="section level2">
 <h2>Temporal Measures</h2>
 <p>Temporal measures quantify temporal behavior of agent based model. Example below shows how to measure <em>percent of burned trees</em> on each simulation step:</p>
-<p><span class="math">\[ percent_{burned}(t) = \frac{trees_{burned}(t)}{trees_{initial}} \times 100 \]</span></p>
+<p><span class="math display">\[ percent_{burned}(t) = \frac{trees_{burned}(t)}{trees_{initial}} \times 100 \]</span></p>
 <p>To define a temporal measure use <code>step_measures</code> element. Measures have to be accurate NetLogo reporters.</p>
 <p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment( 
@@ -193,6 +247,14 @@ Note that <code>burned-trees</code> and <code>initial-trees</code> are global va
 <p>Values <code>run_id</code> and <code>step_id</code> are included in the <code>result$step</code> by default.</p>
 Parameter values are included only by reference to <code>parameter_set_id</code>. The function <code>nl_get_result</code> joins parameter sets with observation data.
 </aside>
+<pre class="r"><code>head(dat)
+#&gt;   density param_set_id percent_burned fire_size step_id run_id
+#&gt; 1      57            1      0.4030340       395       1      1
+#&gt; 2      57            1      0.6437348       481       2      1
+#&gt; 3      57            1      0.8788379       565       3      1
+#&gt; 4      57            1      1.0859526       639       4      1
+#&gt; 5      57            1      1.3070615       718       5      1
+#&gt; 6      57            1      1.5113773       791       6      1</code></pre>
 <aside>
 Table: first 6 observations.
 </aside>
@@ -282,7 +344,7 @@ Distribution of final fire position at different values of forest densities
 <h2>Aggregation Over Time</h2>
 <p>Sometimes a model does not have enough information at the end of simulation and can be measured only by aggregating some temporal measures over time.</p>
 <p>One way to get aggregated data (e.g. maximum, mean or variance) is to report temporal measure and apply aggregation at the end of experiment run. But in case of long simulations it would require a lot of memory and aggregating measure at the and of each simulation run is more efficent.</p>
-<p>Use <code>eval_criteria</code> argument to define the aggreation of temporal measures. The following example define median and standard deviation of fire size (defined as <em>number of trees with active fire in time</em> <span class="math">\(t\)</span>):</p>
+<p>Use <code>eval_criteria</code> argument to define the aggreation of temporal measures. The following example define median and standard deviation of fire size (defined as <em>number of trees with active fire in time</em> <span class="math inline">\(t\)</span>):</p>
 <p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment( 
   model_file = &quot;models/Sample Models/Earth Science/Fire.nlogo&quot;, 
@@ -352,14 +414,20 @@ Standard deviation of fire size. Each point represents one simulation.
   Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
 </footer>
 
+
+
 </div>
 
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

@@ -21,7 +21,7 @@ Northwestern University, Evanston, IL.
 
 ```{r Initialize, title = "Setup"}
 library(nlexperiment)
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
+nl_netlogo_path("c:/Program Files/NetLogo 6.0.1/app") 
 ```
 <aside>You have to do this only once per R session.</aside>
 
@@ -111,6 +111,10 @@ Values `run_id` and `step_id` are included in the `result$step` by default.
 Parameter values are included only by reference to `parameter_set_id`. The 
 function `nl_get_result` joins parameter sets with observation data.
 </aside>
+
+```{r}
+head(dat)
+```
 
 <aside>
 Table: first 6 observations. 

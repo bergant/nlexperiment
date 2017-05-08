@@ -10,20 +10,20 @@
 
 
 
+
 <title>L-BFGS-B Optimization</title>
 
-<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
-<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<link href="libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="libs/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="libs/highlight/default.css"
-      type="text/css" />
-<script src="libs/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -37,6 +37,34 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 }
 </script>
 
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
 
 <link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
 
@@ -54,12 +82,34 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
 }
 </style>
+
+
+
 <div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
 
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -119,8 +169,12 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div id="header">
-<h1 class="title">L-BFGS-B Optimization</h1>
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">L-BFGS-B Optimization</h1>
+
 </div>
 
 
@@ -177,7 +231,6 @@ Thiele, J. C., Kurth, W., &amp; Grimm, V. (2014). Facilitating Parameter Estimat
 <p>Use <code>nl_eval_run</code> <em>parallel</em> option when optimizing stochastic models with more than a few repetitions needed to evaluate one parameter set.</p>
 <p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run optim function" style="color:gray"></span></lside></p>
 <pre class="r"><code>cl &lt;- nl_eval_init(experiment, parallel = TRUE)
-#&gt; [1] &quot;Creating sockets...&quot;
 trace &lt;- nl_eval_tracer(verbose = FALSE)
 param_range &lt;- nl_get_param_range(experiment)   
 set.seed(1) 
@@ -191,7 +244,7 @@ o_result &lt;- optim(
   method = &quot;L-BFGS-B&quot;,
   lower = param_range$lower, upper = param_range$upper, 
   control = list(maxit = 200, trace = 1))
-#&gt; final  value 4.480883 
+#&gt; final  value 5.900873 
 #&gt; converged
 
 nl_eval_close(parallel = TRUE, cl)</code></pre>
@@ -203,14 +256,14 @@ Function <code>nl_get_param_range</code> returns parameters’ lower and upper v
 <pre class="r"><code>o_result
 #&gt; $par
 #&gt; min_separation max_align_turn 
-#&gt;       1.877521       9.382087 
+#&gt;              2             10 
 #&gt; 
 #&gt; $value
-#&gt; [1] 4.480883
+#&gt; [1] 5.900873
 #&gt; 
 #&gt; $counts
 #&gt; function gradient 
-#&gt;       24       24 
+#&gt;       15       15 
 #&gt; 
 #&gt; $convergence
 #&gt; [1] 0
@@ -264,14 +317,20 @@ Where did <code>optim</code> look for best value?
   Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
 </footer>
 
+
+
 </div>
 
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

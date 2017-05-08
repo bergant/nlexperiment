@@ -10,20 +10,20 @@
 
 
 
+
 <title>Nelder-Mead Optimization</title>
 
-<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
-<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<link href="libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="libs/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="libs/highlight/default.css"
-      type="text/css" />
-<script src="libs/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -37,6 +37,34 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 }
 </script>
 
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
 
 <link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
 
@@ -54,12 +82,34 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
 }
 </style>
+
+
+
 <div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
 
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -119,8 +169,12 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div id="header">
-<h1 class="title">Nelder-Mead Optimization</h1>
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Nelder-Mead Optimization</h1>
+
 </div>
 
 
@@ -172,7 +226,7 @@ Ravi Varadhan, Johns Hopkins University, Hans W. Borchers and ABB Corporate Rese
   )
 )</code></pre>
 <aside>
-Note that best-fit criteria function is defined in the experiment. <span class="math">\[ \sqrt{(crowding - 8)^2 + 800 \times (converged - 1)^2} \]</span>
+Note that best-fit criteria function is defined in the experiment. <span class="math display">\[ \sqrt{(crowding - 8)^2 + 800 \times (converged - 1)^2} \]</span>
 </aside>
 <p>In this example the <code>nl_eval_run</code> function is used instead of <code>nl_run</code>.</p>
 <p>While <code>nl_run</code> expects predefined parameter sets, <code>nl_run_eval</code> accepts a single parameter set and returns a numeric value. That makes it compatible with optimization functions from different R packages where next parameter combination depends on the result of previous simulation.</p>
@@ -207,13 +261,13 @@ Function <code>nl_get_param_range</code> returns parameters’ lower and upper v
 <p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Optim results" style="color:gray"></span></lside></p>
 <pre class="r"><code>o_result
 #&gt; $par
-#&gt; [1]  2.081577 14.876627
+#&gt; [1]  2.214608 14.934036
 #&gt; 
 #&gt; $value
-#&gt; [1] 3.602917
+#&gt; [1] 3.767803
 #&gt; 
 #&gt; $feval
-#&gt; [1] 112
+#&gt; [1] 125
 #&gt; 
 #&gt; $restarts
 #&gt; [1] 0
@@ -268,14 +322,20 @@ Where did <code>nmkb</code> look for best value?
   Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
 </footer>
 
+
+
 </div>
 
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

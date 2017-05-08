@@ -10,20 +10,20 @@
 
 
 
+
 <title>One-at-a-time (OAT) Method</title>
 
-<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
-<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<link href="libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="libs/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="libs/highlight/default.css"
-      type="text/css" />
-<script src="libs/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -37,6 +37,34 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 }
 </script>
 
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
 
 <link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
 
@@ -54,12 +82,34 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
 }
 </style>
+
+
+
 <div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
 
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -119,8 +169,12 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div id="header">
-<h1 class="title">One-at-a-time (OAT) Method</h1>
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">One-at-a-time (OAT) Method</h1>
+
 </div>
 
 
@@ -141,7 +195,7 @@ img {
 See <a href="flocking.html">Flocking example</a> for formal definitions of the measures.
 </aside>
 <p>Instead of using a list of parameter values (which would be interpreted in nlexperiment as all combinations of parameter values), parameter value sets are defined with <code>nl_param_oat</code> function.</p>
-<p>It takes minimum and maximum values as a parameter range and median value as default value. Each parameter is sampled over its range (with <span class="math">\(n\)</span> values) while other parameters are fixed to default value. Default value is calculated from parameter values with <code>median</code> so three values are enough for each parameter (min, median and max). Parameters with only one value are treated as constants.</p>
+<p>It takes minimum and maximum values as a parameter range and median value as default value. Each parameter is sampled over its range (with <span class="math inline">\(n\)</span> values) while other parameters are fixed to default value. Default value is calculated from parameter values with <code>median</code> so three values are enough for each parameter (min, median and max). Parameters with only one value are treated as constants.</p>
 <p><lside><span class="glyphicon glyphicon-list-alt" aria-hidden="true" title="Define the experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>experiment &lt;- nl_experiment( 
   model_file = &quot;models/Sample Models/Biology/Flocking.nlogo&quot;,
@@ -192,7 +246,9 @@ Experiment design: parameter value sets shown with scatter plots.
 <p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run experiment" style="color:gray"></span></lside></p>
 <pre class="r"><code>result &lt;- nl_run(experiment, parallel = TRUE) </code></pre>
 <aside>
-<p>Parameter value sets: 150<br />Total simulations: 1500<br />Experiment duration: 1.63 mins</p>
+<p>Parameter value sets: 150<br />
+Total simulations: 1500<br />
+Experiment duration: 1.8 mins</p>
 </aside>
 <pre class="r"><code>dat &lt;- nl_get_result(result, type = &quot;criteria&quot;)
 
@@ -244,14 +300,20 @@ Mean crowding by model parameters
   Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
 </footer>
 
+
+
 </div>
 
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

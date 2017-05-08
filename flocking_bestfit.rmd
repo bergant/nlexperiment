@@ -8,7 +8,7 @@ title: "Best-fit Criterion"
 
 ```{r, echo = FALSE}
 library(nlexperiment)
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0") 
+nl_netlogo_path("c:/Program Files/NetLogo 6.0.1/app") 
 ```
 
 This example is using NetLogo Flocking model (Wilensky, 1998) to
@@ -67,7 +67,7 @@ experiment <- nl_experiment(
 
 
 ```{r flockBestfitRun, title = "Run the experiment", cache=TRUE}
-result <- nl_run(experiment, parallel = TRUE)
+result <- nl_run(experiment, parallel = TRUE, print_progress = TRUE)
 ```
 
 ## Best-fit Criterion Function

@@ -9,7 +9,7 @@ title: "Network"
 ```{r, echo = FALSE}
 library(nlexperiment)
 # Set the path to your NetLogo instalation
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
+nl_netlogo_path("c:/Program Files/NetLogo 6.0.1/app") 
 ```
 
 

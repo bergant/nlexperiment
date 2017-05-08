@@ -8,7 +8,7 @@ title: "Genetic Algorithm"
 
 ```{r, echo = FALSE}
 library(nlexperiment)
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0") 
+nl_netlogo_path("c:/Program Files/NetLogo 6.0.1/app/") 
 ```
 
 This example is using NetLogo Flocking model (Wilensky, 1998) to
@@ -135,20 +135,23 @@ plot(result)
 ```
 
 
-```{r flockGAPlot2, title = "Plot results", fig.show='hold', fig.height=7, fig.cap="Generations in separate plots"}
-plot_monitor <- function(obj) {
-  xlim = c(obj$stringMin[1], obj$stringMax[1]);
-  ylim = c(obj$stringMin[2], obj$stringMax[2]);
-  plot(obj$population, xlim=xlim, ylim=ylim, 
-       main = paste("Iteration: ",obj$iter), 
-       xlab = names(param_range$lower)[1], 
-       ylab = names(param_range$lower)[2]);
-}
+```{r flockGAPlot2, title = "Plot results", fig.show='hold', fig.height=7, fig.cap="Generations in separate plots", message=FALSE}
+library(dplyr)
+generations <- 
+  lapply(monitor_data, function(obj) {
+    setNames(as_data_frame(obj$population), names(param_range$lower))
+  }) %>% 
+    bind_rows(.id = "generation")
 
-op <- par(mfrow = c(3,3))
-for(obj in monitor_data)
-  plot_monitor(obj)
-par(op)
+library(ggplot2)
+ggplot(generations, aes(x=min_separation, y=max_align_turn)) +
+  geom_point(alpha = 0.4) +
+  stat_ellipse(level = 0.7, alpha = 0.3, type = "norm") +
+  facet_wrap(~generation, labeller = label_both) +
+  theme_bw()
+
+
+
 ```
 
 ## Related

@@ -155,11 +155,11 @@ with random sampling and scatter plots.
 <aside>
 [![](img/pages-flockSensLhsPlot1-1.png)](flocking_sens_lhs.html)
 
-[![](img/pages-flockFastPlot-1.png)](flocking_sens_lhs.html)
+[![](img/pages-flockFastPlot-1.png)](flocking_fast.html)
 
 </aside>
 
-[One-at-a-time](flocking_sens_lhs.html) example demonstrates
+[One-at-a-time](flocking_sens_oat.html) example demonstrates
 sensitivity analysis with OAT method.
 
 

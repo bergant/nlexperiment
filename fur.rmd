@@ -9,7 +9,7 @@ title: "Fur Patterns"
 ```{r, echo = FALSE}
 library(nlexperiment)
 # Set the path to your NetLogo instalation
-nl_netlogo_path("c:/Program Files (x86)/NetLogo 5.2.0/") 
+nl_netlogo_path("c:/Program Files/NetLogo 6.0.1/app/") 
 ```
 
 The following example is using NetLogo Fur model (Wilensky 2003) to show
@@ -115,6 +115,7 @@ only $5 \times 8 = 40$ simulation runs.
 library(ggplot2)
 nl_show_patches(result, x_param = "ratio", y_param = "rdiff") +
   scale_fill_manual(values = c("black","white")) +
+  coord_fixed() +
   labs(y=expression(radius[y] - radius[x]), title = "Fur patterns (gap = 3)")
 ```
 

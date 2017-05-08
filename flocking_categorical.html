@@ -10,20 +10,20 @@
 
 
 
+
 <title>Categorical Criteria</title>
 
-<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
-<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<link href="libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="libs/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="libs/highlight/default.css"
-      type="text/css" />
-<script src="libs/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -37,6 +37,34 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 }
 </script>
 
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
 
 <link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
 
@@ -54,12 +82,34 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
 }
 </style>
+
+
+
 <div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
 
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -119,8 +169,12 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div id="header">
-<h1 class="title">Categorical Criteria</h1>
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Categorical Criteria</h1>
+
 </div>
 
 
@@ -190,9 +244,9 @@ Aggregate function (<code>eval_aggregate_fun</code>) specifies that the results 
 <h2>Add Categorical Criteria</h2>
 <p>If we were interested in parameters where the model will produce <strong>medium sized flocks</strong> which <strong>fly in same direction</strong> we could define criteria based on crowding and direction convergence like this:</p>
 <p>Crowding criteria:</p>
-<p><span class="math">\[ 5 \leq crowding &lt; 11 \]</span></p>
+<p><span class="math display">\[ 5 \leq crowding &lt; 11 \]</span></p>
 <p>Alignment criteria:</p>
-<p><span class="math">\[ converged &gt; 0.7 \]</span></p>
+<p><span class="math display">\[ converged &gt; 0.7 \]</span></p>
 <p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Prepare data" style="color:gray"></span></lside></p>
 <pre class="r"><code>dat &lt;- nl_get_criteria_result( 
   result3,
@@ -211,7 +265,9 @@ ggplot( dat, aes(x = min_separation, y = max_align_turn) ) +
   coord_equal(ratio = 1/5) +
   facet_grid(. ~ vision, labeller = label_both) +
   theme_minimal() +
-  theme(panel.margin = grid::unit(0.07,&quot;npc&quot;))</code></pre>
+  theme(panel.margin = grid::unit(0.07,&quot;npc&quot;))
+#&gt; Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
+#&gt; instead</code></pre>
 <p>
 <img src="img/pages-pFlockCatPlot-1.png">
 <aside>
@@ -235,14 +291,20 @@ Categorical criteria “aligned” (red triangle) and “grouped” (blue cross)
   Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
 </footer>
 
+
+
 </div>
 
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

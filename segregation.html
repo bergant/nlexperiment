@@ -10,20 +10,20 @@
 
 
 
+
 <title>Segregation</title>
 
-<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<script src="libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap-3.3.1/css/spacelab.min.css" rel="stylesheet" />
-<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
-<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
+<link href="libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<link href="libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="libs/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="libs/highlight/default.css"
-      type="text/css" />
-<script src="libs/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -37,6 +37,34 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 }
 </script>
 
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
 
 <link rel="stylesheet" href="tufterhandout2.css" type="text/css" />
 
@@ -54,12 +82,34 @@ code {
   color: inherit;
   background-color: rgba(0, 0, 0, 0.04);
 }
-img { 
-  max-width:100%; 
-  height: auto; 
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
 }
 </style>
+
+
+
 <div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
 
 
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -119,8 +169,12 @@ img {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div id="header">
-<h1 class="title">Segregation</h1>
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Segregation</h1>
+
 </div>
 
 
@@ -151,7 +205,10 @@ Wilensky, U. (1997). NetLogo <a href="http://ccl.northwestern.edu/netlogo/models
 Note that turtle variable “color” is mapped to group variable
 </aside>
 <p><lside><span class="glyphicon glyphicon-play-circle" aria-hidden="true" title="Run the experiment" style="color:gray"></span></lside></p>
-<pre class="r"><code>result &lt;- nl_run(experiment)</code></pre>
+<pre class="r"><code>result &lt;- nl_run(experiment, print_progress = TRUE)
+#&gt; Params: 1, Run: 1
+#&gt; Params: 2, Run: 1
+#&gt; Params: 3, Run: 1</code></pre>
 <p>The data about individual agents are now stored in <code>result$agents_after$individuals</code>. To join the data with the values from parameter sets use <code>nl_get_result</code> function.</p>
 <p><lside><span class="glyphicon glyphicon-th-list" aria-hidden="true" title="Get data" style="color:gray"></span></lside></p>
 <pre class="r"><code>dat &lt;- nl_get_result(result, type = &quot;agents_after&quot;, sub_type = &quot;individuals&quot;)</code></pre>
@@ -160,6 +217,7 @@ Note that turtle variable “color” is mapped to group variable
 dat$group &lt;- factor(dat$group, labels = c(&quot;A&quot;, &quot;B&quot;))
 ggplot(dat, aes(x = xcor, y = ycor, fill = group)) +
   geom_raster() +
+  coord_fixed() +
   facet_grid( ~ percent_similar_wanted, labeller = label_both) +
   scale_fill_manual(values = c(&quot;cadetblue4&quot;, &quot;gray&quot; )) +
   theme_minimal() </code></pre>
@@ -187,14 +245,20 @@ Segregation results for different values of %-similar-wanted
   Report <a href="https://github.com/bergant/nlexperiment/issues">Issues</a>
 </footer>
 
+
+
 </div>
 
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 
