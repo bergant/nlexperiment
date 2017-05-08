@@ -523,17 +523,9 @@ nl_single_agent_report <- function(agent_report,
                                    run_id = 1,
                                    step_id = NULL) {
   lapply(agent_report, function(x) {
-    #df1 <- RNetLogo::NLGetAgentSet(x$vars, x$agents)
-    reporter <-
-      sprintf("map [x -> (list %s)] sort %s",
-        paste(
-          sprintf('[%s] of x', x$vars),
-          collapse = " "
-        ),
-        x$agents
-      )
-    nlogo_ret <- RNetLogo::NLReport(reporter)
-    df1 <- data.frame(do.call(rbind, nlogo_ret), stringsAsFactors = FALSE)
+    reporters <- sprintf("map [x -> [%s] of x ] sort %s", x$vars, x$agents)
+    nlogo_ret <- RNetLogo::NLReport(reporters)
+    df1 <- data.frame(nlogo_ret, stringsAsFactors = FALSE)
     names(df1) <- x$vars
     if(!is.null(names(x$vars))) names(df1) <- names(x$vars)
     df1$run_id <- run_id
@@ -548,7 +540,10 @@ nl_single_patch_report <- function(patch_report,
                                    run_id = 1) {
 
   lapply(patch_report, function(x) {
-    df1 <- RNetLogo::NLGetPatches(x$vars, x$patches)
+    reporters <- sprintf("map [x -> [%s] of x ] sort %s", x$vars, x$patches)
+    nlogo_ret <- RNetLogo::NLReport(reporters)
+    df1 <- data.frame(nlogo_ret, stringsAsFactors = FALSE)
+    names(df1) <- x$vars
     if(!is.null(names(x$vars))) names(df1) <- names(x$vars)
     df1$run_id <- run_id
     df1$param_set_id <- parameter_set_id
