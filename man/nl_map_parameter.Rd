@@ -17,4 +17,3 @@ NetLogo variable name
 \description{
 Internal: maps parameter
 }
-

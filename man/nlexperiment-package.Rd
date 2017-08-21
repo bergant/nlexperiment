@@ -2,8 +2,8 @@
 % Please edit documentation in R/nlexperiment.R
 \docType{package}
 \name{nlexperiment-package}
-\alias{nlexperiment}
 \alias{nlexperiment-package}
+\alias{nlexperiment}
 \title{nlexperiment: NetLogo experiments}
 \description{
 Exploration of NetLogo (Wilensky 1999) agent based models.
@@ -83,4 +83,3 @@ Wilensky, U. (1999) NetLogo. \url{http://ccl.northwestern.edu/netlogo/}. Center 
   \url{http://ccl.northwestern.edu/netlogo/docs/behaviorspace.html}
   and BehaviorSearch tool \url{http://www.behaviorsearch.org/}
 }
-

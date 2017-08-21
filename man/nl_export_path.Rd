@@ -18,4 +18,3 @@ Setting export path is optional. If not set, running experiments
   folder in working directory.
   Option is defined per session.
 }
-

@@ -68,4 +68,3 @@ experiment <- nl_experiment(
 See also \code{\link{nl_param_lhs}} for latin cube and
   \code{\link{nl_param_fast}} for FAST parameter sampling.
 }
-

@@ -18,4 +18,3 @@ nl_show_views_grid(result, x_param = NULL, y_param = NULL, img_gap = 0.03)
 \description{
 Show exported views images in a grid
 }
-

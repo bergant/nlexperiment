@@ -16,4 +16,3 @@ Create a patch set reporter to set patch reporters in `nl_experiment` or
   `nl_set_agent_reports`
 }
 \keyword{internal}
-

@@ -15,4 +15,3 @@ nl_single_export(experiment, param_set_id = NA, run_id = 1)
 Export view and/or world for individual run
 }
 \keyword{internal}
-

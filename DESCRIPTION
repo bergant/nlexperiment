@@ -1,8 +1,8 @@
 Package: nlexperiment
 Type: Package
 Title: Exploration of NetLogo Agent Based Models
-Version: 0.2.1
-Date: 2017-05-07
+Version: 0.2.1.9000
+Date: 2017-08-21
 Author: Darko Bergant
 Maintainer: Darko Bergant <darko.bergant@gmail.com>
 BugReports: https://github.com/bergant/nlexperiment/issues
@@ -27,4 +27,4 @@ Suggests:
     lhs,
     fast
 LazyData: TRUE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

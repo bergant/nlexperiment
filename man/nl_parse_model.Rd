@@ -29,4 +29,3 @@ Imports attributes from sliders defined in
     and
     \url{https://github.com/NetLogo/NetLogo/wiki/Widget-Format}
 }
-

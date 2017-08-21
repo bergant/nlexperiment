@@ -17,4 +17,3 @@ Used in evaluate element in \code{\link{nl_experiment}} or
 Must evaluate to a numeric
 }
 \keyword{internal}
-

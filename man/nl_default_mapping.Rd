@@ -55,4 +55,3 @@ experiment <- nl_experiment(
 cbind(experiment$mapping)
 
 }
-

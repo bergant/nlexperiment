@@ -22,4 +22,3 @@ NetLogo experiment object
 \description{
 Define parameter sets for NetLogo experiment
 }
-

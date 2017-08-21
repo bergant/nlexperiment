@@ -12,4 +12,3 @@ nl_eval_tracer(verbose = TRUE)
 \description{
 Iterations call-back factory
 }
-

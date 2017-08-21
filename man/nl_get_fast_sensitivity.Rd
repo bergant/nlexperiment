@@ -73,4 +73,3 @@ result <- nl_run(experiment, parallel = TRUE)
 sensitivity_data <- nl_get_fast_sensitivity(result, "c_converged")
 }
 }
-

@@ -29,4 +29,3 @@ Set reporting of variable value(s) of one or more agent(s) as a data.frame
 \seealso{
 To create an experiment object use \code{\link{nl_experiment}}
 }
-

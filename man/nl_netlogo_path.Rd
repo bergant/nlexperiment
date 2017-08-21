@@ -13,4 +13,3 @@ On Windows, for example, something like "C:/Program Files/NetLogo 5.1.0".}
 \description{
 Get and set netlogo path
 }
-

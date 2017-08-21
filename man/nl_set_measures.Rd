@@ -50,4 +50,3 @@ Values of experiment measures are NetLogo reporters.
 \seealso{
 To create an experiment object use \code{\link{nl_experiment}}
 }
-

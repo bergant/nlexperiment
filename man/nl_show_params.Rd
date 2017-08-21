@@ -21,4 +21,3 @@ nl_show_params(experiment, cex = 0.7, col = "#000000CC",
 \description{
 Plots parameters with scatter plots
 }
-

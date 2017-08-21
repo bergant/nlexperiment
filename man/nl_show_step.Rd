@@ -34,4 +34,3 @@ Plot observations for each simulation step
 \seealso{
 To get only data and create custom plots see \code{\link{nl_get_result}}
 }
-

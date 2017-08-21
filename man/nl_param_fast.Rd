@@ -37,4 +37,3 @@ Use \code{\link{nl_get_fast_sensitivity}} to get sensitivity data.
   from the simulation results.
   See \code{\link{nl_param_lhs}} for latin hypercube sampling.
 }
-

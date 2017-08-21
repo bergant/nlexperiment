@@ -23,4 +23,3 @@ nl_show_patches(result, x_param, y_param = NULL, fill = "pcolor",
 \description{
 Plot patches from simualations result
 }
-

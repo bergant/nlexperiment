@@ -70,4 +70,3 @@ Model is run for each parameter combination
 \seealso{
 See \code{\link{nl_experiment}} for creating NetLogo experiment object.
 }
-

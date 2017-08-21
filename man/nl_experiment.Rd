@@ -103,4 +103,3 @@ To run experiment use \code{\link{nl_run}}.
   \code{\link{nl_set_run_options}} and
   \code{\link{nl_set_param_values}}.
 }
-
