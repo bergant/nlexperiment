@@ -81,6 +81,7 @@
 #' ggplot(dat, mapping = aes(x = factor(density), y = percent_burned) ) +
 #'   geom_violin()
 #' }
+#' @import stats
 NULL
 
 # package global variables
@@ -927,7 +928,7 @@ nl_show_params <- function(experiment, cex = 0.7, col = "#000000CC",
   variable_params <-
     sapply(experiment$param_sets, function(x) min(x) != max(x))
 
-  pairs(experiment$param_sets[variable_params],
+  graphics::pairs(experiment$param_sets[variable_params],
         cex = 0.7, col = "#000000CC", lower.panel = NULL, ...)
 }
 

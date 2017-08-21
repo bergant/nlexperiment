@@ -106,7 +106,7 @@ nl_parse_model <- function(model_file) {
                   yaxis = x[7],
                   stringsAsFactors = FALSE)
               pens <- paste(x[16:length(x)], collapse = "\n")
-              df_pens <- read.table(text = pens, stringsAsFactors = FALSE)
+              df_pens <- utils::read.table(text = pens, stringsAsFactors = FALSE)
               names(df_pens) <- c("display", "interval", "mode", "color" ,"inLegend", "setupCode", "updateCode")
               df_pens <- transform(df_pens,
                 name = x[5],
