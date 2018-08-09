@@ -15,7 +15,7 @@ nl_run(experiment, print_progress = FALSE, gui = FALSE, parallel = FALSE,
 \item{gui}{Start NetLogo with GUI (by default NetLogo is run in headless mode)}
 
 \item{parallel}{Runs experiment in parallel worker processes
-(requires \link[parallel]{parallel} package)}
+(requires \link[parallel]{parallel-package} package)}
 
 \item{max_cores}{(optional) only relevant if parallel = TRUE.
 If not defined all available processors will be used}

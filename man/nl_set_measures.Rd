@@ -6,7 +6,7 @@
 \usage{
 nl_set_measures(experiment, step = NULL, run = NULL, eval_criteria = NULL,
   eval_aggregate_fun = NULL, eval_mutate = NULL, as.data.frame = TRUE,
-  step_transform = NULL)
+  step_transform = NULL, keep_step_measures = FALSE)
 }
 \arguments{
 \item{experiment}{NetLogo experiment object}
@@ -35,6 +35,9 @@ It makes sense when when repetitions > 1}
 step reporters. When simulation has many steps and only summary
 data is needed, step_transform can reduce memory requirements to
 run experiment.}
+
+\item{keep_step_measures}{Keep individual step measures results even if
+evaluation criteria is defined (FALSE by default)}
 }
 \value{
 NetLogo experiment object

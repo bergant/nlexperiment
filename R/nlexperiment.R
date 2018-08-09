@@ -167,6 +167,8 @@ nl_export_path <- function(export_path = NULL) {
 #' @param data_handler Function to handle observations. If handler is defined
 #'   the observations will not be stored in result elements when running
 #'   the experiment with `nl_run` function.
+#' @param keep_step_measures Keep individual step measures results even if
+#'   evaluation criteria is defined (FALSE by default)
 #' @examples
 #' experiment <- nl_experiment(
 #'   model_file = "models/Sample Models/Earth Science/Fire.nlogo",
@@ -206,7 +208,8 @@ nl_experiment <- function(model_file,
                           eval_criteria = NULL,
                           eval_aggregate_fun = NULL,
                           eval_mutate = NULL,
-                          data_handler = NULL
+                          data_handler = NULL,
+                          keep_step_measures = FALSE
                           ) {
 
   # NetLogo model library exemption
@@ -239,7 +242,8 @@ nl_experiment <- function(model_file,
                                 run = run_measures,
                                 eval_criteria = eval_criteria,
                                 eval_aggregate_fun = eval_aggregate_fun,
-                                eval_mutate = eval_mutate)
+                                eval_mutate = eval_mutate,
+                                keep_step_measures = keep_step_measures)
   # set agent reports
   experiment <- nl_set_agent_reports(experiment,
                                      agents_after = agents_after,
@@ -408,6 +412,8 @@ nl_set_run_options <- function(
 #'   step reporters. When simulation has many steps and only summary
 #'   data is needed, step_transform can reduce memory requirements to
 #'   run experiment.
+#' @param keep_step_measures Keep individual step measures results even if
+#'   evaluation criteria is defined (FALSE by default)
 #' @details Values of experiment measures are NetLogo reporters.
 #'   Names of measures will be used in the resulting data frames as
 #'   column names.
@@ -421,7 +427,8 @@ nl_set_measures <- function(experiment,
                         eval_aggregate_fun = NULL,
                         eval_mutate = NULL,
                         as.data.frame = TRUE,
-                        step_transform = NULL) {
+                        step_transform = NULL,
+                        keep_step_measures = FALSE) {
   if(!inherits(experiment, nl_experiment_class))
     stop("Not a NetLogo experiment object")
 
@@ -432,7 +439,8 @@ nl_set_measures <- function(experiment,
          eval_aggregate_fun = eval_aggregate_fun,
          eval_mutate = eval_mutate,
          as.data.frame = as.data.frame,
-         step_transform = step_transform)
+         step_transform = step_transform,
+         keep_step_measures = keep_step_measures)
 
   experiment
 }
@@ -816,7 +824,7 @@ nl_param_oat <- function(n, ...) {
 #' @return A data frame with parameter value sets.
 #' @seealso
 #'   Use \code{\link{nl_get_fast_sensitivity}} to get sensitivity data.
-#'   See \link[fast]{fast} package documentation for FAST algorithm details.
+#'   See \link[fast]{fast-package} package documentation for FAST algorithm details.
 #'   from the simulation results.
 #'   See \code{\link{nl_param_lhs}} for latin hypercube sampling.
 #' @examples

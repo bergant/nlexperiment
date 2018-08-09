@@ -10,7 +10,7 @@ nl_experiment(model_file, iterations = NULL, while_condition = NULL,
   agents_after = NULL, agents_step = NULL, patches_after = NULL,
   export_view = FALSE, export_world = FALSE, setup_commands = "setup",
   go_command = "go", eval_criteria = NULL, eval_aggregate_fun = NULL,
-  eval_mutate = NULL, data_handler = NULL)
+  eval_mutate = NULL, data_handler = NULL, keep_step_measures = FALSE)
 }
 \arguments{
 \item{model_file}{An absolute path to your NetLogo model file (.nlogo)}
@@ -75,6 +75,9 @@ Must return named numeric vector.}
 \item{data_handler}{Function to handle observations. If handler is defined
 the observations will not be stored in result elements when running
 the experiment with `nl_run` function.}
+
+\item{keep_step_measures}{Keep individual step measures results even if
+evaluation criteria is defined (FALSE by default)}
 }
 \value{
 NetLogo experiment object

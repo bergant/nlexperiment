@@ -33,7 +33,7 @@ param_values <- nl_param_fast(
 }
 \seealso{
 Use \code{\link{nl_get_fast_sensitivity}} to get sensitivity data.
-  See \link[fast]{fast} package documentation for FAST algorithm details.
+  See \link[fast]{fast-package} package documentation for FAST algorithm details.
   from the simulation results.
   See \code{\link{nl_param_lhs}} for latin hypercube sampling.
 }

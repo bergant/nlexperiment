@@ -22,7 +22,7 @@ nl_options <- nl_options_class()
 #' @param gui Start NetLogo with GUI (by default NetLogo is run in headless mode)
 #' @param print_progress Set to TRUE if you want to follow the progress in the console
 #' @param parallel Runs experiment in parallel worker processes
-#'   (requires \link[parallel]{parallel} package)
+#'   (requires \link[parallel]{parallel-package} package)
 #' @param max_cores (optional) only relevant if parallel = TRUE.
 #'   If not defined all available processors will be used
 #' @return Returns an object of class \code{nl_result}.
@@ -311,7 +311,9 @@ nl_single_run <- function(experiment, parameter_set_id, run_id,
         names(agents_step[[1]])
       )
   }
-  else if(length(experiment$measures$step) > 0 ) {
+
+  #else if(length(experiment$measures$step) > 0 ) {
+  if(length(experiment$measures$step) > 0 ) {
     # if any step measures defined - use RNetLogo::NLDoReportWhile
     if(!is.null(experiment$while_condition)) {
       report_step <- RNetLogo::NLDoReportWhile(
@@ -409,7 +411,9 @@ nl_single_run <- function(experiment, parameter_set_id, run_id,
     ret$criteria <- as.data.frame(t(unlist(criteria_vec)))
     ret$criteria$param_set_id <- parameter_set_id
     ret$criteria$run_id <- run_id
-    ret$step <- NULL
+    if(!experiment$measures$keep_step_measures) {
+      ret$step <- NULL
+    }
   }
   # if external data handler is defined
   if(!is.null(experiment$run_options$data_handler)) {
